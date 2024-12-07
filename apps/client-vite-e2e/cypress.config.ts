@@ -8,10 +8,10 @@ export default defineConfig({
       cypressDir: 'src',
       bundler: 'vite',
       webServerCommands: {
-        default: 'npx nx run react-monorepo:serve',
-        production: 'npx nx run react-monorepo:preview',
+        default: 'pnpm exec nx run client-vite:serve',
+        production: 'pnpm exec nx run client-vite:preview',
       },
-      ciWebServerCommand: 'npx nx run react-monorepo:preview',
+      ciWebServerCommand: 'pnpm exec nx run client-vite:preview',
       ciBaseUrl: 'http://localhost:4300',
     }),
     baseUrl: 'http://localhost:4200',

@@ -1,6 +1,6 @@
 import { getGreeting } from '../support/app.po';
 
-describe('react-monorepo-e2e', () => {
+describe('client-vite-e2e', () => {
   beforeEach(() => cy.visit('/'));
 
   it('should display welcome message', () => {
