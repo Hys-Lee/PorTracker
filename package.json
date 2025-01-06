@@ -5,7 +5,7 @@
   "scripts": {
     "start": "pnpm exec panda && nx serve client-vite",
     "prepare": "husky && panda codegen",
-    "test": "jest",
+    "test": "pnpm nx test client-vite",
     "lint": "eslint 'apps/**/*.{js,jsx,ts,tsx}'",
     "storybook": "pnpm exec panda  && nx run client-vite:storybook",
     "build": "pnpm exec panda && nx build client-vite ",
