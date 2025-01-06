@@ -41,4 +41,11 @@ Thumbs.db
 .nx/cache
 .nx/workspace-data
 
+.eslintcache
+
 vite.config.*.timestamp*
+
+storybook-static
+## Panda
+styled-system
+styled-system-studio
