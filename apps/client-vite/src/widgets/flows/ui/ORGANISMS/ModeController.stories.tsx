@@ -1,4 +1,4 @@
-import ModeController from './ModeContoller';
+import ModeController from './ModeController';
 
 import { FlowModeAtom } from '../../../../entities/flows/atoms/flowAtoms';
 import { within, fireEvent } from '@storybook/testing-library';
