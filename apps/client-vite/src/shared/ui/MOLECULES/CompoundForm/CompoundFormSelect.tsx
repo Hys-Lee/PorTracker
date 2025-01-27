@@ -2,28 +2,26 @@ import { Options } from 'react-select';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 
 type ReactSelectOptions = Options<{ value: string; label: string }>;
-interface CompoundFormTagsProps {
+interface CompoundFormSelectProps {
   defaultOptions?: ReactSelectOptions;
   isLoading: boolean;
 }
 
-const CompoundFormTags = ({
+const CompoundFormSelect = ({
   defaultOptions,
   isLoading,
-}: CompoundFormTagsProps) => {
+}: CompoundFormSelectProps) => {
   return (
     <div>
       <AsyncCreatableSelect
-        isMulti
         isClearable
         defaultOptions={defaultOptions}
         // options={options}
         // loadOptions={loadOptions}
-        placeholder="태그를 선택 혹은 입력해주세요"
         isLoading={isLoading}
       />
     </div>
   );
 };
 
-export default CompoundFormTags;
+export default CompoundFormSelect;

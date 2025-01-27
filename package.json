@@ -7,7 +7,7 @@
     "prepare": "husky && panda codegen",
     "test": "pnpm nx test client-vite",
     "lint": "eslint 'apps/**/*.{js,jsx,ts,tsx}'",
-    "storybook": "pnpm exec panda  && nx run client-vite:storybook",
+    "storybook": "nx run client-vite:storybook && pnpm exec panda --watch",
     "build": "pnpm exec panda && nx build client-vite ",
     "build:watch": "pnpm exec panda --watch && nx build client-vite --watch "
   },
@@ -19,6 +19,7 @@
   },
   "private": true,
   "dependencies": {
+    "@hookform/resolvers": "^3.10.0",
     "@storybook/addon-console": "^3.0.0",
     "@visx/annotation": "^3.12.0",
     "@visx/xychart": "^3.12.0",
@@ -27,11 +28,15 @@
     "jotai": "^2.11.0",
     "pnpm": "^9.15.3",
     "react": "18.3.1",
+    "react-datepicker": "^7.6.0",
     "react-dom": "18.3.1",
     "react-draggable": "^4.4.6",
+    "react-hook-form": "^7.54.2",
+    "react-modal": "^3.16.3",
     "react-router": "^7.1.1",
     "react-select": "^5.9.0",
-    "react-simple-star-rating": "^5.1.7"
+    "react-simple-star-rating": "^5.1.7",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.0",
@@ -61,10 +66,13 @@
     "@swc/core": "~1.5.29",
     "@swc/helpers": "~0.5.15",
     "@testing-library/react": "15.0.6",
+    "@types/echarts": "^5.0.0",
     "@types/jest": "^29.5.14",
     "@types/node": "18.16.9",
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.19.1",
+    "@typescript-eslint/parser": "^8.19.1",
     "@visx/curve": "^3.12.0",
     "@visx/glyph": "^3.12.0",
     "@visx/mock-data": "^3.12.0",

@@ -2,6 +2,7 @@ import CompoundFormRating from './CompoundFormRating';
 import CompoundFormTags from './CompoundFormTags';
 import CompoundForm from './CompoundForm';
 import { flushSync } from 'react-dom';
+import CompoundFormButton from './CompoundFormButton';
 export default {
   //   component: SegmentControl,
   title: 'CompoundForm',
@@ -41,13 +42,16 @@ const Template = () => (
     <CompoundForm.Input value={'타이틀'} />
     <div style={{ display: 'flex', gap: '4px' }}>
       <CompoundForm.Label textContent="입력" />
-      <CompoundForm.Input value={'입력이에용'} />
+      <CompoundForm.Input value={'입력이에용'} disabled />
     </div>
     <CompoundForm.InputArea
       value={`와우ww 이게 진짜인가? \n 아니면 거짓인가`}
     />
     <CompoundForm.Rating maxRate={5} rate={3} onClick={(rate) => alert(rate)} />
     <CompoundForm.Tags defaultOptions={options} isLoading={false} />
+    <CompoundForm.Date selected={new Date(Date.now())} />
+    <CompoundForm.Select defaultOptions={options} isLoading={false} />
+    <CompoundForm.Button type="button">버튼</CompoundForm.Button>
   </CompoundForm>
 );
 
