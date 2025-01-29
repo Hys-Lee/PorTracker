@@ -1,16 +1,14 @@
 import { FC, TextareaHTMLAttributes } from 'react';
 
-interface InputAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
-  value: string;
-}
+type InputAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement>;
 
-const InputArea: FC<InputAreaProps> = ({ value, ...props }) => {
+const InputArea: FC<InputAreaProps> = ({ ...props }) => {
   return (
     <textarea
       {...props}
       // dangerouslySetInnerHTML={{ __html: innerHTMLContent }}
-      value={value}
-      style={{ whiteSpace: 'pre-line' }}
+      // value={value}
+      style={{ whiteSpace: 'pre-wrap' }}
       wrap="hard"
     />
   );

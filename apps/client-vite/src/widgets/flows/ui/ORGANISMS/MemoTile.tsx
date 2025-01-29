@@ -57,7 +57,7 @@ const MemoTile = () => {
 
             {/* <CompoundForm.Date selected={new Date(Date.now())} /> */}
           </div>
-          <CompoundForm.InputArea value="" placeholder="본문" />
+          <CompoundForm.InputArea defaultValue="" placeholder="본문" />
           <CompoundForm.Tags isLoading={false} />
           <CompoundForm.Rating
             maxRate={5}

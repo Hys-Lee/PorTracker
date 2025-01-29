@@ -1,24 +1,7 @@
 import ReactECharts, { EChartsInstance } from 'echarts-for-react';
 import * as echarts from 'echarts';
 import { useEffect, useRef, useState } from 'react';
-import Draggable from 'react-draggable';
-import FlowAnnotation from './FlowAnnotation';
-/**
- * options에서 리렌더링 간 유지하고 싶은 조건들은 state로 저장해야 함.
- * useEffect와 useRef를 통해 instance를 가져와서 기존 이벤트 리스너 제거 후 커스텀으로 추가하면 되는 듯.
- * 
- * useEffect(() => {
-    if (chartRef.current) {
-      const chart = chartRef.current.getEchartsInstance();
-      if (chart) {
-        chart.off('dataZoom'); // 기존 이벤트 리스너 제거
-        chart.on('dataZoom', (params) => {
-          setDataZoom({ start: params.start, end: params.end });
-        });
-      }
-    }
-  }, []);
- */
+import ChartAnnotation from '../ChartAnnotation';
 
 /////    Any 타입 다 찾으셈..
 
@@ -42,11 +25,18 @@ for (let i = 1; i < 200; i++) {
   }
 }
 
-interface MarkCoord {
-  chartPos: [string, number];
-  viewPos: [number, number];
-  seriesIndex: number;
-  dataIndex: number;
+interface MarkData {
+  [id: string]: {
+    type: 'normal' | 'trade-only' | 'memo-only' | 'all';
+    asset: string;
+    date: string; // x
+    value: number; // y
+    // chartPos: [string, number];
+    viewPos: [number, number];
+    seriesIndex: number;
+    dataIndex: number;
+    accumulatedValue: number;
+  };
 }
 
 const defaultOption = {
@@ -62,6 +52,7 @@ const defaultOption = {
   grid: {
     bottom: 30,
     top: 30,
+    right: 10,
   },
 
   xAxis: {
@@ -162,14 +153,8 @@ const RealFlowEcharts = () => {
   const [echartInstance, setEchartInstance] = useState<null | EChartsInstance>(
     null
   );
-  const [markCoords, setMarkCoords] = useState<Array<MarkCoord>>([]);
-  // const echartInstance = useMemo(
-  //   () =>
-  //     chartRef.current === null
-  //       ? null
-  //       : (chartRef.current as EChartsInstance).getEchartsInstance(),
-  //   []
-  // );
+  // const [markData, setMarkData] = useState<Array<MarkData>>([]);
+  const [markData, setMarkData] = useState<MarkData>({});
 
   useEffect(() => {
     if (chartRef.current !== null) {
@@ -185,15 +170,17 @@ const RealFlowEcharts = () => {
   useEffect(() => {
     if (!echartInstance) return;
 
+    const markDataValues = Object.values(markData);
+
     echartInstance.setOption({
       series: [
         {
           markPoint: {
-            data: markCoords.map((coordInfo, idx) => ({
-              name: `${coordInfo.chartPos}`,
-              xAxis: coordInfo.chartPos[0],
-              yAxis: coordInfo.chartPos[1],
-              itemStyle: { borderColor: 'black' },
+            data: markDataValues.map((data, idx) => ({
+              name: `${data.asset}-${data.date}-${data.value}`,
+              xAxis: data.date,
+              yAxis: data.accumulatedValue,
+              itemStyle: { borderColor: 'black' }, // type에 따라 모양이나 색 처리
               label: {
                 // label 속성 추가
                 show: true, // 레이블 표시
@@ -205,84 +192,74 @@ const RealFlowEcharts = () => {
         },
       ],
     });
-  }, [echartInstance, markCoords]);
+  }, [echartInstance, markData]);
   useEffect(() => {
     if (!echartInstance) return;
-    echartInstance.on('click', (param: echarts.ECElementEvent) => {
-      setMarkCoords((prev) => [
-        ...prev,
-        {
-          chartPos: [
-            param.name as string,
-            defaultDatum.reduce((acc, cur: number[], idx: number) => {
-              // console.log('ACC, CUR, IDX: ', acc, cur, idx);
-              if (idx > (param.seriesIndex as number)) return acc;
-              return acc + cur[param.dataIndex as number];
-            }, 0),
-          ], //param.value],
-          viewPos: [param.event!.offsetX, param.event!.offsetY],
-          dataIndex: param.dataIndex,
-          seriesIndex: param.seriesIndex as number,
+    echartInstance.on('click', 'markPoint', () => {
+      console.log('아ㅗ우');
+    });
+    echartInstance.on('click', 'series', (param: echarts.ECElementEvent) => {
+      if (param.componentType !== 'series') return;
+      //test
+      console.log('데이터쪽 파람: ', param);
+      const accumulatedValue = defaultDatum.reduce(
+        (acc, cur: number[], idx: number) => {
+          // console.log('ACC, CUR, IDX: ', acc, cur, idx);
+          if (idx > (param.seriesIndex as number)) return acc;
+          return acc + cur[param.dataIndex as number];
         },
-      ]);
+        0
+      );
+      setMarkData((prev) => ({
+        ...prev,
+        [`${param.seriesName}-${param.name}-${param.value}`]: {
+          asset: param.seriesName || '이름 없음',
+          date: param.name,
+          type: 'normal',
+          value: Number.isInteger(Number(param.value))
+            ? Number(param.value)
+            : 0,
+          viewPos: [param.event!.offsetX, param.event!.offsetY],
+          dataIndex: param.dataIndex || 0,
+          seriesIndex: param.seriesIndex as number,
+          accumulatedValue,
+        },
+      }));
     });
     return () => {
       echartInstance.off('click');
     };
   }, [echartInstance, defaultDatum]); // defaultDatum위치 정리한번 해야함.
 
+  const constraintsRef = useRef(null);
+
   return (
-    <div style={{ height: '500px' }}>
-      {markCoords.map((markCoordInfo, idx) => (
-        <Draggable
-          key={`${markCoordInfo.seriesIndex}-${markCoordInfo.dataIndex}`}
-          bounds="parent"
-          defaultPosition={{
-            y: markCoordInfo.viewPos[1],
-            x: markCoordInfo.viewPos[0],
-          }}
-        >
-          <div
-            style={{
-              zIndex: 1,
-              position: 'absolute',
-              width: '100px',
-              height: '100px',
-              backgroundColor: 'lightblue',
-              border: '1px solid black',
-              cursor: 'move',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            {idx} 드래거블이래
-            <FlowAnnotation />
-            <button
-              style={{ border: '1px solid white' }}
-              onClick={() => {
-                const newCoords = [...markCoords].filter(
-                  (coordInfo) =>
-                    coordInfo.seriesIndex !== markCoordInfo.seriesIndex ||
-                    coordInfo.dataIndex !== markCoordInfo.dataIndex
-                );
-                setMarkCoords(newCoords);
-              }}
-            >
-              삭제
-            </button>
-          </div>
-        </Draggable>
-      ))}
+    <div style={{ height: '500px', width: '100%' }} ref={constraintsRef}>
       <ReactECharts
         ref={chartRef}
         style={{ width: '100%', height: '100%' }}
         option={defaultOption}
-        // onEvents={{
-        //   mousedown: () => {
-        //     console.log('리액트 마우스다운 ');
-        //   },
-        // }}
       />
+      {Object.values(markData).map(
+        ({ asset, date, value, viewPos, type }, idx) => (
+          <ChartAnnotation
+            key={`${asset}-${date}-${value}`}
+            positionData={{
+              constraintsRef,
+              y: viewPos[1],
+              x: viewPos[0],
+            }}
+            contentsData={{
+              asset,
+              date,
+              exchageRate: 1, // 추후 수정
+              idx,
+              type,
+              value,
+            }}
+          />
+        )
+      )}
     </div>
   );
 };

@@ -4,14 +4,12 @@ import { TextareaHTMLAttributes } from 'react';
 
 // 그냥 기본 디자인 넣기 위해
 
-interface InputAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
-  value: string;
-}
-const CompoundFormInputArea = ({ value, ...props }: InputAreaProps) => {
+type InputAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement>;
+const CompoundFormInputArea = ({ ...props }: InputAreaProps) => {
   return (
     <>
       <InputArea
-        value={value}
+        // value={value}
         className={compoundFormInputAreaStyle}
         {...props}
       />

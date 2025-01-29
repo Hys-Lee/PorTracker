@@ -1,9 +1,11 @@
-import { FC, InputHTMLAttributes } from 'react';
+import { forwardRef, InputHTMLAttributes } from 'react';
 
 type InputLineProps = InputHTMLAttributes<HTMLInputElement>;
 
-const InputLine: FC<InputLineProps> = ({ ...props }) => {
-  return <input {...props} />;
-};
+const InputLine = forwardRef(
+  ({ ...props }: InputLineProps, ref: React.ForwardedRef<null>) => {
+    return <input {...props} ref={ref} />;
+  }
+);
 
 export default InputLine;

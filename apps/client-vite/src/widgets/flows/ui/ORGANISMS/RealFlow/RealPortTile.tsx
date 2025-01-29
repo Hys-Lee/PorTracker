@@ -38,6 +38,7 @@ const RealPortTile = ({ type = 'buy' }: { type: 'buy' | 'sell' }) => {
   const [currency, setCurrency] = useState<'won' | 'dollar'>('won');
   const [gainCurrency, setGainCurrency] = useState<'won' | 'dollar'>('won');
   setValue('currency', currency);
+  // 이 안에서 데이터 가져와야 할 듯. id같은것만 뭐 상태관리든 props든으로 가져와서
   return (
     <>
       <Tile>
