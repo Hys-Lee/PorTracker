@@ -37,17 +37,10 @@ interface MarkDataContent {
 }
 interface MarkData {
   [id: string]: MarkDataContent;
-  tmp: MarkDataContent;
+  focus: MarkDataContent;
 }
-// interface TmpMarkData {
-//   asset: string;
-//   date: string;
-//   viewPos: [string, number];
-// }
-
 const defaultOption = {
   animation: false,
-  // animationDurationUpdate: 10,
   tooltip: {
     trigger: 'axis',
     position: function (pt: number[]) {
@@ -159,9 +152,8 @@ const RealFlowEcharts = () => {
   const [echartInstance, setEchartInstance] = useState<null | EChartsInstance>(
     null
   );
-  // const [markData, setMarkData] = useState<Array<MarkData>>([]);
-  const [markData, setMarkData] = useState<MarkData>({ tmp: {} } as MarkData);
-  // const [tmpMarkData, setTmpMarkData] = useState<MarkData>({});
+
+  const [markData, setMarkData] = useState<MarkData>({ focus: {} } as MarkData);
 
   useEffect(() => {
     if (chartRef.current !== null) {
@@ -177,27 +169,9 @@ const RealFlowEcharts = () => {
   useEffect(() => {
     if (!echartInstance) return;
 
-    // const markDataValues = [
-    //   // ...nonTmpKeys.map((validKey) => markData[validKey]),
-    //   ...Object.values(markData).filter(
-    //     (dataObj) => Object.values(dataObj).length > 0
-    //   ),
-    // ];
-
     const markDataEntries = Object.entries(markData);
-    // [
-    //   // ...Object.entries(markData).filter(
-    //   //   ([key, value]) => Object.values(value).length > 0
-    //   // ),
-    // ];
 
-    //test
-    // console.log(
-    //   'markDataValues: ',
-    //   // markDataValues,
-    //   markDataEntries
-    // );
-
+    let hasAlready = false;
     const markPointData: {
       name: string;
       xAxis: string;
@@ -205,93 +179,73 @@ const RealFlowEcharts = () => {
       itemStyle: object;
       label?: object;
     }[] = markDataEntries
-      .filter(([key, data]) => key !== 'tmp')
+      .filter(([key, data]) => key !== 'focus')
       .map(([key, data], idx) => {
-        // if (key === 'tmp') return {};
-        return {
-          name: `${data.asset}-${data.date}`,
+        const template = {
+          name: `${data.asset}`,
           xAxis: data.date,
           yAxis: data.accumulatedValue,
           itemStyle: { borderColor: 'black' }, // type에 따라 모양이나 색 처리
           label: {
-            // label 속성 추가
             show: true, // 레이블 표시
             formatter: () => `${idx}`, // 값 표시
             color: 'black', // 텍스트 색상
           },
         };
+        if (
+          data.asset === markData.focus.asset &&
+          data.date === markData.focus.date
+        ) {
+          hasAlready = true;
+          return {
+            ...template,
+            itemStyle: {
+              borderColor: 'white',
+              borderType: 'dotted',
+              borderWidth: 4,
+            },
+          };
+        }
+        return template;
       });
-    const isTmpExist = Object.values(markData.tmp).length > 0;
-    if (isTmpExist) {
+
+    const isFocusExist = Object.values(markData.focus).length > 0;
+    if (isFocusExist && !hasAlready) {
       markPointData.push({
-        name: `${markData.tmp.asset}-${markData.tmp.date}`,
-        xAxis: markData.tmp.date,
-        yAxis: markData.tmp.accumulatedValue,
-        itemStyle: { borderColor: 'white' },
+        // name: `${markData.focus.asset}-${markData.focus.date}`,
+        name: `${markData.focus.asset}`,
+        xAxis: markData.focus.date,
+        yAxis: markData.focus.accumulatedValue,
+        itemStyle: {
+          borderColor: 'white',
+          borderType: 'dotted',
+          borderWidth: 4,
+        },
       });
     }
 
-    //test
-    console.log('마크포인트데이터: ', markPointData);
     echartInstance.setOption({
       series: [
         {
           markPoint: {
             data: markPointData,
-            // data: markDataEntries.map(([key, data], idx) => {
-            //   if (Object.values(data).length <= 0) return {};
-            //   const markPointData = {
-            //     name: `${data.asset}-${data.date}-${data.value}`,
-            //     xAxis: data.date,
-            //     yAxis: data.accumulatedValue,
-            //   };
-            //   return key === 'tmp'
-            //     ? { ...markPointData, itemStyle: { borderColor: 'white' } }
-            //     : {
-            //         ...markPointData,
-            //         itemStyle: { borderColor: 'black' }, // type에 따라 모양이나 색 처리
-            //         label: {
-            //           // label 속성 추가
-            //           show: true, // 레이블 표시
-            //           formatter: () => `${idx}`, // 값 표시
-            //           color: 'black', // 텍스트 색상
-            //         },
-            //       };
-            // }),
-            //////////////////
-            // data: markDataValues.map((data, idx) => ({
-            //   name: `${data.asset}-${data.date}-${data.value}`,
-            //   xAxis: data.date,
-            //   yAxis: data.accumulatedValue,
-            //   itemStyle: { borderColor: 'black' }, // type에 따라 모양이나 색 처리
-            //   label: {
-            //     // label 속성 추가
-            //     show: true, // 레이블 표시
-            //     formatter: () => `${idx}`, // 값 표시
-            //     color: 'black', // 텍스트 색상
-            //   },
-            // })),
           },
         },
       ],
     });
   }, [echartInstance, markData]);
+
   useEffect(() => {
     if (!echartInstance) return;
-    // echartInstance.on('click', 'markPoint', () => {
-    //   console.log('아ㅗ우');
-    // });
+
     echartInstance.on('click', 'series', (param: echarts.ECElementEvent) => {
       if (
         param.componentType !== 'markPoint' &&
         param.componentType !== 'series'
       )
         return;
-      //test
-      console.log('데이터쪽 파람: ', param);
       const accumulatedValue = defaultDatum.reduce(
         (acc, cur: number[], idx: number) => {
-          // console.log('ACC, CUR, IDX: ', acc, cur, idx);
           if (idx > (param.seriesIndex as number)) return acc;
           return acc + cur[param.dataIndex as number];
         },
@@ -312,8 +266,7 @@ const RealFlowEcharts = () => {
       if (param.componentType === 'series') {
         setMarkData((prev) => ({
           ...prev,
-          // [`${param.seriesName}-${param.name}-${param.value}`]
-          tmp: markDataTemplate,
+          focus: markDataTemplate,
         }));
       } else if (param.componentType === 'markPoint') {
         setMarkData((prev) => {
@@ -322,29 +275,30 @@ const RealFlowEcharts = () => {
             yAxis: number;
             xAxis: string;
             name: string;
+            // value:
           };
-          if (
-            prev?.tmp.accumulatedValue === paramData.yAxis &&
-            prev?.tmp.date === paramData.xAxis
-          ) {
-            //test
-            console.log('존재?: ', prev[`${prev.tmp.asset}-${prev.tmp.date}`]);
+          const isFocus =
+            prev?.focus.accumulatedValue === paramData.yAxis &&
+            prev?.focus.date === paramData.xAxis &&
+            prev.focus.asset === paramData.name; // 포커스랑 동일 위치, 동일 시리즈
+
+          const focusedKey = isFocus
+            ? `${prev.focus.asset}-${prev.focus.date}`
+            : '';
+
+          if (isFocus) {
             return {
               ...prev,
-              [`${prev.tmp.asset}-${prev.tmp.date}`]: prev[
-                `${prev.tmp.asset}-${prev.tmp.date}`
-              ]
-                ? prev[`${prev.tmp.asset}-${prev.tmp.date}`]
-                : prev.tmp,
-              tmp: {} as MarkDataContent,
+              [focusedKey]: prev[focusedKey] || prev.focus,
+              focus: {} as MarkDataContent,
             };
           } else {
             // 포커스가 아닌 지점 클릭한다면..
             return {
               ...prev,
-              tmp: {
+              focus: {
                 // asset: param.seriesName || '이름 없음',
-                asset: paramData.name.split('-')[0],
+                asset: paramData.name || '',
                 date: paramData.xAxis,
                 type: 'normal',
                 value: 0, // 원본 value는 모르고 acc만 알게 되므로.
@@ -372,27 +326,26 @@ const RealFlowEcharts = () => {
         style={{ width: '100%', height: '100%' }}
         option={defaultOption}
       />
-      {Object.entries(markData).map(
-        ([key, { asset, date, value, viewPos, type }], idx) =>
-          key !== 'tmp' && (
-            <ChartAnnotation
-              key={`${asset}-${date}-${value}`}
-              positionData={{
-                constraintsRef,
-                y: viewPos[1],
-                x: viewPos[0],
-              }}
-              contentsData={{
-                asset,
-                date,
-                exchageRate: 1, // 추후 수정
-                idx,
-                type,
-                value,
-              }}
-            />
-          )
-      )}
+      {Object.entries(markData)
+        .filter(([key, value]) => key !== 'focus')
+        .map(([key, { asset, date, value, viewPos, type }], idx) => (
+          <ChartAnnotation
+            key={`${asset}-${date}-${value}`}
+            positionData={{
+              constraintsRef,
+              y: viewPos[1],
+              x: viewPos[0],
+            }}
+            contentsData={{
+              asset,
+              date,
+              exchageRate: 1, // 추후 수정
+              idx,
+              type,
+              value,
+            }}
+          />
+        ))}
     </div>
   );
 };
