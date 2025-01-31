@@ -15,7 +15,7 @@ const realPortSchema = z.object({
     z.date(),
   price: z.number().positive(),
   currency: z.string().nonempty(),
-  exchangeRate: z.number().optional(),
+  exchangeRate: z.number().default(1),
   shares: z.number().positive(), // 주식 수량
 });
 type RealPort = z.infer<typeof realPortSchema>;
@@ -34,6 +34,7 @@ const RealPortTile = ({
     control,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm<RealPort>({
     resolver: zodResolver(realPortSchema),
@@ -147,6 +148,13 @@ const RealPortTile = ({
           <div>
             <CompoundForm.Label textContent="수량" />
             <CompoundForm.Input type="number" {...register('shares')} />
+          </div>
+          <div>
+            <p>{`금액: ${
+              getValues('price') *
+              getValues('shares') *
+              getValues('exchangeRate') // 환율 없으면 1임
+            }`}</p>
           </div>
           {type === 'withdrawal' &&
             true /* 그리고 vip에게만. readonly임. */ && (
