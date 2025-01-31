@@ -19,7 +19,7 @@ const Template = (args) => {
           e.preventDefault();
         }}
       >
-        <RealPortTile {...args} type="sell" />
+        <RealPortTile {...args} type="withdrawal" />
       </div>
     </FormProvider>
   );

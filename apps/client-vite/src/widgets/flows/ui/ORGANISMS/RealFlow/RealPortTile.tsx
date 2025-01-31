@@ -20,7 +20,11 @@ const realPortSchema = z.object({
 });
 type RealPort = z.infer<typeof realPortSchema>;
 
-const RealPortTile = ({ type = 'buy' }: { type: 'buy' | 'sell' }) => {
+const RealPortTile = ({
+  defaultType = 'allocation',
+}: {
+  defaultType: 'allocation' | 'withdrawal';
+}) => {
   // 얘네들을 일단 controlled로 처리 -> react-hook-form을 통제든 비통제든 씀. 여기에 zod붙이면 더 좋을 듯.
   // mode에 따라 disabled할거 처리
   // vip 전용 기능 처리 각 잡기
@@ -35,8 +39,10 @@ const RealPortTile = ({ type = 'buy' }: { type: 'buy' | 'sell' }) => {
     resolver: zodResolver(realPortSchema),
     defaultValues: {},
   });
+  const [type, setType] = useState<'allocation' | 'withdrawal'>(defaultType);
   const [currency, setCurrency] = useState<'won' | 'dollar'>('won');
   const [gainCurrency, setGainCurrency] = useState<'won' | 'dollar'>('won');
+
   setValue('currency', currency);
   // 이 안에서 데이터 가져와야 할 듯. id같은것만 뭐 상태관리든 props든으로 가져와서
   return (
@@ -82,8 +88,27 @@ const RealPortTile = ({ type = 'buy' }: { type: 'buy' | 'sell' }) => {
           </div>
           <div>
             <CompoundForm.Label
-              textContent={type === 'buy' ? '매수 가격' : '매도 가격'}
+              textContent={type === 'allocation' ? '투입' : '인출'}
             />
+            <CompoundSegmentControl>
+              <CompoundSegmentControl.Button
+                textContent="$"
+                key={'$'}
+                type="button"
+                onClick={() => setCurrency('dollar')}
+              />
+              <CompoundSegmentControl.Button
+                textContent="원"
+                key={'원'}
+                type="button"
+                onClick={(e) => {
+                  setCurrency('won');
+                }}
+              />
+            </CompoundSegmentControl>
+          </div>
+          <div>
+            <CompoundForm.Label textContent={'가격'} />
             <div>
               <CompoundForm.Input
                 {...register('price')}
@@ -123,34 +148,35 @@ const RealPortTile = ({ type = 'buy' }: { type: 'buy' | 'sell' }) => {
             <CompoundForm.Label textContent="수량" />
             <CompoundForm.Input type="number" {...register('shares')} />
           </div>
-          {type === 'sell' && true /* 그리고 vip에게만. readonly임. */ && (
-            <div>
-              <CompoundForm.Label textContent="매도 이익" />
+          {type === 'withdrawal' &&
+            true /* 그리고 vip에게만. readonly임. */ && (
               <div>
-                <CompoundSegmentControl>
-                  <CompoundSegmentControl.Button
-                    type="button"
-                    textContent="$"
-                    key="$"
-                    onClick={(e) => {
-                      setGainCurrency('dollar');
-                    }}
-                  />
+                <CompoundForm.Label textContent="매도 이익" />
+                <div>
+                  <CompoundSegmentControl>
+                    <CompoundSegmentControl.Button
+                      type="button"
+                      textContent="$"
+                      key="$"
+                      onClick={(e) => {
+                        setGainCurrency('dollar');
+                      }}
+                    />
 
-                  <CompoundSegmentControl.Button
-                    type="button"
-                    textContent="원"
-                    key="원"
-                    onClick={(e) => {
-                      setGainCurrency('won');
-                    }}
-                  />
-                </CompoundSegmentControl>
-                {/* <CompoundForm.Input value={'1000원'} disabled /> */}
-                <Text as="p" textContent="1000" />
+                    <CompoundSegmentControl.Button
+                      type="button"
+                      textContent="원"
+                      key="원"
+                      onClick={(e) => {
+                        setGainCurrency('won');
+                      }}
+                    />
+                  </CompoundSegmentControl>
+                  {/* <CompoundForm.Input value={'1000원'} disabled /> */}
+                  <Text as="p" textContent="1000" />
+                </div>
               </div>
-            </div>
-          )}
+            )}
           <CompoundForm.Button>저장</CompoundForm.Button>
         </CompoundForm>
       </Tile>
