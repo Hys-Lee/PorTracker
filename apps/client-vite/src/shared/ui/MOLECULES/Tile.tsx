@@ -1,6 +1,6 @@
 import { HTMLAttributes, ReactNode } from 'react';
 import { css } from '@styled-system/css';
-interface TileProps extends HTMLAttributes<HTMLDivElement> {
+export interface TileProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
 }
 

@@ -8,6 +8,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 const memoSchema = z.object({
   title: z.string().nonempty(),
+  asset: z.string().nonempty(),
+  transactionType: z.enum(['allocation', 'withdrawal']),
   date:
     // z.string().nonempty()
     z.date(),
@@ -39,6 +41,34 @@ const MemoTile = () => {
           })}
         >
           <CompoundForm.Input placeholder="제목" />
+          <div>
+            <CompoundForm.Label textContent={'연결 자산'} />
+            <div>
+              <Controller
+                name="asset"
+                control={control}
+                render={({ field }) => (
+                  <CompoundForm.Select
+                    {...field}
+                    defaultOptions={[{ value: 'deafult', label: '기본' }]}
+                    isLoading={false}
+                  />
+                )}
+              />
+              <CompoundSegmentControl>
+                <CompoundSegmentControl.Button
+                  textContent="투입"
+                  key={'투입'}
+                  type="button"
+                />
+                <CompoundSegmentControl.Button
+                  textContent="인출"
+                  key={'인출'}
+                  type="button"
+                />
+              </CompoundSegmentControl>
+            </div>
+          </div>
           <div>
             <CompoundForm.Label textContent="날짜" />
             <Controller

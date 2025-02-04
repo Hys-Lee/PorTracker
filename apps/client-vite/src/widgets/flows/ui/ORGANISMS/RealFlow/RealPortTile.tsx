@@ -6,13 +6,13 @@ import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
-import DatePicker from 'react-datepicker';
 
 const realPortSchema = z.object({
   asset: z.string().nonempty(),
   date:
     // z.string().nonempty()
     z.date(),
+  transactionType: z.enum(['allocation', 'withdrawal']),
   price: z.number().positive(),
   currency: z.string().nonempty(),
   exchangeRate: z.number().default(1),
@@ -21,9 +21,9 @@ const realPortSchema = z.object({
 type RealPort = z.infer<typeof realPortSchema>;
 
 const RealPortTile = ({
-  defaultType = 'allocation',
+  defaultTransactionType = 'allocation',
 }: {
-  defaultType: 'allocation' | 'withdrawal';
+  defaultTransactionType: 'allocation' | 'withdrawal';
 }) => {
   // 얘네들을 일단 controlled로 처리 -> react-hook-form을 통제든 비통제든 씀. 여기에 zod붙이면 더 좋을 듯.
   // mode에 따라 disabled할거 처리
@@ -40,7 +40,9 @@ const RealPortTile = ({
     resolver: zodResolver(realPortSchema),
     defaultValues: {},
   });
-  const [type, setType] = useState<'allocation' | 'withdrawal'>(defaultType);
+  const [transactionType, setTransactionType] = useState<
+    'allocation' | 'withdrawal'
+  >(defaultTransactionType);
   const [currency, setCurrency] = useState<'won' | 'dollar'>('won');
   const [gainCurrency, setGainCurrency] = useState<'won' | 'dollar'>('won');
 
@@ -89,7 +91,7 @@ const RealPortTile = ({
           </div>
           <div>
             <CompoundForm.Label
-              textContent={type === 'allocation' ? '투입' : '인출'}
+              textContent={transactionType === 'allocation' ? '투입' : '인출'}
             />
             <CompoundSegmentControl>
               <CompoundSegmentControl.Button
@@ -156,7 +158,7 @@ const RealPortTile = ({
               getValues('exchangeRate') // 환율 없으면 1임
             }`}</p>
           </div>
-          {type === 'withdrawal' &&
+          {transactionType === 'withdrawal' &&
             true /* 그리고 vip에게만. readonly임. */ && (
               <div>
                 <CompoundForm.Label textContent="매도 이익" />
