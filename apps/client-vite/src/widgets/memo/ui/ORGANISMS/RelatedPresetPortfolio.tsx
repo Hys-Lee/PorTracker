@@ -35,13 +35,13 @@ const defaultOption = {
   },
 };
 
-const RelatedConfigPortfolio = () => {
+const RelatedPresetPortfolio = () => {
   // 날짜를 받으면, 이전 것들 중 제일 최근의 설정포폴을 가져오기.
-  const noConfig = true; // 임시
+  const noPreset = true; // 임시
   return (
     <>
       <Tile>
-        {noConfig ? (
+        {noPreset ? (
           /** 설정 포폴이 없다면 */ <p>설정 포트폴리오가 없어요</p>
         ) : (
           <>
@@ -57,4 +57,4 @@ const RelatedConfigPortfolio = () => {
   );
 };
 
-export default RelatedConfigPortfolio;
+export default RelatedPresetPortfolio;

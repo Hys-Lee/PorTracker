@@ -1,5 +1,5 @@
 import { FormProvider, useForm } from 'react-hook-form';
-import RealPortTile from './RealPortTile';
+import RealPortTile from './ActualPortTile';
 
 export default {
   component: RealPortTile,

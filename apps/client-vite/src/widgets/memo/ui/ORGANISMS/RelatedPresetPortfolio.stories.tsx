@@ -1,8 +1,8 @@
-import RelatedConfigPortfolio from './RelatedConfigPortfolio';
+import RelatedPresetPortfolio from './RelatedPresetPortfolio';
 
 export default {
-  component: RelatedConfigPortfolio,
-  title: 'MemoPage/RelatedConfigPortfolio',
+  component: RelatedPresetPortfolio,
+  title: 'MemoPage/RelatedPresetPortfolio',
   tags: ['autodocs'],
   //👇 "Data"로 끝나는 export들은 스토리가 아닙니다.
   excludeStories: /.*Data$/,
@@ -10,6 +10,6 @@ export default {
 };
 
 const Template = (args) => {
-  return <RelatedConfigPortfolio {...args} />;
+  return <RelatedPresetPortfolio {...args} />;
 };
 export const Default = Template.bind({});

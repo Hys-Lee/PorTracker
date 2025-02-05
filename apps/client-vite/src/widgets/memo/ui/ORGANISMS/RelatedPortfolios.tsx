@@ -1,5 +1,5 @@
-import RelatedConfigPortfolio from './RelatedConfigPortfolio';
-import RelatedRealPortfolio from './RelatedRealPortfolio';
+import RelatedPresetPortfolio from './RelatedPresetPortfolio';
+import RelatedActualPortfolio from './RelatedActualPortfolio';
 
 const RelatedPortfolios = () => {
   // 현재 날짜에 맞는 실제 포트폴리오가 있다면 데이터 가져와서 보여주기
@@ -7,8 +7,8 @@ const RelatedPortfolios = () => {
   return (
     <>
       <div>
-        <RelatedRealPortfolio />
-        <RelatedConfigPortfolio />
+        <RelatedActualPortfolio />
+        <RelatedPresetPortfolio />
       </div>
     </>
   );

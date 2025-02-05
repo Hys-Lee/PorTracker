@@ -13,8 +13,8 @@ import { relatedMemoDataAtom } from 'src/entities/tmpAtoms/relatedMemoAtom';
 
 const memoSchema = z.object({
   title: z.string().nonempty(),
-  portfolioType: z.enum(['real', 'config']),
-  config: z.string().nonempty().optional(),
+  portfolioType: z.enum(['actual', 'preset']),
+  preset: z.string().nonempty().optional(),
   asset: z.string().nonempty().optional(),
   transactionType: z.enum(['allocation', 'withdrawal']).optional(),
   date:
@@ -83,12 +83,12 @@ const MemoModalContent = ({ id }: { id?: number }) => {
                 />
               </CompoundSegmentControl>
             </div>
-            {getValues('portfolioType') === 'config' ? (
+            {getValues('portfolioType') === 'preset' ? (
               <>
                 <div>
                   <CompoundForm.Label textContent={'연결 설정'} />
                   <Controller
-                    name="config"
+                    name="preset"
                     control={control}
                     render={({ field }) => (
                       <CompoundForm.Select

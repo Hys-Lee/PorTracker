@@ -1,6 +1,6 @@
 const defaultMemoData = {
   title: '메모 제목',
-  portfolioType: 'real' as 'real' | 'config',
+  portfolioType: 'actual' as 'actual' | 'preset',
   //   config: z.string().nonempty().optional(),
   asset: '선택자산없음',
   transactionType: 'allocation' as 'allocation' | 'withdrawal',
@@ -14,7 +14,7 @@ const defaultMemoData = {
 const anotherMemo = {
   id: 1,
   date: new Date('2025-02-02'),
-  portfolioType: 'config' as 'real' | 'config',
+  portfolioType: 'preset' as 'actual' | 'preset',
   title: '메모 제2',
   asset: '선택자산없음',
   content: `얘는 본문이 다르지`,

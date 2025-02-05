@@ -1,8 +1,8 @@
-import RealFlowEcharts from 'src/widgets/flows/ui/ORGANISMS/RealFlow/RealFlowEcharts';
-import RealPortTile from './RealPortTile';
+import ActualFlowEcharts from 'src/widgets/flows/ui/ORGANISMS/ActualFlow/ActualFlowEcharts';
+import ActualPortTile from './ActualPortTile';
 import MemoTile from '../MemoTile';
 
-const RealFlow = () => {
+const ActualFlow = () => {
   return (
     <>
       <div
@@ -24,10 +24,10 @@ const RealFlow = () => {
             대충 뭔가 위에 있는 정보들하고뭔가 // 근데 이게 echarts에 사용되는
             데이터들 전체에 대해 핸들링하는거라
           </div>
-          <RealFlowEcharts />
+          <ActualFlowEcharts />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <RealPortTile type="buy" />
+          <ActualPortTile type="buy" />
           <MemoTile />
         </div>
       </div>
@@ -35,4 +35,4 @@ const RealFlow = () => {
   );
 };
 
-export default RealFlow;
+export default ActualFlow;

@@ -1,4 +1,4 @@
-import RealFlowEcharts from './RealFlowEcharts';
+import RealFlowEcharts from './ActualFlowEcharts';
 
 export default {
   component: RealFlowEcharts,

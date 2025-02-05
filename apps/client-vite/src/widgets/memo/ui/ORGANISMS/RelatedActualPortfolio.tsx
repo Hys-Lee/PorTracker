@@ -1,14 +1,14 @@
 import CompoundSegmentControl from 'src/shared/ui/MOLECULES/CompoundSegmentControl/CompoundSegmentControl';
 import Tile from 'src/shared/ui/MOLECULES/Tile';
 
-const RelatedRealPortfolio = () => {
+const RelatedActualPortfolio = () => {
   // 날짜만 넘겨받으면 fetch해보기.
-  const noReal = true; // 임시
+  const noActual = true; // 임시
   const isVip = true; // 임시
   return (
     <>
       <Tile>
-        {noReal /*날짜에 데이터가 없다면*/ ? (
+        {noActual /*날짜에 데이터가 없다면*/ ? (
           <p>해당 날짜에 실제 포트폴리오가 없어요</p>
         ) : (
           <>
@@ -52,4 +52,4 @@ const RelatedRealPortfolio = () => {
     </>
   );
 };
-export default RelatedRealPortfolio;
+export default RelatedActualPortfolio;

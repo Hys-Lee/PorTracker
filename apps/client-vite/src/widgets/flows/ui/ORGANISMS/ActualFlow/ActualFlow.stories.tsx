@@ -1,9 +1,9 @@
 import { FormProvider, useForm } from 'react-hook-form';
-import RealFlow from './RealFlow';
+import ActualFlow from './ActualFlow';
 
 export default {
-  component: RealFlow,
-  title: 'RealFlow',
+  component: ActualFlow,
+  title: 'ActualFlow',
   tags: ['autodocs'],
   //👇 "Data"로 끝나는 export들은 스토리가 아닙니다.
   excludeStories: /.*Data$/,
@@ -19,7 +19,7 @@ const Template = (args) => {
           e.preventDefault();
         }}
       >
-        <RealFlow {...args} />
+        <ActualFlow {...args} />
       </div>
     </FormProvider>
   );
