@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import CompoundSegmentControl from '../../../../shared/ui/MOLECULES/CompoundSegmentControl/CompoundSegmentControl';
+import CompoundSegmentControl from '../../../../../shared/ui/MOLECULES/CompoundSegmentControl/CompoundSegmentControl';
 import { motion } from 'motion/react';
 
 interface FlowAnnotationProps {

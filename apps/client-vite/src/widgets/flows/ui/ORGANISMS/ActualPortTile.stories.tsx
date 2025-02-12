@@ -1,9 +1,9 @@
 import { FormProvider, useForm } from 'react-hook-form';
-import RealPortTile from './ActualPortTile';
+import ActualPortTile from './ActualPortTile';
 
 export default {
-  component: RealPortTile,
-  title: 'RealPortTile',
+  component: ActualPortTile,
+  title: 'ActualPortTile',
   tags: ['autodocs'],
   //👇 "Data"로 끝나는 export들은 스토리가 아닙니다.
   excludeStories: /.*Data$/,
@@ -19,7 +19,7 @@ const Template = (args) => {
           e.preventDefault();
         }}
       >
-        <RealPortTile {...args} type="withdrawal" />
+        <ActualPortTile {...args} type="withdrawal" />
       </div>
     </FormProvider>
   );

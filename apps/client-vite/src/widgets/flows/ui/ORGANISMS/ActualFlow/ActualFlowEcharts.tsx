@@ -1,7 +1,7 @@
 import ReactECharts, { EChartsInstance } from 'echarts-for-react';
 import * as echarts from 'echarts';
 import { useEffect, useRef, useState } from 'react';
-import ChartAnnotation from '../ChartAnnotation';
+import ChartAnnotation from './ChartAnnotation';
 
 /////    Any 타입 다 찾으셈..
 
@@ -152,6 +152,8 @@ const RealFlowEcharts = () => {
   const [echartInstance, setEchartInstance] = useState<null | EChartsInstance>(
     null
   );
+  //test
+  console.log('차트 인스턴스: ', echartInstance, chartRef);
 
   const [markData, setMarkData] = useState<MarkData>({ focus: {} } as MarkData);
 
@@ -162,7 +164,9 @@ const RealFlowEcharts = () => {
       );
     }
     return () => {
-      chartRef.current = null;
+      if (echartInstance) {
+        echartInstance.dispose();
+      }
     };
   }, []);
 
@@ -238,12 +242,17 @@ const RealFlowEcharts = () => {
   useEffect(() => {
     if (!echartInstance) return;
 
-    echartInstance.on('click', 'series', (param: echarts.ECElementEvent) => {
+    // echartInstance.on('click', 'series', (param: echarts.ECElementEvent) => {
+    echartInstance.on('click', (param: echarts.ECElementEvent) => {
+      //test
+      console.log('이거 아님?');
       if (
         param.componentType !== 'markPoint' &&
         param.componentType !== 'series'
-      )
+      ) {
         return;
+      }
+
       const accumulatedValue = defaultDatum.reduce(
         (acc, cur: number[], idx: number) => {
           if (idx > (param.seriesIndex as number)) return acc;

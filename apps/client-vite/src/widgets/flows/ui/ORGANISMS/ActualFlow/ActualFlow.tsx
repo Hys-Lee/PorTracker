@@ -1,5 +1,5 @@
 import ActualFlowEcharts from 'src/widgets/flows/ui/ORGANISMS/ActualFlow/ActualFlowEcharts';
-import ActualPortTile from './ActualPortTile';
+import ActualPortTile from '../ActualPortTile';
 import MemoTile from '../MemoTile';
 
 const ActualFlow = () => {
@@ -27,7 +27,7 @@ const ActualFlow = () => {
           <ActualFlowEcharts />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <ActualPortTile type="buy" />
+          <ActualPortTile defaultTransactionType="allocation" />
           <MemoTile />
         </div>
       </div>

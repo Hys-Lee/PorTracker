@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 
-const realPortSchema = z.object({
+const actualPortSchema = z.object({
   asset: z.string().nonempty(),
   date:
     // z.string().nonempty()
@@ -18,9 +18,9 @@ const realPortSchema = z.object({
   exchangeRate: z.number().default(1),
   shares: z.number().positive(), // 주식 수량
 });
-type RealPort = z.infer<typeof realPortSchema>;
+type ActualPort = z.infer<typeof actualPortSchema>;
 
-const RealPortTile = ({
+const ActualPortTile = ({
   defaultTransactionType = 'allocation',
 }: {
   defaultTransactionType: 'allocation' | 'withdrawal';
@@ -36,8 +36,8 @@ const RealPortTile = ({
     setValue,
     getValues,
     formState: { errors },
-  } = useForm<RealPort>({
-    resolver: zodResolver(realPortSchema),
+  } = useForm<ActualPort>({
+    resolver: zodResolver(actualPortSchema),
     defaultValues: {},
   });
   const [transactionType, setTransactionType] = useState<
@@ -193,4 +193,4 @@ const RealPortTile = ({
     </>
   );
 };
-export default RealPortTile;
+export default ActualPortTile;
