@@ -44,6 +44,9 @@ dependencies:
   react-draggable:
     specifier: ^4.4.6
     version: 4.4.6(react-dom@18.3.1)(react@18.3.1)
+  react-error-boundary:
+    specifier: ^5.0.0
+    version: 5.0.0(react@18.3.1)
   react-hook-form:
     specifier: ^7.54.2
     version: 7.54.2(react@18.3.1)
@@ -59,6 +62,9 @@ dependencies:
   react-simple-star-rating:
     specifier: ^5.1.7
     version: 5.1.7(react-dom@18.3.1)(react@18.3.1)
+  swiper:
+    specifier: ^11.2.2
+    version: 11.2.2
   zod:
     specifier: ^3.24.1
     version: 3.24.1
@@ -13575,6 +13581,15 @@ packages:
       react-dom: 18.3.1(react@18.3.1)
     dev: false
 
+  /react-error-boundary@5.0.0(react@18.3.1):
+    resolution: {integrity: sha512-tnjAxG+IkpLephNcePNA7v6F/QpWLH8He65+DmedchDwg162JZqx4NmbXj0mlAYVVEd81OW7aFhmbsScYfiAFQ==}
+    peerDependencies:
+      react: '>=16.13.1'
+    dependencies:
+      '@babel/runtime': 7.26.0
+      react: 18.3.1
+    dev: false
+
   /react-hook-form@7.54.2(react@18.3.1):
     resolution: {integrity: sha512-eHpAUgUjWbZocoQYUHposymRb4ZP6d0uwUnooL2uOybA9/3tPUvoAKqEWK1WaSiTxxOfTpffNZP7QwlnM3/gEg==}
     engines: {node: '>=18.0.0'}
@@ -14728,6 +14743,11 @@ packages:
       csso: 5.0.5
       picocolors: 1.1.1
     dev: true
+
+  /swiper@11.2.2:
+    resolution: {integrity: sha512-FmAN6zACpVUbd/1prO9xQ9gKo9cc6RE2UKU/z4oXtS8fNyX4sdOW/HHT/e444WucLJs0jeMId6WjdWM2Lrs8zA==}
+    engines: {node: '>= 4.7.0'}
+    dev: false
 
   /symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
