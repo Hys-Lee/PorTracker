@@ -8,12 +8,7 @@ import { css } from '@styled-system/css';
 const FlowCarousel = () => {
   return (
     <>
-      <Swiper
-        modules={[Navigation]}
-        navigation
-        onSwiper={(swiper) => console.log(swiper)}
-        className={flowCarouselStyle}
-      >
+      <Swiper modules={[Navigation]} navigation className={flowCarouselStyle}>
         <SwiperSlide style={{ display: 'flex', justifyContent: 'center' }}>
           1
         </SwiperSlide>

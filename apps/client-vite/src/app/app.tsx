@@ -8,6 +8,9 @@ import Layout from 'src/pages/Layout';
 import Home from 'src/pages/home/home';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import Flows from 'src/pages/flows/flows';
+import Portfolio from 'src/pages/portfolios/portfolio';
+import MemoBoard from 'src/widgets/memo/ui/ORGANISMS/MemoBoard';
+import Memos from 'src/pages/memos/memos';
 
 export function App() {
   return (
@@ -19,8 +22,8 @@ export function App() {
           <Route element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="/flows" element={<Flows />} />
-            <Route path="/portfolios" element={<Home />} />
-            <Route path="/memos" element={<Home />} />
+            <Route path="/portfolios" element={<Portfolio />} />
+            <Route path="/memos" element={<Memos />} />
           </Route>
         </Routes>
       </BrowserRouter>

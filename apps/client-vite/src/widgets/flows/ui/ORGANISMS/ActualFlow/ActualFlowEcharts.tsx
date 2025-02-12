@@ -152,8 +152,6 @@ const RealFlowEcharts = () => {
   const [echartInstance, setEchartInstance] = useState<null | EChartsInstance>(
     null
   );
-  //test
-  console.log('차트 인스턴스: ', echartInstance, chartRef);
 
   const [markData, setMarkData] = useState<MarkData>({ focus: {} } as MarkData);
 
@@ -244,8 +242,6 @@ const RealFlowEcharts = () => {
 
     // echartInstance.on('click', 'series', (param: echarts.ECElementEvent) => {
     echartInstance.on('click', (param: echarts.ECElementEvent) => {
-      //test
-      console.log('이거 아님?');
       if (
         param.componentType !== 'markPoint' &&
         param.componentType !== 'series'
