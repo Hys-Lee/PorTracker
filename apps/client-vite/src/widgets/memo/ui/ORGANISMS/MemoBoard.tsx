@@ -2,6 +2,7 @@ import Modal from 'src/shared/ui/MOLECULES/ModalWithX';
 import MemoTile from './MemoTile';
 import MemoModalContent from './MemoModalContent';
 import { useState } from 'react';
+import LayeredErrorBoundary from 'src/features/errors/LayeredErrorBoundary';
 
 const MemoBoard = () => {
   const [open, setOpen] = useState(true);
@@ -21,7 +22,9 @@ const MemoBoard = () => {
         />
       </div>
       <Modal isOpen={open} onClose={() => setOpen(false)}>
-        <MemoModalContent />
+        <LayeredErrorBoundary>
+          <MemoModalContent />
+        </LayeredErrorBoundary>
       </Modal>
     </>
   );

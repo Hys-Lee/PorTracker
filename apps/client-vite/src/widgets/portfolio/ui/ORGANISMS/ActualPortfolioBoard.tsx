@@ -2,6 +2,7 @@ import Modal from 'src/shared/ui/MOLECULES/ModalWithX';
 import { useState } from 'react';
 import ActualPortfolioModalContent from './ActualPortfolioModalContent';
 import getActualPorts from 'src/features/tmpFuncs/getAcutalPorts';
+import LayeredErrorBoundary from 'src/features/errors/LayeredErrorBoundary';
 
 const ActualPortfolioBoard = () => {
   const [open, setOpen] = useState(true);
@@ -25,7 +26,9 @@ const ActualPortfolioBoard = () => {
         </ul>
       </div>
       <Modal isOpen={open} onClose={() => setOpen(false)}>
-        <ActualPortfolioModalContent />
+        <LayeredErrorBoundary>
+          <ActualPortfolioModalContent />
+        </LayeredErrorBoundary>
       </Modal>
     </>
   );
