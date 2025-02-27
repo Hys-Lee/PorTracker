@@ -1,7 +1,7 @@
 import Text from 'src/shared/ui/ATOMS/Text';
 import CompoundForm from 'src/shared/ui/MOLECULES/CompoundForm/CompoundForm';
 import CompoundSegmentControl from 'src/shared/ui/MOLECULES/CompoundSegmentControl/CompoundSegmentControl';
-import Tile from 'src/shared/ui/MOLECULES/Tile';
+import Tile from 'src/shared/ui/ATOMS/Tile';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';

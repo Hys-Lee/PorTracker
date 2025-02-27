@@ -1,5 +1,5 @@
 import { HTMLAttributes, useState } from 'react';
-import Tile, { TileProps } from 'src/shared/ui/MOLECULES/Tile';
+import Tile, { TileProps } from 'src/shared/ui/ATOMS/Tile';
 interface MemoTileProps extends HTMLAttributes<HTMLDivElement> {
   date: string;
   portfolioType: string;

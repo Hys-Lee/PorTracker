@@ -1,5 +1,5 @@
 import CompoundSegmentControl from 'src/shared/ui/MOLECULES/CompoundSegmentControl/CompoundSegmentControl';
-import Tile from 'src/shared/ui/MOLECULES/Tile';
+import Tile from 'src/shared/ui/ATOMS/Tile';
 import RelatedActualPortfolioRecordDetail from './RelatedActualPortfolioRecordDetail';
 import getActual from 'src/features/tmpFuncs/getActualPort';
 import getActualPorts from 'src/features/tmpFuncs/getAcutalPorts';

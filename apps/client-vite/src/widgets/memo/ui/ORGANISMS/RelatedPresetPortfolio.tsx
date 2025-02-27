@@ -1,4 +1,4 @@
-import Tile from 'src/shared/ui/MOLECULES/Tile';
+import Tile from 'src/shared/ui/ATOMS/Tile';
 import ReactECharts, { EChartsInstance } from 'echarts-for-react';
 
 const defaultOption = {

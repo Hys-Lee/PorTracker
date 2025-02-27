@@ -1,5 +1,5 @@
 import CompoundSegmentControl from 'src/shared/ui/MOLECULES/CompoundSegmentControl/CompoundSegmentControl';
-import Tile from 'src/shared/ui/MOLECULES/Tile';
+import Tile from 'src/shared/ui/ATOMS/Tile';
 
 const RelatedActualPortfolio = () => {
   // 날짜만 넘겨받으면 fetch해보기.

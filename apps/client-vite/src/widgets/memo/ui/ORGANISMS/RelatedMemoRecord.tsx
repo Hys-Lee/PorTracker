@@ -1,6 +1,6 @@
 import CompoundSegmentControl from 'src/shared/ui/MOLECULES/CompoundSegmentControl/CompoundSegmentControl';
 import RelatedMemoRecordDetail from './RelatedMemoRecordDetail';
-import Tile from 'src/shared/ui/MOLECULES/Tile';
+import Tile from 'src/shared/ui/ATOMS/Tile';
 import getMemos from 'src/features/tmpFuncs/getMemos';
 
 const RelatedMemoRecord = () => {

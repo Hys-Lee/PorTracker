@@ -14,10 +14,10 @@ const Tile = ({ children, ...props }: TileProps) => {
 export default Tile;
 
 const TileDefaultStyle = css({
-  rounded: 'lg',
-  border: '1px solid black',
+  rounded: '2xl',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
+  bg: 'white',
 });
