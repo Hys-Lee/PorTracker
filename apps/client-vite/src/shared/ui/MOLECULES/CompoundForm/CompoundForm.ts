@@ -2,6 +2,7 @@ import InputLine from '../../ATOMS/InputLine';
 import CompoundFormButton from './CompoundFormButton';
 import CompoundFormDate from './CompoundFormDate';
 import CompoundFormInputArea from './CompoundFormInputArea';
+import CompoundFormInputLine from './CompoundFormInputLine';
 import CompoundFormLabel from './CompoundFormLabel';
 import CompoundFormMain from './CompoundFormMain';
 import CompoundFormRating from './CompoundFormRating';
@@ -13,7 +14,7 @@ const CompoundForm = Object.assign(CompoundFormMain, {
   InputArea: CompoundFormInputArea,
   Rating: CompoundFormRating,
   Tags: CompoundFormTags,
-  Input: InputLine,
+  Input: CompoundFormInputLine,
   Date: CompoundFormDate,
   Select: CompoundFormSelect,
   Button: CompoundFormButton,
