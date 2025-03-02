@@ -1,20 +1,23 @@
+import { css } from '@styled-system/css';
 import { FC, forwardRef, TextareaHTMLAttributes } from 'react';
 
 type InputAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement>;
 
-const InputArea: FC<InputAreaProps> = forwardRef(
-  ({ ...props }, ref: React.ForwardedRef<null>) => {
+const InputArea = forwardRef<HTMLTextAreaElement, InputAreaProps>(
+  ({ style, ...props }, ref) => {
     return (
       <textarea
-        ref={ref}
         {...props}
-        // dangerouslySetInnerHTML={{ __html: innerHTMLContent }}
-        // value={value}
-        style={{ whiteSpace: 'pre-wrap' }}
+        ref={ref}
+        className={`${InputAreaDefaultStyle} ${props.className}`}
         wrap="hard"
       />
     );
   }
 );
+
+const InputAreaDefaultStyle = css({
+  whiteSpace: 'pre-wrap',
+});
 
 export default InputArea;
