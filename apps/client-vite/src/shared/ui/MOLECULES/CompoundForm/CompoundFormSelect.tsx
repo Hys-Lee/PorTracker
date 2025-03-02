@@ -23,6 +23,13 @@ const CompoundFormSelect = forwardRef(
           defaultOptions={defaultOptions}
           // options={options}
           // loadOptions={loadOptions}
+          noOptionsMessage={() => '현재 값입니다'}
+          formatCreateLabel={(inputValue) => (
+            <p style={{ color: 'gray' }}>
+              {inputValue}{' '}
+              <span style={{ fontWeight: 'bold' }}>{'생성하기'}</span>{' '}
+            </p>
+          )}
           isLoading={isLoading}
           classNames={{
             indicatorSeparator: (props) => css({ width: '0px !important' }),
