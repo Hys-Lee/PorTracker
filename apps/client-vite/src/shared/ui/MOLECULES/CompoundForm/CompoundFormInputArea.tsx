@@ -29,7 +29,7 @@ const InputAreaDefaultStyle = css({
   boxSizing: 'content-box',
   padding: '12px',
   height: '100% !important',
-  width: '100%',
+  // width: '100%',
   overflowY: 'auto ',
   resize: 'none',
   outline: '2px solid rgb(230,230,230) !important',
@@ -42,8 +42,4 @@ const InputAreaDefaultStyle = css({
     outline: '2px solid #8cdec5',
   },
   borderRadius: 'md',
-});
-const compoundFormInputAreaStyle = css({
-  resize: 'none',
-  overflowY: 'auto',
 });

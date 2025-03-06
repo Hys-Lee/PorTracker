@@ -18,6 +18,7 @@ const CompoundFormRating = ({
   return (
     <div className={CompoundFormRatingWrapper}>
       <Rating
+        size={30}
         onClick={onClick}
         SVGstyle={{ display: 'inline' }}
         initialValue={rate}
@@ -32,5 +33,5 @@ export default CompoundFormRating;
 
 const CompoundFormRatingWrapper = css({
   display: 'flex',
-  flexDirection: 'row',
+  flexDirection: 'row-reverse',
 });

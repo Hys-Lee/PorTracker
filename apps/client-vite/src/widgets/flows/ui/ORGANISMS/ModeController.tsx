@@ -8,14 +8,6 @@ import SegmentControlButton from 'src/shared/ui/MOLECULES/CompoundSegmentControl
 import useAtomicInputControl from 'src/features/hooks/atomics/useAtomicInputControl';
 
 const ModeController = () => {
-  //   const {
-  //     value,
-  //     setValue,
-  //   }: { value: FlowMode; setValue: SetStateAction<FlowMode> } =
-  //     useAtomicInputControl<FlowMode>({
-  //       atom: modeAtom,
-  //     });
-
   const [selectedMode, setSelectedMode] = useAtom(FlowModeAtom);
   const flowModes: FlowMode[] = ['actual', 'preset', 'comparison'];
   const modeInfo: Array<{ content: FlowMode; selected: boolean }> =
@@ -58,18 +50,19 @@ const ModeController = () => {
 export default ModeController;
 
 const SegmentControlBodyStyle = css({
-  backgroundColor: 'red.500',
+  backgroundColor: 'neutral.300',
   display: 'flex',
-  rounded: '2xl',
+  rounded: 'lg',
+  padding: '4px',
   // zIndex: 3,
   // margin: '1rem',
 });
 export const segmentControlButton = cva({
-  base: { flexGrow: 1, padding: '0.5rem', rounded: '2xl' },
+  base: { flexGrow: 1, padding: '4px', rounded: 'lg' },
   variants: {
     bg: {
-      selected: { backgroundColor: 'skyblue' },
-      unselected: { backgroundColor: 'gray' },
+      selected: { backgroundColor: 'white' },
+      unselected: { backgroundColor: 'neutral.300' },
     },
   },
 });

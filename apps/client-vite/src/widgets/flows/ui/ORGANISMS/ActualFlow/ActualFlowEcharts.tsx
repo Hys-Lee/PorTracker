@@ -51,7 +51,8 @@ const defaultOption = {
   grid: {
     bottom: 30,
     top: 30,
-    right: 10,
+    // right: 10,
+    left: 10,
   },
 
   xAxis: {
@@ -60,6 +61,7 @@ const defaultOption = {
     data: defaultDate,
   },
   yAxis: {
+    position: 'right',
     type: 'value',
     boundaryGap: [0, '100%'],
   },
@@ -325,7 +327,7 @@ const RealFlowEcharts = () => {
   const constraintsRef = useRef(null);
 
   return (
-    <div style={{ height: '500px', width: '100%' }} ref={constraintsRef}>
+    <div style={{ height: '100%', width: '100%' }} ref={constraintsRef}>
       <ReactECharts
         ref={chartRef}
         style={{ width: '100%', height: '100%' }}

@@ -1,4 +1,4 @@
-import { Options } from 'react-select';
+import { Options, SingleValue } from 'react-select';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 import { forwardRef } from 'react';
 import { css } from '@styled-system/css';
@@ -7,20 +7,33 @@ type ReactSelectOptions = Options<{ value: string; label: string }>;
 interface CompoundFormSelectProps {
   defaultOptions?: ReactSelectOptions;
   isLoading: boolean;
+  onChange: (newValue: string) => void;
+  defaultValue?: ReactSelectOptions;
 }
 
 const CompoundFormSelect = forwardRef(
   (
-    { defaultOptions, isLoading }: CompoundFormSelectProps,
+    {
+      defaultOptions,
+      isLoading,
+      onChange,
+      defaultValue,
+    }: CompoundFormSelectProps,
     ref: React.ForwardedRef<null>
   ) => {
     return (
-      <div>
+      <div className={SelectContainerDefaultStyle}>
         <AsyncCreatableSelect
           // menuIsOpen
           ref={ref}
           isClearable
           defaultOptions={defaultOptions}
+          onChange={(newValue) => {
+            if (newValue) {
+              onChange(newValue.value);
+            }
+          }}
+          defaultValue={defaultValue}
           // options={options}
           // loadOptions={loadOptions}
           noOptionsMessage={() => '현재 값입니다'}
@@ -32,7 +45,8 @@ const CompoundFormSelect = forwardRef(
           )}
           isLoading={isLoading}
           classNames={{
-            indicatorSeparator: (props) => css({ width: '0px !important' }),
+            indicatorSeparator: (props) =>
+              css({ width: '0px !important', height: '0px !important' }),
             control: (props) =>
               css({
                 border: props.isFocused
@@ -74,3 +88,7 @@ const CompoundFormSelect = forwardRef(
 );
 
 export default CompoundFormSelect;
+
+const SelectContainerDefaultStyle = css({
+  flexGrow: '1',
+});

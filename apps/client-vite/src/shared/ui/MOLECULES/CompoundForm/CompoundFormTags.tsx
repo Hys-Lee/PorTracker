@@ -1,16 +1,20 @@
 import { css } from '@styled-system/css';
-import { Options } from 'react-select';
-import AsyncCreatableSelect from 'react-select/async-creatable';
+import { GroupBase, Options } from 'react-select';
+import AsyncCreatableSelect, {
+  AsyncCreatableProps,
+} from 'react-select/async-creatable';
 
 type ReactSelectOptions = Options<{ value: string; label: string }>;
-interface CompoundFormTagsProps {
-  defaultOptions?: ReactSelectOptions;
-  isLoading: boolean;
-}
+type CompoundFormTagsProps = AsyncCreatableProps<
+  ReactSelectOptions,
+  true,
+  GroupBase<ReactSelectOptions>
+>;
 
 const CompoundFormTags = ({
   defaultOptions,
   isLoading,
+  ...props
 }: CompoundFormTagsProps) => {
   return (
     <div>
@@ -18,10 +22,10 @@ const CompoundFormTags = ({
         isMulti
         isClearable
         defaultOptions={defaultOptions}
+        isLoading={isLoading}
         // options={options}
         // loadOptions={loadOptions}
         placeholder="태그를 선택 혹은 입력해주세요"
-        isLoading={isLoading}
         noOptionsMessage={() => '새 태그를 입력해보세요'}
         formatCreateLabel={(inputValue) => (
           <p style={{ color: 'gray' }}>
@@ -97,6 +101,7 @@ const CompoundFormTags = ({
               },
             }),
         }}
+        {...props}
       />
     </div>
   );

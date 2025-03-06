@@ -1,10 +1,15 @@
 import { css } from '@styled-system/css';
 import InputLine from '../../ATOMS/InputLine';
-import { forwardRef, TextareaHTMLAttributes, useRef } from 'react';
+import {
+  forwardRef,
+  InputHTMLAttributes,
+  TextareaHTMLAttributes,
+  useRef,
+} from 'react';
 
 // 그냥 기본 디자인 넣기 위해
 
-type InputLineProps = TextareaHTMLAttributes<HTMLInputElement>;
+type InputLineProps = InputHTMLAttributes<HTMLInputElement>;
 const CompoundFormInputLine = forwardRef<HTMLInputElement, InputLineProps>(
   ({ ...props }, ref) => {
     return (
@@ -12,8 +17,8 @@ const CompoundFormInputLine = forwardRef<HTMLInputElement, InputLineProps>(
         <InputLine
           ref={ref}
           // value={value}
-          className={InputLineDefaultStyle}
           {...props}
+          className={`${InputLineDefaultStyle} ${props.className}`}
         />
       </>
     );

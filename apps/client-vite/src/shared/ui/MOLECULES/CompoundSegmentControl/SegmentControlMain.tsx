@@ -15,6 +15,7 @@ const SegmentControlMain = ({
   ...props
 }: SegmentControlMainProps) => {
   //   const childrenArray = Children.toArray(children);
+
   return (
     <div className={controlMainDefaultStyle} {...props}>
       {children}
@@ -24,9 +25,12 @@ const SegmentControlMain = ({
 export default SegmentControlMain;
 
 const controlMainDefaultStyle = css({
-  bg: 'gray.800',
+  bg: 'neutral.300',
   rounded: 'md',
+  padding: '1px',
+  // gap: '2px',
   display: 'flex',
   flexDirection: 'row',
-  gap: '4px',
+  alignItems: 'center',
+  justifyContent: 'center',
 });

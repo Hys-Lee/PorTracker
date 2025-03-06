@@ -5,7 +5,7 @@ import SegmentControlMain from './SegmentControlMain';
 
 export default {
   component: SegmentControl,
-  title: 'CompoundSegmentControl',
+  title: 'Shared/MOLECULES/CompoundSegmentControl',
   tags: ['autodocs'],
   //👇 "Data"로 끝나는 export들은 스토리가 아닙니다.
   excludeStories: /.*Data$/,

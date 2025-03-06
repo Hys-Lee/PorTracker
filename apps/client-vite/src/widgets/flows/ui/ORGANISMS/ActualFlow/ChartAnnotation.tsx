@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import CompoundSegmentControl from '../../../../../shared/ui/MOLECULES/CompoundSegmentControl/CompoundSegmentControl';
 import { motion } from 'motion/react';
+import { css } from '@styled-system/css';
 
 interface FlowAnnotationProps {
   positionData: {
@@ -35,7 +36,22 @@ const ChartAnnotation = ({
       <motion.div
         dragConstraints={constraintsRef}
         drag
-        style={{ width: '100px', position: 'absolute', top: '0' }}
+        style={{
+          width: '120px',
+          position: 'absolute',
+          top: '0',
+          // border: '1px solid black',
+        }}
+        className={css({
+          border: '1px solid gray',
+          bg: 'neutral.200',
+          rounded: 'lg',
+          padding: '4px',
+          fontSize: 'xs',
+          '& p': {
+            fontSize: 'xs',
+          },
+        })}
         initial={{
           y: y,
           x: x,
@@ -48,18 +64,18 @@ const ChartAnnotation = ({
         </div>
         <div>
           <p>{asset}</p>
-          <div>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             <p>평가금</p>
             <p>{value}</p>
-            <CompoundSegmentControl>
+            <CompoundSegmentControl style={{ width: '40px' }}>
               <CompoundSegmentControl.Button textContent="원" />
               <CompoundSegmentControl.Button textContent="$" />
             </CompoundSegmentControl>
           </div>
-          <div>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             <p>{tradeType === 'buy' ? '매수' : '매도'}</p>
             <p>{price}</p>
-            <CompoundSegmentControl>
+            <CompoundSegmentControl style={{ width: '40px' }}>
               <CompoundSegmentControl.Button textContent="원" />
               <CompoundSegmentControl.Button textContent="$" />
             </CompoundSegmentControl>

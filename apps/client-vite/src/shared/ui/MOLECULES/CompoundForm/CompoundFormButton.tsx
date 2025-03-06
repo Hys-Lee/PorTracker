@@ -1,5 +1,6 @@
 import { ButtonHTMLAttributes, LabelHTMLAttributes, ReactNode } from 'react';
 import Text from '../../ATOMS/Text';
+import ActionButton from '../../ATOMS/ActionButton';
 
 interface CompoundFormButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -11,7 +12,8 @@ const CompoundFormButton = ({
 }: CompoundFormButtonProps) => {
   return (
     <>
-      <button {...props}>{children}</button>
+      <ActionButton {...props}>{children}</ActionButton>
+      {/* <button {...props}>{children}</button> */}
     </>
   );
 };

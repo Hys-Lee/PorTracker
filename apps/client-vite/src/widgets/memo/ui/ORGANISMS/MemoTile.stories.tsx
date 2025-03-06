@@ -2,7 +2,7 @@ import MemoTile from './MemoTile';
 
 export default {
   component: MemoTile,
-  title: 'MemoPage/MemoTile',
+  title: 'Widgets/Memos/ORGANSIMS/MemoTile',
   tags: ['autodocs'],
   //👇 "Data"로 끝나는 export들은 스토리가 아닙니다.
   excludeStories: /.*Data$/,

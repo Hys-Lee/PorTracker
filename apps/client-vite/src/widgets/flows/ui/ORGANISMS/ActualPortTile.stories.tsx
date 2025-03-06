@@ -3,7 +3,7 @@ import ActualPortTile from './ActualPortTile';
 
 export default {
   component: ActualPortTile,
-  title: 'ActualPortTile',
+  title: 'Widgets/Flows/ORGANISMS/ActualPortTile',
   tags: ['autodocs'],
   //👇 "Data"로 끝나는 export들은 스토리가 아닙니다.
   excludeStories: /.*Data$/,

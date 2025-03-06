@@ -4,10 +4,10 @@ interface CompoundFormMainProps extends FormHTMLAttributes<HTMLFormElement> {
   children?: ReactNode;
 }
 
-const CompoundFormMain = ({ children }: CompoundFormMainProps) => {
+const CompoundFormMain = ({ children, ...props }: CompoundFormMainProps) => {
   return (
     <>
-      <form>{children}</form>
+      <form {...props}>{children}</form>
     </>
   );
 };

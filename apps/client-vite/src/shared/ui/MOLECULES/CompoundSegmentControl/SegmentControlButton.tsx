@@ -27,9 +27,14 @@ const SegmentControlButton = ({
 export default SegmentControlButton;
 
 const buttonDefaultStyle = css({
-  bg: 'gray.400',
-  rounded: 'lg',
+  bg: 'white',
+  rounded: 'md',
+  cursor: 'pointer',
   flexGrow: 1,
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
 });
 
 const buttonTextDefaultStyle = css({

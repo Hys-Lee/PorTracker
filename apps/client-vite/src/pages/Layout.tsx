@@ -92,5 +92,5 @@ const LayouBodyStyle = css({
   justifyContent: 'center',
   alignItems: 'center',
   padding: '12px',
-  paddingTop: '80px',
+  paddingTop: '40px',
 });
