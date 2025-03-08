@@ -2,6 +2,13 @@ import ReactECharts, { EChartsInstance } from 'echarts-for-react';
 import * as echarts from 'echarts';
 import { useEffect, useRef, useState } from 'react';
 import ChartAnnotation from './ChartAnnotation';
+import { useAtom, useSetAtom } from 'jotai';
+import {
+  ActualFlowFocusInfoAtom,
+  FocusContent,
+  MarkDataContent,
+} from 'src/entities/flows/atoms/actualFlowFocusAtoms';
+import { v4 as uuidV4 } from 'uuid';
 
 /////    Any 타입 다 찾으셈..
 
@@ -24,20 +31,10 @@ for (let i = 1; i < 200; i++) {
     );
   }
 }
-interface MarkDataContent {
-  type: 'normal' | 'trade-only' | 'memo-only' | 'all';
-  asset: string;
-  date: string; // x
-  value: number; // y
-  // chartPos: [string, number];
-  viewPos: [number, number];
-  seriesIndex: number;
-  dataIndex: number;
-  accumulatedValue: number;
-}
+
 interface MarkData {
   [id: string]: MarkDataContent;
-  focus: MarkDataContent;
+  // focus: MarkDataContent;
 }
 const defaultOption = {
   animation: false,
@@ -155,7 +152,29 @@ const RealFlowEcharts = () => {
     null
   );
 
-  const [markData, setMarkData] = useState<MarkData>({ focus: {} } as MarkData);
+  // const [markData, setMarkData] = useState<MarkData>({ focus: {} } as MarkData);
+  const [markData, setMarkData] = useState<MarkData>({} as MarkData);
+  const [focusInfo, setFocusInfo] = useAtom(ActualFlowFocusInfoAtom);
+
+  const focusInfoRef = useRef({});
+
+  focusInfoRef.current = focusInfo;
+
+  useEffect(() => {
+    if (
+      !focusInfo.isExist ||
+      !focusInfo.original ||
+      markData[focusInfo.original]
+    )
+      return;
+    markData[focusInfo.original] = Object.keys(focusInfo).reduce((acc, cur) => {
+      if (cur === 'isExist') return acc;
+      return {
+        ...acc,
+        [cur as keyof MarkDataContent]: focusInfo[cur as keyof MarkDataContent],
+      };
+    }, {}) as MarkDataContent;
+  }, [focusInfo]);
 
   useEffect(() => {
     if (chartRef.current !== null) {
@@ -183,7 +202,7 @@ const RealFlowEcharts = () => {
       itemStyle: object;
       label?: object;
     }[] = markDataEntries
-      .filter(([key, data]) => key !== 'focus')
+      // .filter(([key, data]) => key !== 'focus')
       .map(([key, data], idx) => {
         const template = {
           name: `${data.asset}`,
@@ -196,9 +215,20 @@ const RealFlowEcharts = () => {
             color: 'black', // 텍스트 색상
           },
         };
+        // test
+        console.log(
+          'focusInfo.isExist ,          data.asset === focusInfo.asset ,          data.date === focusInfo.date',
+          focusInfo.isExist,
+          data.asset === focusInfo.asset,
+          data.date === focusInfo.date
+        );
+
         if (
-          data.asset === markData.focus.asset &&
-          data.date === markData.focus.date
+          // data.asset === markData.focus.asset &&
+          // data.date === markData.focus.date
+          focusInfo.isExist &&
+          data.asset === focusInfo.asset &&
+          data.date === focusInfo.date
         ) {
           hasAlready = true;
           return {
@@ -213,13 +243,20 @@ const RealFlowEcharts = () => {
         return template;
       });
 
-    const isFocusExist = Object.values(markData.focus).length > 0;
+    /// test
+    console.log('makrpointdata 처음: ', markPointData);
+
+    // const isFocusExist = Object.values(markData.focus).length > 0;
+    const isFocusExist = focusInfo.isExist;
     if (isFocusExist && !hasAlready) {
       markPointData.push({
         // name: `${markData.focus.asset}-${markData.focus.date}`,
-        name: `${markData.focus.asset}`,
-        xAxis: markData.focus.date,
-        yAxis: markData.focus.accumulatedValue,
+        // name: `${markData.focus.asset}`,
+        // xAxis: markData.focus.date,
+        // yAxis: markData.focus.accumulatedValue,
+        name: `${focusInfo.asset}`,
+        xAxis: focusInfo.date,
+        yAxis: focusInfo.accumulatedValue,
         itemStyle: {
           borderColor: 'white',
           borderType: 'dotted',
@@ -227,6 +264,9 @@ const RealFlowEcharts = () => {
         },
       });
     }
+
+    /// test
+    console.log('makrpointdata 마지막: ', markPointData);
 
     echartInstance.setOption({
       series: [
@@ -237,12 +277,11 @@ const RealFlowEcharts = () => {
         },
       ],
     });
-  }, [echartInstance, markData]);
+  }, [echartInstance, markData, focusInfo]);
 
   useEffect(() => {
     if (!echartInstance) return;
 
-    // echartInstance.on('click', 'series', (param: echarts.ECElementEvent) => {
     echartInstance.on('click', (param: echarts.ECElementEvent) => {
       if (
         param.componentType !== 'markPoint' &&
@@ -250,7 +289,8 @@ const RealFlowEcharts = () => {
       ) {
         return;
       }
-
+      //test
+      console.log('param :', param);
       const accumulatedValue = defaultDatum.reduce(
         (acc, cur: number[], idx: number) => {
           if (idx > (param.seriesIndex as number)) return acc;
@@ -273,9 +313,13 @@ const RealFlowEcharts = () => {
       if (param.componentType === 'series') {
         setMarkData((prev) => ({
           ...prev,
-          focus: markDataTemplate,
+          // focus: markDataTemplate,
         }));
+        setFocusInfo({ ...markDataTemplate, isExist: true, original: '' });
       } else if (param.componentType === 'markPoint') {
+        //test
+        console.log('makrdat: ', markData);
+        const focusInfo = focusInfoRef.current as FocusContent;
         setMarkData((prev) => {
           // 임시 타입 처리
           const paramData = param.data as {
@@ -285,36 +329,67 @@ const RealFlowEcharts = () => {
             // value:
           };
           const isFocus =
-            prev?.focus.accumulatedValue === paramData.yAxis &&
-            prev?.focus.date === paramData.xAxis &&
-            prev.focus.asset === paramData.name; // 포커스랑 동일 위치, 동일 시리즈
-
+            // prev?.focus.accumulatedValue === paramData.yAxis &&
+            // prev?.focus.date === paramData.xAxis &&
+            // prev.focus.asset === paramData.name; // 포커스랑 동일 위치, 동일 시리즈
+            focusInfo.accumulatedValue === paramData.yAxis &&
+            focusInfo.date === paramData.xAxis &&
+            focusInfo.asset === paramData.name &&
+            focusInfo.isExist; // 포커스랑 동일 위치, 동일 시리즈
           const focusedKey = isFocus
-            ? `${prev.focus.asset}-${prev.focus.date}`
-            : '';
-
+            ? focusInfo.original
+            : // ? `${focusInfo.asset}-${focusInfo.date}`
+              //  //`${prev.focus.asset}-${prev.focus.date}`
+              '';
+          //test
+          console.log('isFocus: ', isFocus, focusInfo, paramData, focusedKey);
+          const nonFocus = Object.keys(focusInfo).reduce((acc, cur) => {
+            if (cur === 'isExist' || cur === 'original') return { ...acc };
+            return { ...acc, [cur]: focusInfo[cur as keyof MarkDataContent] };
+          }, {}) as MarkDataContent;
           if (isFocus) {
-            return {
-              ...prev,
-              [focusedKey]: prev[focusedKey] || prev.focus,
-              focus: {} as MarkDataContent,
-            };
+            setFocusInfo((prev) => ({ ...prev, isExist: false }));
+            //test
+            console.log('이전은 뭔데: ', prev);
+            return focusedKey === ''
+              ? { ...prev, [`${focusInfo.asset}-${focusInfo.date}`]: nonFocus }
+              : {
+                  ...prev,
+                  // [focusedKey]: prev[focusedKey] || prev.focus,
+                  // focus: {} as MarkDataContent,
+                  [focusedKey]: prev[focusedKey],
+                };
           } else {
             // 포커스가 아닌 지점 클릭한다면..
-            return {
-              ...prev,
-              focus: {
-                // asset: param.seriesName || '이름 없음',
-                asset: paramData.name || '',
-                date: paramData.xAxis,
-                type: 'normal',
-                value: 0, // 원본 value는 모르고 acc만 알게 되므로.
-                viewPos: [param.event!.offsetX, param.event!.offsetY],
-                dataIndex: param.dataIndex || 0,
-                seriesIndex: param.seriesIndex as number,
-                accumulatedValue: paramData.yAxis,
-              }, // on-off기능
-            };
+            //test
+            console.log('먼데 도대체');
+            setFocusInfo({
+              asset: paramData.name || '',
+              date: paramData.xAxis,
+              type: 'normal',
+              value: 0, // 원본 value는 모르고 acc만 알게 되므로.
+              viewPos: [param.event!.offsetX, param.event!.offsetY],
+              dataIndex: param.dataIndex || 0,
+              seriesIndex: param.seriesIndex as number,
+              accumulatedValue: paramData.yAxis,
+              isExist: true,
+              original: `${paramData.name || ''}-${paramData.xAxis}`,
+            });
+            return prev;
+            // return {
+            //   ...prev,
+            //   focus: {
+            //     // asset: param.seriesName || '이름 없음',
+            // asset: paramData.name || '',
+            // date: paramData.xAxis,
+            // type: 'normal',
+            // value: 0, // 원본 value는 모르고 acc만 알게 되므로.
+            // viewPos: [param.event!.offsetX, param.event!.offsetY],
+            // dataIndex: param.dataIndex || 0,
+            // seriesIndex: param.seriesIndex as number,
+            // accumulatedValue: paramData.yAxis,
+            //   }, // on-off기능
+            // };
           }
         });
       }
@@ -326,6 +401,28 @@ const RealFlowEcharts = () => {
 
   const constraintsRef = useRef(null);
 
+  // useEffect(() => {
+  //   setFocusInfo({
+  //     asset: markData.focus.asset,
+  //     date: markData.focus.date,
+  //     type: markData.focus.type,
+  //   });
+  // }, [markData.focus.asset, markData.focus.date, markData.focus.type]);
+  // useEffect(() => {
+  //   setMarkData((prev) => ({
+  //     ...prev,
+  //     focus: {
+  //       ...prev.focus,
+  //       asset: focusInfo.asset,
+  //       date: focusInfo.date,
+  //       type: focusInfo.type,
+  //     },
+  //   }));
+  // }, [focusInfo.asset, focusInfo.date, focusInfo.type]);
+
+  //test
+  console.log('makrDAta, focusInfo: ', markData, focusInfo);
+
   return (
     <div style={{ height: '100%', width: '100%' }} ref={constraintsRef}>
       <ReactECharts
@@ -335,24 +432,68 @@ const RealFlowEcharts = () => {
       />
       {Object.entries(markData)
         .filter(([key, value]) => key !== 'focus')
-        .map(([key, { asset, date, value, viewPos, type }], idx) => (
-          <ChartAnnotation
-            key={`${asset}-${date}-${value}`}
-            positionData={{
-              constraintsRef,
-              y: viewPos[1],
-              x: viewPos[0],
-            }}
-            contentsData={{
-              asset,
-              date,
-              exchageRate: 1, // 추후 수정
-              idx,
-              type,
-              value,
-            }}
-          />
-        ))}
+        .map(
+          (
+            [
+              key,
+              {
+                asset,
+                date,
+                value,
+                viewPos,
+                type,
+                accumulatedValue,
+                dataIndex,
+                seriesIndex,
+              },
+            ],
+            idx
+          ) => (
+            <ChartAnnotation
+              onClick={() => {
+                // setMarkData((prev) => ({
+                //   ...prev,
+                //   focus: {
+                //     asset,
+                //     date,
+                //     value,
+                //     viewPos,
+                //     type,
+                //     accumulatedValue,
+                //     dataIndex,
+                //     seriesIndex,
+                //   },
+                // }));
+                setFocusInfo((prev) => ({
+                  asset,
+                  date,
+                  value,
+                  viewPos,
+                  type,
+                  accumulatedValue,
+                  dataIndex,
+                  seriesIndex,
+                  isExist: true,
+                  original: `${asset}-${date}`,
+                }));
+              }}
+              key={`${asset}-${date}-${value}`}
+              positionData={{
+                constraintsRef,
+                y: viewPos[1],
+                x: viewPos[0],
+              }}
+              contentsData={{
+                asset,
+                date,
+                exchageRate: 1, // 추후 수정
+                idx,
+                type,
+                value,
+              }}
+            />
+          )
+        )}
     </div>
   );
 };

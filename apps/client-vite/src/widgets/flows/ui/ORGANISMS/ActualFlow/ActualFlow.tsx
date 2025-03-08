@@ -4,6 +4,7 @@ import MemoTile from '../MemoTile';
 import { css } from '@styled-system/css';
 import AsyncSelect from 'react-select/async';
 import CompoundSegmentControl from 'src/shared/ui/MOLECULES/CompoundSegmentControl/CompoundSegmentControl';
+import ActualTile from '../ActualTile';
 
 const ActualFlow = () => {
   return (
@@ -164,10 +165,11 @@ const ActualFlow = () => {
             },
           })}
         >
-          <div style={{ height: '350px' }}>
-            <ActualPortTile defaultTransactionType="allocation" />
-          </div>
-          <MemoTile />
+          {/* <div style={{ height: '350px' }}> */}
+          <ActualTile defaultTransactionType="allocation" />
+          {/* <ActualPortTile defaultTransactionType="allocation" /> */}
+          {/* </div> */}
+          {/* <MemoTile /> */}
         </div>
       </div>
     </>

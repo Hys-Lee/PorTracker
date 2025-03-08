@@ -17,11 +17,13 @@ interface FlowAnnotationProps {
     value: number;
     exchageRate: number; // 전달 받는거로 하자 그냥. 그래프 만들 때 필요하니까 애초에.. // 기본은 해당 국가 통화로. 따라서 원화로 바꾸려면 exchangeRate를 곱하도록.. (원과 자산은 rate를 1로 하면 되자너..)
   };
+  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
 const ChartAnnotation = ({
   positionData: { constraintsRef, y, x },
   contentsData: { idx, type, date, asset, value, exchageRate },
+  onClick,
 }: FlowAnnotationProps) => {
   const [isMemoOpen, setIsMemoOpen] = useState(false);
   // date, asset을 가지고 데이터를 가져와야 할 듯. type에 따라 어떤 데이터를 가져올지는 달라지고.
@@ -34,6 +36,7 @@ const ChartAnnotation = ({
   return (
     <>
       <motion.div
+        onClick={onClick}
         dragConstraints={constraintsRef}
         drag
         style={{

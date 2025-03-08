@@ -1,43 +1,31 @@
 import { FlowMode, FlowModeAtom } from 'src/entities/flows/atoms/flowAtoms';
 import { cva, css } from '@styled-system/css';
 import { Atom, SetStateAction, useAtom } from 'jotai';
-import SegmentControl from 'src/shared/ui/MOLECULES/SegmentControlWithButton';
-import { useState } from 'react';
 import CompoundSegmentControl from 'src/shared/ui/MOLECULES/CompoundSegmentControl/CompoundSegmentControl';
-import SegmentControlButton from 'src/shared/ui/MOLECULES/CompoundSegmentControl/SegmentControlButton';
-import useAtomicInputControl from 'src/features/hooks/atomics/useAtomicInputControl';
 
 const ModeController = () => {
   const [selectedMode, setSelectedMode] = useAtom(FlowModeAtom);
   const flowModes: FlowMode[] = ['actual', 'preset', 'comparison'];
-  const modeInfo: Array<{ content: FlowMode; selected: boolean }> =
-    flowModes.map((mode) => ({
-      content: mode,
-      selected: mode === selectedMode,
-    }));
+  const flowModeLabels = ['실제', '설정', '비교'];
+  const modeInfo: Array<{
+    value: FlowMode;
+    selected: boolean;
+    label: string;
+  }> = flowModes.map((mode, idx) => ({
+    value: mode,
+    selected: mode === selectedMode,
+    label: flowModeLabels[idx],
+  }));
   return (
     <>
-      {/* <SegmentControl
-        stylingClassName={{
-          body: SegmentControlBodyStyle,
-          button: {
-            selected: segmentControlButton({ bg: 'selected' }),
-            unselected: segmentControlButton({ bg: 'unselected' }),
-          },
-        }}
-        elementsInfo={modeInfo}
-        onButtonClick={(idx: number) => {
-          setSelectedMode(modeInfo[idx].content);
-        }}
-      /> */}
       <CompoundSegmentControl className={SegmentControlBodyStyle}>
         {modeInfo.map((mode) => (
           <CompoundSegmentControl.Button
-            key={mode.content}
-            textContent={mode.content}
-            onClick={() => setSelectedMode(mode.content)}
+            key={mode.value}
+            textContent={mode.label}
+            onClick={() => setSelectedMode(mode.value)}
             className={
-              mode.content === selectedMode
+              mode.value === selectedMode
                 ? segmentControlButton({ bg: 'selected' })
                 : segmentControlButton({ bg: 'unselected' })
             }

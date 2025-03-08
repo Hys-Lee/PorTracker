@@ -8,17 +8,12 @@ interface CompoundFormSelectProps {
   defaultOptions?: ReactSelectOptions;
   isLoading: boolean;
   onChange: (newValue: string) => void;
-  defaultValue?: ReactSelectOptions;
+  value?: ReactSelectOptions;
 }
 
 const CompoundFormSelect = forwardRef(
   (
-    {
-      defaultOptions,
-      isLoading,
-      onChange,
-      defaultValue,
-    }: CompoundFormSelectProps,
+    { defaultOptions, isLoading, onChange, value }: CompoundFormSelectProps,
     ref: React.ForwardedRef<null>
   ) => {
     return (
@@ -33,7 +28,7 @@ const CompoundFormSelect = forwardRef(
               onChange(newValue.value);
             }
           }}
-          defaultValue={defaultValue}
+          value={value}
           // options={options}
           // loadOptions={loadOptions}
           noOptionsMessage={() => '현재 값입니다'}
