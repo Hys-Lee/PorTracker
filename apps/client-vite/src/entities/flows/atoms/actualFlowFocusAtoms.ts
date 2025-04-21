@@ -12,13 +12,11 @@ interface MarkDataContent {
   accumulatedValue: number;
 }
 
-export interface FocusContent extends MarkDataContent {
-  isExist: boolean;
-  original: string; // 원본 markdata key값
-}
+export type FocusContent = MarkDataContent;
+// isExist: boolean;
+// original: string; // 원본 markdata key값
 
-const ActualFlowFocusInfoAtom = atom<FocusContent>({
-  isExist: false,
+export const ActualFlowFocusInfoAtomInit: FocusContent = {
   date: '',
   asset: '',
   type: 'normal',
@@ -27,7 +25,7 @@ const ActualFlowFocusInfoAtom = atom<FocusContent>({
   seriesIndex: 0,
   dataIndex: 0,
   accumulatedValue: 0,
-  original: '',
-});
+};
+const ActualFlowFocusInfoAtom = atom<FocusContent>(ActualFlowFocusInfoAtomInit);
 
 export { MarkDataContent, ActualFlowFocusInfoAtom };
