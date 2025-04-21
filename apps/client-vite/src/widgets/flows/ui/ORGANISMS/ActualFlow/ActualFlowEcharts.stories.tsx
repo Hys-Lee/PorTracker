@@ -1,8 +1,13 @@
-import RealFlowEcharts from './ActualFlowEcharts';
-
+// import RealFlowEcharts from './ActualFlowEcharts';
+import RealFlowEcharts from './ActualFlowEchartsNew';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQueryClient,
+} from '@tanstack/react-query';
 export default {
   component: RealFlowEcharts,
-  title: 'RealFlowEcharts',
+  title: 'Widgets/FLows/ORGANISMS/RealFlowEcharts',
   tags: ['autodocs'],
   //👇 "Data"로 끝나는 export들은 스토리가 아닙니다.
   excludeStories: /.*Data$/,
@@ -15,6 +20,14 @@ export default {
 //   //   },
 // };
 
-const Template = () => <RealFlowEcharts />;
+const Template = () => {
+  const client = new QueryClient();
+
+  return (
+    <QueryClientProvider client={client}>
+      <RealFlowEcharts />
+    </QueryClientProvider>
+  );
+};
 // const Template = () => <Tmp />;
 export const Default = Template.bind({});

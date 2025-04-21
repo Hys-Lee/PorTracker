@@ -215,13 +215,6 @@ const RealFlowEcharts = () => {
             color: 'black', // 텍스트 색상
           },
         };
-        // test
-        console.log(
-          'focusInfo.isExist ,          data.asset === focusInfo.asset ,          data.date === focusInfo.date',
-          focusInfo.isExist,
-          data.asset === focusInfo.asset,
-          data.date === focusInfo.date
-        );
 
         if (
           // data.asset === markData.focus.asset &&
