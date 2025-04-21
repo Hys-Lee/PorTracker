@@ -13,6 +13,9 @@ import {
   RouterProvider,
   Routes,
 } from 'react-router';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 import Flows from 'src/pages/flows/flows';
 import Portfolio from 'src/pages/portfolios/portfolio';
 import Memos from 'src/pages/memos/memos';
@@ -35,11 +38,15 @@ const router = createBrowserRouter([
   },
 ]);
 
+const queryClient = new QueryClient();
+
 export function App() {
   return (
     <>
       <LayeredErrorBoundary>
-        <RouterProvider router={router} />
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
       </LayeredErrorBoundary>
       {/* <SheetTmp /> */}
     </>

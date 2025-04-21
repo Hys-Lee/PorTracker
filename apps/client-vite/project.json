@@ -5,5 +5,13 @@
   "projectType": "application",
   "tags": [],
   "// targets": "to see all targets run: nx show project client-vite --web",
-  "targets": {}
+  "targets": {
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "apps/client-vite/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  }
 }
