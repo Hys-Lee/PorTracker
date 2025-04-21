@@ -1,0 +1,19 @@
+{
+  "name": "portracker-supabase-functions",
+  "version": "1.0.0",
+  "description": "PorTracker 앱을 위한 Supabase Edge Functions",
+  "main": "index.js",
+  "scripts": {
+    "deploy:portfolio": "supabase functions deploy portfolio",
+    "deploy:memo": "supabase functions deploy memo",
+    "deploy:combined": "supabase functions deploy combined",
+    "deploy:all": "npm run deploy:portfolio && npm run deploy:memo && npm run deploy:combined"
+  },
+  "keywords": [
+    "supabase",
+    "edge-functions",
+    "portfolio-tracker"
+  ],
+  "author": "",
+  "license": "MIT"
+}
