@@ -7,6 +7,7 @@ import { css } from '@styled-system/css';
 import { useEffect, useState } from 'react';
 import { useAtomValue } from 'jotai';
 import { ActualFlowFocusInfoAtom } from 'src/entities/flows/atoms/actualFlowFocusAtoms';
+import { putTradeData } from 'src/shared/ui/MOLECULES/chartDataHandler';
 
 const actualSchema = z.object({
   asset: z.string().nonempty(),
@@ -62,7 +63,7 @@ const ActualTile = ({
     typeof actualForm.date
   );
   useEffect(() => {
-    if (!focusInfo.isExist) return;
+    if (!focusInfo) return;
     setActualForm((prev) => ({
       ...prev,
       ...focusInfo,
@@ -74,9 +75,12 @@ const ActualTile = ({
     <>
       <Tile style={{ borderRadius: '16px', padding: '8px' }}>
         <CompoundForm
-          // onSubmit={handleSubmit((data) => {
-          //   console.log('제출: ', data);
-          // })}
+          onSubmit={(e) => {
+            e.preventDefault();
+            putTradeData(actualForm);
+            //test
+            console.log(e);
+          }}
           className={css({
             width: '100%',
             display: 'flex',
@@ -281,7 +285,10 @@ const ActualTile = ({
 
           <CompoundForm.InputArea defaultValue="" placeholder="본문" />
           <CompoundForm.Tags isLoading={false} />
-          <CompoundForm.Button style={{ width: '100%', height: '32px' }}>
+          <CompoundForm.Button
+            style={{ width: '100%', height: '32px' }}
+            type="submit"
+          >
             저장
           </CompoundForm.Button>
         </CompoundForm>
