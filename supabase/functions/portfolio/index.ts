@@ -31,7 +31,11 @@ Deno.serve(async (req) => {
       const filter: RealPortfolioFilter = {
         startDate: params.get('startDate') || undefined,
         endDate: params.get('endDate') || undefined,
-        asset: params.get('asset') || undefined,
+        assetIds: params.get('asset')
+          ? (params.get('asset_ids') as string)
+              .split(',')
+              .map((id) => parseInt(id, 10))
+          : undefined,
         transactionType: params.get('transactionType') || undefined,
         size: params.get('size')
           ? parseInt(params.get('size') as string, 10)
@@ -113,7 +117,47 @@ Deno.serve(async (req) => {
 async function getPortfolioData(supabase, filter: RealPortfolioFilter) {
   // 1. 전체 데이터 개수 계산(날짜 외 필터 적용) - 첫 요청에만.
 
-  // let latestAssetData: unknown[] | undefined = undefined;
+  let latestAssetsData: unknown[] | undefined = undefined;
+  // let assetMappingData: unknown | undefined = undefined;
+  if (filter.page && filter.page === 1) {
+    // Asset id와 name 매핑 정보 찾기
+
+    // if (!filter.assetIds) {
+    //   // 페이지 처음 들어가면 asset정보 없이 띄워야 하니까, 이 때 매핑정보 전달
+    //   const assetMappingQuery = supabase.from('assets').select('*');
+    //   const { data: assetMappingResult, error: assetMappingError } =
+    //     await assetMappingQuery;
+    //   if (assetMappingError) {
+    //     throw new Error(`Error fetching count: ${assetMappingError.message}`);
+    //   }
+    //   assetMappingData = {
+    //     idToName: assetMappingResult.reduce((acc, cur) => {
+    //       return { ...acc, [cur.id]: cur.name };
+    //     }, {}),
+    //     nameToId: assetMappingResult.reduce((acc, cur) => {
+    //       return { ...acc, [cur.name]: cur.id };
+    //     }, {}),
+    //   };
+    // }
+
+    // Asset별 최신 값 찾기
+
+    let latestAssetsQuery = supabase
+      .from('asset_latest_state')
+      .select('*, asset:assets(name)');
+
+    if (filter.assetIds && filter.assetIds?.length > 0) {
+      // countQuery = countQuery.eq('asset', filter.asset);
+      latestAssetsQuery = latestAssetsQuery.in('asset_id', filter.assetIds);
+    }
+    const { data: latestAssetsResult, error: latestAssetsError } =
+      await latestAssetsQuery;
+    if (latestAssetsError) {
+      throw new Error(`Error fetching count: ${latestAssetsError.message}`);
+    }
+    latestAssetsData = latestAssetsResult;
+  }
+  // let count: number | undefined = undefined;
   // if (filter.page && filter.page === 1) {
   //   let countQuery = supabase
   //     .from('RealPortfolio')
@@ -131,24 +175,6 @@ async function getPortfolioData(supabase, filter: RealPortfolioFilter) {
   //   }
   //   count = totalCount;
   // }
-  let count: number | undefined = undefined;
-  if (filter.page && filter.page === 1) {
-    let countQuery = supabase
-      .from('RealPortfolio')
-      .select('*', { count: 'exact', head: true });
-
-    if (filter.asset) {
-      countQuery = countQuery.eq('asset', filter.asset);
-    }
-    if (filter.transactionType) {
-      countQuery = countQuery.eq('transaction_type', filter.transactionType);
-    }
-    const { count: totalCount, error: countError } = await countQuery;
-    if (countError) {
-      throw new Error(`Error fetching count: ${countError.message}`);
-    }
-    count = totalCount;
-  }
 
   // 2. 데이터 가져오기
 
@@ -161,8 +187,11 @@ async function getPortfolioData(supabase, filter: RealPortfolioFilter) {
   if (filter.endDate) {
     query = query.lte('date', filter.endDate);
   }
-  if (filter.asset) {
-    query = query.eq('assets.name', filter.asset);
+  // if (filter.asset) {
+  //   query = query.eq('assets.name', filter.asset);
+  // }
+  if (filter.assetIds && filter.assetIds?.length > 0) {
+    query = query.in('asset_id', filter.assetIds);
   }
   if (filter.transactionType) {
     query = query.eq('transaction_type', filter.transactionType);
@@ -210,8 +239,12 @@ async function getPortfolioData(supabase, filter: RealPortfolioFilter) {
   const ascData = (data as unknown[]).reverse();
   return {
     data: ascData,
-    meta: { total: count, nextCursor },
-    // meta: { nextCursor },
+    // meta: { total: count, nextCursor },
+    meta: {
+      latestAssetsData,
+      // assetMappingData,
+      nextCursor,
+    },
   };
 
   // const { data, error } = await query.order('date', { ascending: true });

@@ -17,7 +17,7 @@ export type MemoUpdate = Database['public']['Tables']['Memos']['Update'];
 export interface RealPortfolioFilter {
   startDate?: string;
   endDate?: string;
-  asset?: string; // ids로 수정
+  assetIds?: number[]; // ids로 수정
   transactionType?: string;
   size?: number; // 체크하기.
   page?: number; // 체크하기.
