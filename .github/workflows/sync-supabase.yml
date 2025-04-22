@@ -1,0 +1,45 @@
+# .github/workflows/sync-supabase.yml
+
+name: Sync External API Data to Supabase (Nx)
+
+on:
+  schedule:
+    ## UTC기준 12시라, 한국 기준 매 9시마다임.
+    - cron: '0 */12 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync_data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        # Nx는 Git 히스토리를 사용하여 변경사항 감지(affected) 기능을 사용하므로,
+        # 전체 히스토리를 가져오는 것이 Nx 캐싱 등에 유리할 수 있습니다. (선택 사항)
+        # with:
+        #   fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+        #   cache: 'npm' # 루트 package-lock.json 기준 캐싱
+
+      - name: Install Dependencies for Sync Script # 스크립트 디렉토리에서 필요한 의존성만 설치
+        working-directory: ./tools/data-sync # 작업 디렉토리 변경
+        run: npm install
+
+      # TypeScript를 직접 실행하는 경우 (선택 사항)
+      # - name: Install ts-node globally (or use npx)
+      #   run: npm install -g ts-node # 또는 devDependencies에 포함되어 있다면 이 단계 불필요
+
+      - name: Run Sync Script # 스크립트 디렉토리에서 실행
+        working-directory: ./tools/data-sync # 작업 디렉토리 변경
+        run: node sync-data.js
+        env:
+          EXTERNAL_API_URL: ${{ secrets.EXTERNAL_API_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_API_KEY }}
+          # NODE_ENV: production # 필요시 환경 설정
+          # 기타 필요한 환경 변수
