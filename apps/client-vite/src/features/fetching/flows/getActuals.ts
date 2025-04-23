@@ -4,16 +4,35 @@ import makeFetch from './template';
 type GetActualsParam = {
   startDate?: Date;
   endDate?: Date;
-  assets?: string[];
+  assetIds?: number[];
   transactionType?: string;
   size: number; // 체크
   page?: number; // 체크 - 첫 요청 체크용
   id?: number; //체크 - 커서 기반 요청용
 };
 
+// type AssetMappingDataType = {
+//   idToName: {
+//     [id: number]: string;
+//   };
+//   nameToId: {
+//     [name: string]: number;
+//   };
+// };
+type LatestAssetsDataType = {
+  asset_id: number;
+  asset: { name: string };
+  created_at: string;
+  accumulated_shares: number;
+  has_positive_shares: boolean;
+  latest_price: number;
+  latest_realportfolio_id: number;
+  updated_at: string;
+}[];
+
 type ActualDataResponse = {
   data: {
-    asset: string;
+    assetId: number;
     currency: string;
     date: string;
     exchange_rate: number;
@@ -24,19 +43,20 @@ type ActualDataResponse = {
     transaction_type: string;
   }[];
   meta: {
-    total?: number;
+    // assetMappingData?: AssetMappingDataType;
+    latestAssetsData?: LatestAssetsDataType;
     nextCursor: {
       endDate: string;
       id: number;
       size: number;
-    };
+    } | null;
   };
 };
 
 const getActuals = async ({
   startDate,
   endDate,
-  assets,
+  assetIds,
   transactionType,
   size,
   page,
@@ -48,8 +68,8 @@ const getActuals = async ({
   const endDateQuery = endDate ? `endDate=${endDate.toISOString()}` : '';
   const sizeQuery = `size=${size}`;
   const pageQuery = page ? `page=${page}` : '';
-  const assetQuery =
-    assets && assets.length > 0 ? `asset=${assets.join(',')}` : '';
+  const assetIdsQuery =
+    assetIds && assetIds.length > 0 ? `assetIds=${assetIds.join(',')}` : '';
   const transactionTypeQuery = transactionType
     ? `transactionType=${transactionType}`
     : '';
@@ -62,7 +82,7 @@ const getActuals = async ({
     endDateQuery,
     sizeQuery,
     pageQuery,
-    assetQuery,
+    assetIdsQuery,
     transactionTypeQuery,
     idQuery,
   ]
@@ -84,6 +104,8 @@ const getActuals = async ({
     const res = await axios.get<ActualDataResponse>(
       `${import.meta.env.VITE_SUPABASE_FUNCTIONS_URL}/portfolio?${queryTotal}`
     );
+    //teset
+    console.log('fetch결과: ', res);
     return res.data;
   });
 
@@ -92,4 +114,9 @@ const getActuals = async ({
 };
 
 export default getActuals;
-export type { GetActualsParam, ActualDataResponse };
+export type {
+  GetActualsParam,
+  ActualDataResponse,
+  // AssetMappingDataType,
+  LatestAssetsDataType,
+};

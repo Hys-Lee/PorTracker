@@ -4,6 +4,7 @@ import getActuals, {
 } from 'src/features/fetching/flows/getActuals';
 import { infiniteQueryOptions } from '@tanstack/react-query';
 import addDate from 'src/features/utils/addDate';
+import { ActualDataResponse } from 'src/features/fetching/flows/getActuals';
 
 const queryFactory = {
   combinedOne: (date: Date, asset: string, transactionType: string) => ({
@@ -16,7 +17,7 @@ const queryFactory = {
   actualInfinite: (
     endDate: Date,
     size: number,
-    assets?: string[],
+    assetIds?: number[],
     transactionType?: string
   ) => {
     // const startDate = addDate(endDate, 'day', -dayInterval);
@@ -29,29 +30,23 @@ const queryFactory = {
       initialPageParam: {
         // startDate,
         endDate,
-        assets,
+        assetIds,
         transactionType,
         size,
         page: 1,
       },
       getNextPageParam: (
-        lastPage: {
-          data: unknown[];
-          meta: {
-            total?: number;
-            nextCursor: { endDate: string; id: number; size: number };
-          };
-        },
+        lastPage: ActualDataResponse,
         _allPage: unknown,
         lastPageParam: GetActualsParam
       ) => {
-        //test
-        // console.log('cursor: ', lastPage.meta.nextCursor);
-        const nextParam = {
-          ...lastPage.meta.nextCursor,
-          endDate: new Date(lastPage.meta.nextCursor.endDate),
-          page: undefined,
-        };
+        const nextParam = lastPage.meta.nextCursor // 정확하겐 null인지 체크
+          ? {
+              ...lastPage.meta.nextCursor,
+              endDate: new Date(lastPage.meta.nextCursor.endDate),
+              page: undefined,
+            }
+          : undefined;
         return nextParam;
       },
     });
