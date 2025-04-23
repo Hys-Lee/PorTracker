@@ -29,15 +29,23 @@ async function fetchDataAndSync() {
       `Successfully fetched data. Records count: ${apiData.length || 1}`
     ); // 데이터 형태에 따라 로그 조정
 
+    if (apiData[0].result !== 1) {
+      console.log('No data to insert. The result is invalid');
+      return;
+    }
+
     // 2. 가져온 데이터를 Supabase 테이블 형식에 맞게 가공 (필요시)
     // 예시: API 데이터가 객체 배열이라고 가정
     // 실제 API 응답과 Supabase 테이블 구조에 맞게 이 부분을 수정해야 합니다.
-    const dataToInsert = Array.isArray(apiData) ? apiData : [apiData]; // 배열이 아니면 배열로 감싸기
+    // const dataToInsert = Array.isArray(apiData) ? apiData : [apiData]; // 배열이 아니면 배열로 감싸기
 
-    if (dataToInsert.length === 0) {
-      console.log('No data to insert.');
-      return;
-    }
+    const dataToInsert = apiData.map((currencyData) => ({
+      currency_code: currencyData.cur_unit,
+      currency_name: currencyData.cur_nm,
+      rate_when_get: currencyData.ttb,
+      rate_when_send: currencyData.tts,
+      standard_rate: currencyData.deal_bas_r,
+    }));
 
     // 3. Supabase에 데이터 삽입 (또는 업데이트/업서트)
     // 'your_table_name' 을 실제 테이블 이름으로 변경하세요.
@@ -46,7 +54,7 @@ async function fetchDataAndSync() {
     );
     const { data, error } = await supabase
       .from('your_table_name') // *** 여기에 실제 테이블 이름을 입력하세요 ***
-      .upsert(dataToInsert, { onConflict: 'id' }); // 예: 'id' 컬럼 기준으로 중복 시 업데이트 (필요에 따라 .insert() 또는 옵션 변경)
+      .upsert(dataToInsert, { onConflict: 'currency_code' }); // 예: 'id' 컬럼 기준으로 중복 시 업데이트 (필요에 따라 .insert() 또는 옵션 변경)
 
     if (error) {
       console.error('Error inserting data into Supabase:', error.message);
