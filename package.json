@@ -101,8 +101,6 @@
     "deno": "^2.2.6",
     "esbuild": "^0.19.2",
     "eslint": "^9.16.0",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-cypress": "^3.6.0",
     "eslint-plugin-import": "2.31.0",
