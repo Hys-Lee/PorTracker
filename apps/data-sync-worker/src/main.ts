@@ -26,10 +26,10 @@ async function fetchDataAndSync() {
     const apiData = response.data; // API 응답 구조에 맞게 조정 필요
 
     console.log(
-      `Successfully fetched data. Records count: ${apiData.length || 1}`
+      `Successfully fetched data. Records count: ${apiData.conversion_rates}`
     ); // 데이터 형태에 따라 로그 조정
 
-    if (apiData[0].result !== 1) {
+    if (apiData?.result !== 'success') {
       console.log('No data to insert. The result is invalid');
       return;
     }
@@ -39,13 +39,15 @@ async function fetchDataAndSync() {
     // 실제 API 응답과 Supabase 테이블 구조에 맞게 이 부분을 수정해야 합니다.
     // const dataToInsert = Array.isArray(apiData) ? apiData : [apiData]; // 배열이 아니면 배열로 감싸기
 
-    const dataToInsert = apiData.map((currencyData) => ({
-      currency_code: currencyData.cur_unit,
-      currency_name: currencyData.cur_nm,
-      rate_when_get: currencyData.ttb,
-      rate_when_send: currencyData.tts,
-      standard_rate: currencyData.deal_bas_r,
-    }));
+    const dataToInsert = Object.entries(apiData.conversion_rates)
+      .reduce((acc, [currency_code, valueBasedKRW]) => {
+        const convertedValue = (1 / (valueBasedKRW as number)).toFixed(2);
+        return [...acc, { currency_code, standard_rate: convertedValue }];
+      }, [])
+      .map((data) => ({
+        ...data,
+        updated_at: apiData?.time_last_update_utc ?? null,
+      }));
 
     // 3. Supabase에 데이터 삽입 (또는 업데이트/업서트)
     // 'your_table_name' 을 실제 테이블 이름으로 변경하세요.
