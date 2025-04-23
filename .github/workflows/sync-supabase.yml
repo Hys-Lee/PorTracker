@@ -27,16 +27,14 @@ jobs:
         #   cache: 'npm' # 루트 package-lock.json 기준 캐싱
 
       - name: Install Dependencies for Sync Script # 스크립트 디렉토리에서 필요한 의존성만 설치
-        working-directory: ./tools/data-sync # 작업 디렉토리 변경
         run: npm install
 
       # TypeScript를 직접 실행하는 경우 (선택 사항)
       # - name: Install ts-node globally (or use npx)
       #   run: npm install -g ts-node # 또는 devDependencies에 포함되어 있다면 이 단계 불필요
 
-      - name: Run Sync Script # 스크립트 디렉토리에서 실행
-        working-directory: ./tools/data-sync # 작업 디렉토리 변경
-        run: node sync-data.js
+      - name: Run Sync Script via Nx # Nx 타겟 실행
+        run: npx nx run data-sync-worker:run-sync # 정의한 앱 이름과 타겟 이름 사용
         env:
           EXTERNAL_API_URL: ${{ secrets.EXTERNAL_API_URL }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
