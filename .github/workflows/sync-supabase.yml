@@ -39,7 +39,7 @@ jobs:
       #   run: npm install -g ts-node # 또는 devDependencies에 포함되어 있다면 이 단계 불필요
 
       - name: Run Sync Script via Nx # Nx 타겟 실행
-        run: pnpm exec nx run data-sync-worker:run-sync # 정의한 앱 이름과 타겟 이름 사용
+        run: pnpm exec nx run data-sync-worker:run-sync --no-nx-cache # 정의한 앱 이름과 타겟 이름 사용, nx cloud 사용 안함.
         env:
           EXTERNAL_API_URL: ${{ secrets.EXTERNAL_API_URL }}
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
