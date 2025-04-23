@@ -53,13 +53,13 @@ async function fetchDataAndSync() {
       `Attempting to insert/upsert ${dataToInsert.length} records into Supabase table 'your_table_name'...`
     );
     const { data, error } = await supabase
-      .from('your_table_name') // *** 여기에 실제 테이블 이름을 입력하세요 ***
+      .from('exchange_rate') // *** 여기에 실제 테이블 이름을 입력하세요 ***
       .upsert(dataToInsert, { onConflict: 'currency_code' }); // 예: 'id' 컬럼 기준으로 중복 시 업데이트 (필요에 따라 .insert() 또는 옵션 변경)
 
     if (error) {
       console.error('Error inserting data into Supabase:', error.message);
       // 에러 세부 정보 로깅 (선택 사항)
-      // console.error('Supabase error details:', error);
+      console.error('Supabase error details:', error);
       throw error; // 에러 발생 시 워크플로우 실패 처리
     } else {
       console.log('Successfully synced data to Supabase.');
@@ -69,7 +69,7 @@ async function fetchDataAndSync() {
   } catch (error) {
     console.error('An error occurred during the sync process:', error.message);
     // 스택 트레이스 로깅 (디버깅에 유용)
-    // console.error(error.stack);
+    console.error(error.stack);
     process.exit(1); // 에러 발생 시 워크플로우 실패 처리
   }
 }
