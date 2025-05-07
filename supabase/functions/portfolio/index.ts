@@ -119,6 +119,7 @@ async function getPortfolioData(supabase, filter: RealPortfolioFilter) {
 
   let latestAssetsData: unknown[] | undefined = undefined;
   // let assetMappingData: unknown | undefined = undefined;
+  let exchangeRateOfTodayData: number | undefined = undefined;
   if (filter.page && filter.page === 1) {
     // Asset id와 name 매핑 정보 찾기
 
@@ -140,6 +141,18 @@ async function getPortfolioData(supabase, filter: RealPortfolioFilter) {
     //   };
     // }
 
+    // 현재(당일) 원/달러 환율값 찾기
+    const exchangeRateOfTodayQuery = supabase.from('exchange_rate').select('*');
+    const targetCurrency = 'USD';
+    exchangeRateOfTodayQuery.eq('currency_code', targetCurrency);
+    const { data: exchangeRateOfTodayResult, error: exchangeRateOfTodayError } =
+      await exchangeRateOfTodayQuery;
+    if (exchangeRateOfTodayError) {
+      throw new Error(
+        `Error fetching count: ${exchangeRateOfTodayError.message}`
+      );
+    }
+    exchangeRateOfTodayData = exchangeRateOfTodayResult;
     // Asset별 최신 값 찾기
 
     let latestAssetsQuery = supabase
@@ -242,6 +255,7 @@ async function getPortfolioData(supabase, filter: RealPortfolioFilter) {
     // meta: { total: count, nextCursor },
     meta: {
       latestAssetsData,
+      exchangeRateOfTodayData,
       // assetMappingData,
       nextCursor,
     },
