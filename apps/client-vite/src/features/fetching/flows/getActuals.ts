@@ -29,22 +29,29 @@ type LatestAssetsDataType = {
   latest_realportfolio_id: number;
   updated_at: string;
 }[];
-
+type ExchangeRateOfTodayDataType = {
+  id: number;
+  created_at: string;
+  currency_code: string;
+  standard_rate: number;
+  updated_at: string;
+}[];
 type ActualDataResponse = {
   data: {
-    assetId: number;
+    asset_id: number;
+    asset: { name: string };
     currency: string;
     date: string;
     exchange_rate: number;
     id: number;
     price: number;
     shares: number;
-    accumulated_shares: number;
     transaction_type: string;
   }[];
   meta: {
     // assetMappingData?: AssetMappingDataType;
     latestAssetsData?: LatestAssetsDataType;
+    exchangeRateOfTodayData?: ExchangeRateOfTodayDataType; // 일단 달러로 고정
     nextCursor: {
       endDate: string;
       id: number;
