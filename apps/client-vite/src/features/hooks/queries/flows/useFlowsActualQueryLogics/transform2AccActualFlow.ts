@@ -9,7 +9,7 @@ import { ActualDataResponse } from 'src/features/fetching/flows/getActuals';
 function transform2AccActualFlow(
   prevAccData: FlowData,
   latestFetchedData: ActualDataResponse['data'],
-  latestAssetInfo: { [assetId: number]: { accShares: number } }
+  latestAssetInfo: { [assetId: number]: { accShares: number; name: string } }
 ) {
   //
   // const snapshotDeepCopyHelper = (objectWithDateAndAssetId) => {
@@ -56,9 +56,9 @@ function transform2AccActualFlow(
     //     };
     {
       values: {
-        krwValue: { ...(prevAccData.values.krwValues[0] ?? {}) },
+        krwValue: { ...(prevAccData.values.krwValues?.[0] ?? {}) },
         localCurrencyValue: {
-          ...(prevAccData.values.localCurrencyValues[0] ?? {}),
+          ...(prevAccData.values.localCurrencyValues?.[0] ?? {}),
         },
       },
       otherData: prevAccData.otherData[0]
@@ -236,8 +236,8 @@ function transform2AccActualFlow(
   console.log('transactin들 넣은 후 cur.other: ', curFlowData.otherData);
 
   /// 내림차순으로 처리하기
-  const otherDataLastIdx =
-    curFlowData.otherData.length > 0 ? curFlowData.otherData.length - 1 : 0;
+  const otherDataLastIdx = curFlowData.otherData.length - 1;
+  // curFlowData.otherData.length > 0 ? curFlowData.otherData.length - 1 : 0;
   for (let i = otherDataLastIdx; i >= 0; i--) {
     const latelyOtherData = curFlowData.otherData[i];
     Object.entries(latelyOtherData).forEach(

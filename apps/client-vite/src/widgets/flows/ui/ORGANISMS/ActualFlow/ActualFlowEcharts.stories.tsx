@@ -25,7 +25,9 @@ const Template = () => {
 
   return (
     <QueryClientProvider client={client}>
-      <RealFlowEcharts />
+      <div style={{ height: '500px' }}>
+        <RealFlowEcharts />
+      </div>
     </QueryClientProvider>
   );
 };

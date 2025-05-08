@@ -1,18 +1,14 @@
 import * as echarts from 'echarts';
 import { MarkDataContent } from 'src/entities/flows/atoms/actualFlowFocusAtoms';
-import {
-  FlowDataValuesType,
-  FlowDataValuesMetaDataType,
-} from 'src/features/hooks/queries/flows/useFlowsActualQuery';
+import // FlowDataValuesType,
+// FlowDataValuesMetaDataType,
+'src/features/hooks/queries/flows/useFlowsActualQuery';
 
-export const makeSeriesCommon = (
-  asset: string,
-  values: { value: number; metaData: FlowDataValuesMetaDataType[] }[],
-  idx: number
-) => ({
+/** 아래는 dataset사용 전 series 공통 옵션 */
+const seriesCommon = {
   progressive: 1000,
   large: true,
-  name: `${asset}`,
+  // name: `${asset}`,
   stack: 'Total',
   type: 'line',
   //   symbol: 'none',
@@ -20,10 +16,9 @@ export const makeSeriesCommon = (
   showSymbol: false,
 
   sampling: 'lttb',
-  itemStyle: {
-    color: `rgb(255, ${70 + idx * 10}, 131)`,
-  },
-  data: values,
+  // itemStyle: {
+  //   color: `rgb(255, ${70 + idx * 10}, 131)`,
+  // },
   select: {
     disabled: false,
     itemStyle: {
@@ -34,35 +29,83 @@ export const makeSeriesCommon = (
     },
   },
   selectedMode: 'multiple',
+  connectNulls: true,
 
-  areaStyle: {
-    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-      {
-        offset: 0,
-        color: `rgb(255, 158, ${68 + idx * 10})`,
-      },
-      {
-        offset: 1,
-        color: `rgb(255, 70, ${131 + idx * 10})`,
-      },
-    ]),
-  },
+  // areaStyle: {
+  //   color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+  //     {
+  //       offset: 0,
+  //       color: `rgb(255, 158, ${68 + idx * 10})`,
+  //     },
+  //     {
+  //       offset: 1,
+  //       color: `rgb(255, 70, ${131 + idx * 10})`,
+  //     },
+  //   ]),
+  // },
   emphasis: {
     focus: 'none',
     showSymbol: true,
     showAllSymbol: false,
   },
-});
-type ActualFlowEchartValues = {
-  [asset: string]: {
-    value: number;
-    metaData: FlowDataValuesMetaDataType[];
-  }[];
 };
-const makeActualFlowEchartOption = (
-  commonDate: string[],
-  totalData: ActualFlowEchartValues
-) => ({
+
+// export const makeSeriesCommon = (
+//   asset: string,
+//   values: { value: number; metaData: FlowDataValuesMetaDataType[] }[],
+//   idx: number
+// ) => ({
+//   progressive: 1000,
+//   large: true,
+//   name: `${asset}`,
+//   stack: 'Total',
+//   type: 'line',
+//   //   symbol: 'none',
+//   symbolSize: 10,
+//   showSymbol: false,
+
+//   sampling: 'lttb',
+//   itemStyle: {
+//     color: `rgb(255, ${70 + idx * 10}, 131)`,
+//   },
+//   data: values,
+//   select: {
+//     disabled: false,
+//     itemStyle: {
+//       color: 'blue',
+//       borderColor: 'black',
+//       borderWidth: 2,
+//       radius: 6,
+//     },
+//   },
+//   selectedMode: 'multiple',
+
+//   areaStyle: {
+//     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+//       {
+//         offset: 0,
+//         color: `rgb(255, 158, ${68 + idx * 10})`,
+//       },
+//       {
+//         offset: 1,
+//         color: `rgb(255, 70, ${131 + idx * 10})`,
+//       },
+//     ]),
+//   },
+//   emphasis: {
+//     focus: 'none',
+//     showSymbol: true,
+//     showAllSymbol: false,
+//   },
+// });
+// type ActualFlowEchartValues = {
+//   [asset: string]: {
+//     value: number;
+//     metaData: FlowDataValuesMetaDataType[];
+//   }[];
+// };
+
+const defaultFlowsActualOption = {
   animation: false,
   tooltip: {
     trigger: 'axis',
@@ -75,16 +118,15 @@ const makeActualFlowEchartOption = (
     bottom: 30,
     top: 30,
     // right: 10,
-    left: 10,
+    left: 60,
   },
 
   xAxis: {
     type: 'category',
     boundaryGap: false,
-    data: commonDate,
   },
   yAxis: {
-    position: 'right',
+    position: 'left',
     type: 'value',
     boundaryGap: [0, '100%'],
   },
@@ -110,61 +152,65 @@ const makeActualFlowEchartOption = (
       brushSelect: false, // 범위 드래그로 재설정 비활성화
     },
   ],
-  series: Object.entries(totalData).map(([asset, valueInfos], idx) => {
-    console.log('keys,values', asset, valueInfos);
-    return makeSeriesCommon(asset, valueInfos, idx);
-  }),
-  // series: mixedData.map(
-  //   ({ asset, value }: { asset: string; value: number[] }, idx: number) => ({
-  //     progressive: 1000,
-  //     large: true,
-  //     name: `${asset}`,
-  //     stack: 'Total',
-  //     type: 'line',
-  //     //   symbol: 'none',
-  //     symbolSize: 10,
-  //     showSymbol: false,
+};
+/** 아래는 dataset사용 전 ehcart options 기본 옵션 */
 
-  //     sampling: 'lttb',
-  //     itemStyle: {
-  //       color: `rgb(255, ${70 + idx * 10}, 131)`,
-  //     },
-  //     data: value,
-  //     select: {
-  //       disabled: false,
-  //       itemStyle: {
-  //         color: 'blue',
-  //         borderColor: 'black',
-  //         borderWidth: 2,
-  //         radius: 6,
-  //       },
-  //     },
-  //     selectedMode: 'multiple',
+// const makeActualFlowEchartOption = (
+//   commonDate: string[],
+//   totalData: ActualFlowEchartValues
+// ) => ({
+//   animation: false,
+//   tooltip: {
+//     trigger: 'axis',
+//     position: function (pt: number[]) {
+//       return [pt[0] + 10, '10%'];
+//     },
+//     backgroundColor: 'rgba(255, 255, 255, 0.7)',
+//   },
+//   grid: {
+//     bottom: 30,
+//     top: 30,
+//     // right: 10,
+//     left: 10,
+//   },
 
-  //     areaStyle: {
-  //       color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-  //         {
-  //           offset: 0,
-  //           color: `rgb(255, 158, ${68 + idx * 10})`,
-  //         },
-  //         {
-  //           offset: 1,
-  //           color: `rgb(255, 70, ${131 + idx * 10})`,
-  //         },
-  //       ]),
-  //     },
-  //     emphasis: {
-  //       focus: 'none',
-  //       showSymbol: true,
-  //       showAllSymbol: false,
-  //     },
-  //   })
-  // ),
-});
-
-// const handleMakrPoints = () => {};
-// const handleFocus = () => {};
-// const determineFocus = () => {};
+//   xAxis: {
+//     type: 'category',
+//     boundaryGap: false,
+//     data: commonDate,
+//   },
+//   yAxis: {
+//     position: 'right',
+//     type: 'value',
+//     boundaryGap: [0, '100%'],
+//   },
+//   dataZoom: [
+//     {
+//       id: 'inside-x',
+//       type: 'inside',
+//       xAxisIndex: 0,
+//       zoomOnMouseWheel: true,
+//       moveOnMouseMove: true,
+//     },
+//     {
+//       id: 'inside-y',
+//       type: 'inside',
+//       yAxisIndex: 0,
+//       filterMode: 'none',
+//       zoomOnMouseWheel: true,
+//       moveOnMouseMove: true,
+//     },
+//     {
+//       id: 'slider-x',
+//       type: 'slider',
+//       brushSelect: false, // 범위 드래그로 재설정 비활성화
+//     },
+//   ],
+//   series: Object.entries(totalData).map(([asset, valueInfos], idx) => {
+//     console.log('keys,values', asset, valueInfos);
+//     return makeSeriesCommon(asset, valueInfos, idx);
+//   }),
+// });
 
 interface ParamData extends echarts.ECElementEvent {
   yAxis: number;
@@ -367,8 +413,10 @@ const makeMarkPoints = (markData, focusInfo) => {
 };
 
 export {
-  makeActualFlowEchartOption,
+  // makeActualFlowEchartOption,
   addEventHandler,
   addEventHandlerNew,
   makeMarkPoints,
+  defaultFlowsActualOption,
+  seriesCommon,
 };

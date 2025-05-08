@@ -1,10 +1,12 @@
 import ReusableEchart from 'src/shared/ui/MOLECULES/ReusableEchart';
 import {
-  makeActualFlowEchartOption,
+  // makeActualFlowEchartOption,
   addEventHandler,
   makeMarkPoints,
   addEventHandlerNew,
-  makeSeriesCommon,
+  // makeSeriesCommon,
+  defaultFlowsActualOption,
+  seriesCommon,
 } from 'src/shared/ui/MOLECULES/chartHandlers';
 import {
   makeDefaultDate,
@@ -23,10 +25,7 @@ import { useAtom } from 'jotai';
 import ChartAnnotation from './ChartAnnotation';
 import { MarkDataContent } from 'src/entities/flows/atoms/actualFlowFocusAtoms';
 import { EChartsInstance } from 'echarts-for-react';
-import useFlowsActualQuery, {
-  FlowDataType,
-  FlowDataValuesMetaDataType,
-} from 'src/features/hooks/queries/flows/useFlowsActualQuery';
+import useFlowsActualQuery from 'src/features/hooks/queries/flows/useFlowsActualQuery';
 import { ActualDataResponse } from 'src/features/fetching/flows/getActuals';
 
 interface MarkData {
@@ -62,215 +61,113 @@ const ActualFlowEchartNew = () => {
     useFlowsActualQuery(new Date(Date.now()), 1);
 
   console.log('data, isPending, isError', data, isPending, isError);
+  const { accData: graphData, wonPerDollarUpdateDate } = data;
 
-  // const flattenedData = data?.pages.reduce((acc, page) => {
-  //   return [...acc, ...page.data];
-  // }, [] as { id: number; asset: string; currency: string; date: string; exchange_rate: number; price: number; shares: number; transaction_type: string }[]);
-
-  // const organizedData2 =
-  //   flattenedData?.reduce((acc, portfolio) => {
-  //     const date = portfolio.date;
-  //     const valueOnAsset = {
-  //       price: portfolio.price,
-  //       shares: portfolio.shares,
-  //       transactionType: portfolio.transaction_type,
-  //       exchangeRate: portfolio.exchange_rate,
-  //     };
-  //     if (acc[date]) {
-  //       const newValue = acc[date][portfolio.asset]
-  //         ? {
-  //             ...acc[date],
-  //             [portfolio.asset]: [...acc[date][portfolio.asset], valueOnAsset],
-  //           }
-  //         : { ...acc[date], [portfolio.asset]: [valueOnAsset] };
-
-  //       return {
-  //         ...acc,
-  //         [date]: newValue,
-  //       };
-  //     }
-
-  //     return {
-  //       ...acc,
-  //       [date]: {
-  //         [portfolio.asset]: [valueOnAsset],
-  //       },
-  //     };
-  //   }, {} as { [date: string]: { [asset: string]: { price: number; shares: number; transactionType: string; exchangeRate: number }[] } }) ??
-  //   {};
-
-  // // const organizedData = data?.pages.reduce((acc, page) => {
-  // //   const pageSubResult = page.data.reduce((subResult, portfolio) => {
-  // //     return {
-  // //       ...subResult,
-  // //       [portfolio.date]: {
-  // //         [portfolio.asset]: {
-  // //           price: portfolio.price,
-  // //           shares: portfolio.shares,
-  // //           transactionType: portfolio.transaction_type,
-  // //           exchangeRate: portfolio.exchange_rate,
-  // //         },
-  // //       },
-  // //     };
-  // //   }, {} as { [date: string]: { [asset: string]: { price: number; shares: number; transactionType: string; exchangeRate: number } } });
-
-  // //   const result = acc;
-  // //   Object.entries(pageSubResult).forEach(([key, value]) => {
-  // //     if (result[key]) {
-  // //       result[key] = { ...result[key], ...value };
-  // //     } else {
-  // //       result[key] = value;
-  // //     }
-  // //   });
-  // //   return result;
-  // // }, {} as { [date: string]: { [asset: string]: { price: number; shares: number; transactionType: string; exchangeRate: number } } });
-
-  // console.log('organizedData: ', organizedData2);
-
-  // const totalDates = Object.keys(organizedData2);
-  // //// totalData만들 때, 한 date에 최대 2개 data(transactionType따라)가 들어올 수 있음.
-
-  // const makeTotalData = (usingEchangeRate: boolean) =>
-  //   Object.values(organizedData2).reduce((prevDataOnAsset, dataOnDate, idx) => {
-  //     // dataOnDate에 대해서 동작시키면 안되지.
-  //     // 이전 데이터와 dateOnDAte 둘다 돌려야 해서 2차 루프 돌라여 하는데...
-
-  //     return Object.entries(dataOnDate).reduce((acc, [asset, transactions]) => {
-  //       const newValue = transactions.reduce((valueSum, transaction) => {
-  //         return (
-  //           valueSum +
-  //           transaction.price *
-  //             transaction.shares *
-  //             (transaction.transactionType === 'allocation' ? 1 : -1) *
-  //             (usingEchangeRate ? transaction.exchangeRate : 1)
-  //         );
-  //       }, 0);
-
-  //       //test
-  //       console.log(
-  //         '내부동적 - asset, acc[asset], newValue: ',
-  //         asset,
-  //         acc[asset],
-  //         newValue
-  //       );
-  //       if (acc[asset]) {
-  //         const prevValue = [...acc[asset]];
-  //         const padding = new Array(idx - prevValue.length).fill(
-  //           prevValue[prevValue.length - 1]
-  //         );
-
-  //         return {
-  //           ...acc,
-  //           [asset]: [...prevValue, ...padding, newValue],
-  //         };
-  //       }
-  //       const padding = new Array(idx).fill(0);
-  //       return {
-  //         ...acc,
-  //         [asset]: [...padding, newValue],
-  //       };
-  //     }, prevDataOnAsset as { [asset: string]: number[] });
-  //   }, {} as { [asset: string]: number[] });
-
-  // //test
-  // console.log('totalDates, totalData: ', totalDates, makeTotalData(false));
-
-  // ////////////////////////////////////////////////////////////////////////////
-  // // // test data handling
-  // // const handleData = (usingEchangeRate) =>
-  // //   !data
-  // //     ? {}
-  // //     : data.pages.reduce((acc, page) => {
-  // //         const pageSubResult = page.data.reduce((subResult, portfolio) => {
-  // //           const value =
-  // //             portfolio.price *
-  // //             portfolio.shares *
-  // //             (portfolio.transaction_type === 'allocation' ? 1 : -1) *
-  // //             (usingEchangeRate ? portfolio.exchange_rate : 1);
-  // //           return {
-  // //             ...subResult,
-  // //             [portfolio.asset]: value,
-  // //           };
-  // //         }, {});
-
-  // //         return { ...acc, ...pageSubResult };
-  // //       }, {} as { [asset: string]: number[] });
-
-  // // const handledDate = !data
-  // //   ? []
-  // //   : [
-  // //       ...new Set(
-  // //         data.pages.reduce((acc, page) => {
-  // //           const pageSubResult = page.data.map((portfolio) => portfolio.date);
-  // //           return [...acc, ...pageSubResult];
-  // //         }, [] as string[])
-  // //       ),
-  // //     ];
-
-  // // const tmpData = handleData(false);
-
-  // const handledDate = data?.pages[0].data.map((item) => item.date) || [];
-  // const tmpData =
-  //   data?.pages[0].data.reduce((acc, portfolio) => {
-  //     const value =
-  //       portfolio.price *
-  //       portfolio.shares *
-  //       (portfolio.transaction_type === 'allocation' ? 1 : -1) *
-  //       (portfolio.exchange_rate || 1);
-
-  //     if (acc[portfolio.asset]) {
-  //       const newAnswer = [...acc[portfolio.asset], value];
-  //       return {
-  //         ...acc,
-  //         [portfolio.asset]: newAnswer,
-  //       };
-  //     }
-  //     return {
-  //       ...acc,
-  //       [portfolio.asset]: [value],
-  //     };
-  //   }, {} as { [asset: string]: number[] }) || {};
-  // //test
-  // console.log('handledDate,tmpData: ', handledDate, tmpData);
-  // console.log('hasNextPage: ', hasNextPage);
-
-  const markPoints = makeMarkPoints(markData, focusInfo);
-
-  const decidedValues = useMemo(() => {
-    if (!data?.values) return {}; /// 이거 방어 코드 어케 쓰지?
-    return Object.entries(data?.values).reduce((acc, [asset, valueInfos]) => {
-      const decidedValueInfos = valueInfos.map((valueInfo) => ({
-        metaData: valueInfo.metaData,
-        value: usingKRW ? valueInfo.krwValue : valueInfo.localCurrencyValue,
-      }));
-      return { ...acc, [asset]: decidedValueInfos };
-    }, {} as { [asset: string]: { value: number; metaData: FlowDataValuesMetaDataType[] }[] });
-  }, [usingKRW, data]);
-  const actualFlowDefaultOption = makeActualFlowEchartOption(
-    data.date,
-    decidedValues
+  const markPoints = useMemo(
+    () => makeMarkPoints(markData, focusInfo),
+    [markData, focusInfo]
   );
 
-  useEffect(() => {
-    // data 추가하는 로직
-    if (!chartInstance) return;
-    if (hasNextPage) {
-      //test
-      console.log('더 불러와');
-      // fetchNextPage();
-    }
+  // const decidedValues = useMemo(() => {
+  //   if (!graphData?.values) return {}; /// 이거 방어 코드 어케 쓰지?
+  //   return Object.entries(graphData?.values).reduce(
+  //     (acc, [asset, valueInfos]) => {
+  //       //test
+  //       console.log('valueInfos: ', valueInfos);
+  //       const decidedValueInfos = valueInfos.map((valueInfo) => ({
+  //         metaData: valueInfo.metaData,
+  //         value: usingKRW ? valueInfo.krwValue : valueInfo.localCurrencyValue,
+  //       }));
+  //       return { ...acc, [asset]: decidedValueInfos };
+  //     },
+  //     {} as {
+  //       [asset: string]: {
+  //         value: number;
+  //         metaData: FlowDataValuesMetaDataType[];
+  //       }[];
+  //     }
+  //   );
+  // }, [usingKRW, graphData]);
 
-    chartInstance.setOption({
-      xAxis: {
-        data: data.date,
-      },
-      series: Object.entries(decidedValues).map(([key, value], idx) => {
-        return makeSeriesCommon(key, value, idx);
-      }),
-    });
-  }, [data.date, decidedValues, chartInstance, hasNextPage]);
+  /**
+   * data를 차트에 적용 -- dataset사용 이후 버전
+   */
 
-  // const actualFlowDefaultOption = makeActualFlowEchartOption(date, mixedData);
+  useEffect(
+    () => {
+      if (!chartInstance) return;
+      // 일단 local을 적용하는걸로 해보자.
+      const datasetSource = data.accData.values.localCurrencyValues;
+      const xAxisName = 'date';
+      const assetIds = Object.keys(data.latestAssetInfo);
+      const datasetDimensions = [xAxisName, ...assetIds];
+
+      const seriesOptions = Object.entries(data.latestAssetInfo).map(
+        ([assetId, { name }], idx) => {
+          return {
+            itemStyle: {
+              // color: `rgb(255, ${70 + idx * 10}, 131)`,
+            },
+            areaStyle: {
+              // color: chartInstance.graphic.LinearGradient(0, 0, 0, 1, [
+              //   {
+              //     offset: 0,
+              //     color: `rgb(255, 158, ${68 + idx * 10})`,
+              //   },
+              //   {
+              //     offset: 1,
+              //     color: `rgb(255, 70, ${131 + idx * 10})`,
+              //   },
+              // ]),
+            },
+
+            ...seriesCommon,
+            zlevel: datasetDimensions.length - idx,
+            name,
+            encode: {
+              x: xAxisName,
+              y: assetId,
+            },
+          };
+        }
+      );
+
+      chartInstance.setOption({
+        dataset: {
+          dimensions: datasetDimensions,
+          source: datasetSource,
+        },
+        series: seriesOptions,
+      });
+    },
+    [chartInstance, data.accData.values, data.latestAssetInfo] //  나중에 krwValue <-> localCurrencyValue 토글도 들어가야 함
+  );
+
+  // /**
+  //  * data를 차트에 적용 -- dataset사용 이전 버전
+  //  */
+  // useEffect(() => {
+  //   // data 추가하는 로직
+  //   if (!chartInstance) return;
+  //   if (hasNextPage) {
+  //     //test
+  //     console.log('더 불러와');
+  //     // fetchNextPage();
+  //   }
+
+  //   chartInstance.setOption({
+  //     xAxis: {
+  //       data: graphData.date,
+  //     },
+  //     series: Object.entries(decidedValues).map(([key, value], idx) => {
+  //       return makeSeriesCommon(key, value, idx);
+  //     }),
+  //   });
+  // }, [graphData.date, decidedValues, chartInstance, hasNextPage]);
+
+  /**
+   * 마크포인트 그래프에 적용
+   */
 
   useEffect(() => {
     if (!chartInstance) return;
@@ -286,6 +183,9 @@ const ActualFlowEchartNew = () => {
     });
   }, [markPoints, chartInstance]);
 
+  /**
+   * 클릭 이벤트 핸들러 등록 -- markPoint및 focus관련
+   */
   useEffect(() => {
     if (!chartInstance) return;
     (chartInstance as EChartsInstance).on(
@@ -331,35 +231,6 @@ const ActualFlowEchartNew = () => {
     return () => (chartInstance as EChartsInstance).off('click');
   }, [chartInstance, mixedData, focusInfo]);
 
-  // addEventHandler(
-  //   chartInstance,
-  //   datum,
-  //   (markPoint) => {
-  //     //test
-  //     console.log('마크 포인트: ', markPoint);
-  //     const markDataKey = `${focusInfo.asset}-${focusInfo.date}`;
-  //     setMarkData((prev) => ({ ...prev, [markDataKey]: focusInfo }));
-  //   },
-  //   (focusPoint, metaData) => {
-  //     //test
-  //     console.log('focus: ', focusPoint);
-  //     if (metaData) {
-  //       const key = `${metaData.seriesName}-${metaData.date}`;
-  //       setFocusInfo(markData[key]);
-  //     } else {
-  //       setFocusInfo(focusPoint);
-  //     }
-  //   },
-  //   (yAxis, xAxis, name) => {
-  //     return (
-  //       focusInfo &&
-  //       focusInfo.accumulatedValue === yAxis &&
-  //       focusInfo.date === xAxis &&
-  //       focusInfo.asset === name
-  //     );
-  //   }
-  // );
-
   return (
     <>
       <div
@@ -374,7 +245,7 @@ const ActualFlowEchartNew = () => {
       <div style={{ height: '100%', width: '100%' }} ref={constraintsRef}>
         <ReusableEchart
           cachedGetInstance={getInstance}
-          defaultOption={actualFlowDefaultOption}
+          defaultOption={defaultFlowsActualOption}
         />
         {Object.entries(markData)
           .filter(([key, value]) => key !== 'focus')
