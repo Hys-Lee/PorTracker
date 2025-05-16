@@ -2,17 +2,29 @@ import getCombined from 'src/features/fetching/flows/getCombined';
 import getActuals, {
   GetActualsParam,
 } from 'src/features/fetching/flows/getActuals';
-import { infiniteQueryOptions } from '@tanstack/react-query';
+import { infiniteQueryOptions, queryOptions } from '@tanstack/react-query';
 import addDate from 'src/features/utils/addDate';
 import { ActualDataResponse } from 'src/features/fetching/flows/getActuals';
 
 const queryFactory = {
-  combinedOne: (date: Date, asset: string, transactionType: string) => ({
-    queryKey: [{ type: 'combined', asset, date, transactionType }] as const,
+  combinedData: (date: Date, assetId: number, transactionType: string) => ({
+    queryKey: [{ type: 'combined', assetId, date, transactionType }] as const,
     queryFn: () => {
-      getCombined(date, asset, transactionType);
+      getCombined(date, assetId, transactionType);
     },
   }),
+  // combinedByDateAsset처럼 합쳐서 가져오는 경우는 날짜랑 자산만 같은 경우밖에 없을거 같아서 밑에 따로 만듦.
+  // 위에는 걍 남겨둠.
+  combinedByDateAsset: (date?: Date, assetId?: number) =>
+    queryOptions({
+      queryKey: [{ type: 'combined', date, assetId }] as const,
+      queryFn: async ({ queryKey }) => {
+        const { date, assetId } = queryKey[0];
+        if (!date || !assetId) return;
+
+        return await getCombined(date, assetId);
+      },
+    }),
 
   actualInfinite: (
     endDate: Date,

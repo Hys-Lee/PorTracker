@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import makeFetch from './template';
+import { RealPortfolioOriginal } from 'src/shared/types/RealPortfolio';
 
 type GetActualsParam = {
   startDate?: Date;
@@ -37,17 +38,19 @@ type ExchangeRateOfTodayDataType = {
   updated_at: string;
 }[];
 type ActualDataResponse = {
-  data: {
-    asset_id: number;
-    asset: { name: string };
-    currency: string;
-    date: string;
-    exchange_rate: number;
-    id: number;
-    price: number;
-    shares: number;
-    transaction_type: string;
-  }[];
+  data: RealPortfolioOriginal[];
+  //  {
+  //   asset_id: number;
+  //   asset: { name: string };
+  //   currency: string;
+  //   date: string;
+  //   exchange_rate: number;
+  //   id: number;
+  //   price: number;
+  //   shares: number;
+  //   transaction_type: string;
+  //   linked_memo_id: number;
+  // }[];
   meta: {
     // assetMappingData?: AssetMappingDataType;
     latestAssetsData?: LatestAssetsDataType;
