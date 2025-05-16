@@ -4,6 +4,7 @@ import AsyncCreatableSelect, {
   AsyncCreatableProps,
 } from 'react-select/async-creatable';
 
+// type ReactSelectOptions = Options<string>;
 type ReactSelectOptions = Options<{ value: string; label: string }>;
 type CompoundFormTagsProps = AsyncCreatableProps<
   ReactSelectOptions,
@@ -27,11 +28,13 @@ const CompoundFormTags = ({
         // loadOptions={loadOptions}
         placeholder="태그를 선택 혹은 입력해주세요"
         noOptionsMessage={() => '새 태그를 입력해보세요'}
-        formatCreateLabel={(inputValue) => (
-          <p style={{ color: 'gray' }}>
-            <span style={{ fontWeight: 'bold' }}>{'#'}</span> {inputValue}
-          </p>
-        )}
+        formatCreateLabel={(inputValue) => {
+          return (
+            <p style={{ color: 'gray' }}>
+              <span style={{ fontWeight: 'bold' }}>{'#'}</span> {inputValue}
+            </p>
+          );
+        }}
         classNames={{
           noOptionsMessage: () =>
             css({

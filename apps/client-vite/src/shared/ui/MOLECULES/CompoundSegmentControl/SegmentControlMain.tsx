@@ -17,7 +17,10 @@ const SegmentControlMain = ({
   //   const childrenArray = Children.toArray(children);
 
   return (
-    <div className={controlMainDefaultStyle} {...props}>
+    <div
+      {...props}
+      className={`${controlMainDefaultStyle} ${props?.className ?? ''}`}
+    >
       {children}
     </div>
   );

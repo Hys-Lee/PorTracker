@@ -7,14 +7,23 @@ interface SegmentControlButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: ReactNode;
   textContent: string;
+  activated?: boolean;
 }
 const SegmentControlButton = ({
   children,
   textContent,
+  activated = false,
   ...props
 }: SegmentControlButtonProps) => {
   return (
-    <button className={buttonDefaultStyle} {...props}>
+    <button
+      {...props}
+      className={`${buttonDefaultStyle({
+        bg: activated ? 'activated' : 'unactivated',
+      })}
+      ${props?.className ?? ''}
+    `}
+    >
       {/* {children} */}
       <Text
         as="p"
@@ -26,15 +35,26 @@ const SegmentControlButton = ({
 };
 export default SegmentControlButton;
 
-const buttonDefaultStyle = css({
-  bg: 'white',
-  rounded: 'md',
-  cursor: 'pointer',
-  flexGrow: 1,
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center',
-  alignItems: 'center',
+const buttonDefaultStyle = cva({
+  base: {
+    rounded: 'md',
+    cursor: 'pointer',
+    flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  variants: {
+    bg: {
+      activated: {
+        bg: 'white',
+      },
+      unactivated: {
+        bg: 'transparent',
+      },
+    },
+  },
 });
 
 const buttonTextDefaultStyle = css({
