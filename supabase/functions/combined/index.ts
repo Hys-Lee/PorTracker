@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
       const params = url.searchParams;
       const filter: CombinedFilter = {
         date: params.get('date') || undefined,
-        asset: params.get('asset') || undefined,
+        assetId: params.get('assetId') || undefined,
         transactionType: params.get('transactionType') || undefined,
       };
 
@@ -68,28 +68,27 @@ Deno.serve(async (req) => {
 
 // RealPortfolio와 Memo 데이터 통합 조회 함수
 async function getCombinedData(supabase, filter: CombinedFilter) {
-  // 병렬로 두 데이터를 조회하여 성능 최적화
-  const [portfolioResult, memoResult] = await Promise.all([
-    getFilteredPortfolio(supabase, filter),
-    getFilteredMemo(supabase, filter),
-  ]);
+  // // 병렬로 두 데이터를 조회하여 성능 최적화
+  // const [portfolioResult, memoResult] = await Promise.all([
+  //   getFilteredPortfolio(supabase, filter),
+  //   getFilteredMemo(supabase, filter),
+  // ]);
 
-  return {
-    portfolio: portfolioResult.data,
-    memo: memoResult.data,
-  };
-}
+  // return {
+  //   portfolio: portfolioResult.data,
+  //   memo: memoResult.data,
+  // };
 
-// 통합 조회용 포트폴리오 필터링 함수
-async function getFilteredPortfolio(supabase, filter: CombinedFilter) {
-  let query = supabase.from('RealPortfolio').select('*');
+  let query = supabase
+    .from('RealPortfolio')
+    .select('*, linkedMemo:Memos(*) , asset:assets(name)');
 
   // 필터 적용
   if (filter.date) {
     query = query.eq('date', filter.date);
   }
-  if (filter.asset) {
-    query = query.eq('asset', filter.asset);
+  if (filter.assetId) {
+    query = query.eq('asset_id', filter.assetId);
   }
   if (filter.transactionType) {
     query = query.eq('transaction_type', filter.transactionType);
@@ -106,29 +105,57 @@ async function getFilteredPortfolio(supabase, filter: CombinedFilter) {
   return { data };
 }
 
-// 통합 조회용 메모 필터링 함수
-async function getFilteredMemo(supabase, filter: CombinedFilter) {
-  let query = supabase.from('Memos').select('*');
+// // 통합 조회용 포트폴리오 필터링 함수
+// async function getFilteredPortfolio(supabase, filter: CombinedFilter) {
+//   let query = supabase
+//     .from('RealPortfolio')
+//     .select('*, linkedMemo:Memos(*) , asset:assets(name)');
 
-  // 필터 적용
-  if (filter.date) {
-    query = query.eq('date', filter.date);
-  }
-  if (filter.asset) {
-    query = query.eq('asset', filter.asset);
-  }
-  if (filter.transactionType) {
-    query = query.eq('transaction_type', filter.transactionType);
-  }
+//   // 필터 적용
+//   if (filter.date) {
+//     query = query.eq('date', filter.date);
+//   }
+//   if (filter.assetId) {
+//     query = query.eq('assetId', filter.assetId);
+//   }
+//   if (filter.transactionType) {
+//     query = query.eq('transaction_type', filter.transactionType);
+//   }
 
-  const { data, error } = await query.order('date', { ascending: true });
+//   const { data, error } = await query
+//     .order('date', { ascending: true })
+//     .order('id', { ascending: true });
 
-  if (error) {
-    throw new Error(error.message);
-  }
+//   if (error) {
+//     throw new Error(error.message);
+//   }
 
-  return { data };
-}
+//   return { data };
+// }
+
+// // 통합 조회용 메모 필터링 함수
+// async function getFilteredMemo(supabase, filter: CombinedFilter) {
+//   let query = supabase.from('Memos').select('*, asset:assets(name)');
+
+//   // 필터 적용
+//   if (filter.date) {
+//     query = query.eq('date', filter.date);
+//   }
+//   if (filter.assetId) {
+//     query = query.eq('assetId', filter.assetId);
+//   }
+//   if (filter.transactionType) {
+//     query = query.eq('transaction_type', filter.transactionType);
+//   }
+
+//   const { data, error } = await query.order('date', { ascending: true });
+
+//   if (error) {
+//     throw new Error(error.message);
+//   }
+
+//   return { data };
+// }
 
 // RealPortfolio와 Memo 데이터 통합 업데이트 함수
 async function updateCombinedData(supabase, updateData: CombinedUpdateData) {
@@ -228,7 +255,7 @@ async function updateCombinedData(supabase, updateData: CombinedUpdateData) {
   1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
   2. Make an HTTP request:
 
-  curl -i --location --request GET 'http://127.0.0.1:54321/functions/v1/combined?date=2023-01-01&asset=a' \
+  curl -i --location --request GET 'http://127.0.0.1:54321/functions/v1/combined?date=2023-01-01&assetId=a' \
     --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0'
 
 */

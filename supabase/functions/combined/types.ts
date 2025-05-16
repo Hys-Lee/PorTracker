@@ -13,7 +13,7 @@ export type MemoUpdate = Database['public']['Tables']['Memos']['Update'];
 // 필터 타입 정의
 export interface CombinedFilter {
   date?: string;
-  asset?: string;
+  assetId?: string;
   transactionType?: string;
 }
 
