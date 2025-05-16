@@ -1,9 +1,9 @@
 import { FormProvider, useForm } from 'react-hook-form';
-import MemoTile from './MemoTile';
+import ActualPortTile from './ActualPortfolioContents';
 
 export default {
-  component: MemoTile,
-  title: 'Widgets/Flows/ORGANISMS/MemoTile',
+  component: ActualPortTile,
+  title: 'Widgets/Flows/ORGANISMS/ActualPortTile',
   tags: ['autodocs'],
   //👇 "Data"로 끝나는 export들은 스토리가 아닙니다.
   excludeStories: /.*Data$/,
@@ -19,9 +19,20 @@ const Template = (args) => {
           e.preventDefault();
         }}
       >
-        <MemoTile {...args} />
+        <ActualPortTile {...args} type="withdrawal" />
       </div>
     </FormProvider>
   );
 };
 export const Default = Template.bind({});
+
+// export const Default = {
+//   render: (args) => {
+//     const methods = useForm();
+//     return (
+//       <FormProvider {...methods}>
+//         <RealPortTile mode="editable" type="buy" {...args} />;
+//       </FormProvider>
+//     );
+//   },
+// };

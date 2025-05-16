@@ -242,7 +242,7 @@ const ActualFlowEchartNew = () => {
       >
         패치버튼
       </div>
-      <div style={{ height: '100%', width: '100%' }} ref={constraintsRef}>
+      <div style={{ height: '100% ', width: '100% ' }} ref={constraintsRef}>
         <ReusableEchart
           cachedGetInstance={getInstance}
           defaultOption={defaultFlowsActualOption}
