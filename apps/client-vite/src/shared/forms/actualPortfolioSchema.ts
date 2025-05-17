@@ -25,6 +25,7 @@ const actualPortfolioMinSchema = z.object({
     .number({ invalid_type_error: '형식이 다릅니다' })
     .positive({ message: '양수여야 합니다' })
     .lt(1000000000, '수가 너무 큽니다'), // 주식 수량
+  transactionType: z.enum(['allocation', 'withdrawal']),
 });
 
 export {

@@ -13,7 +13,7 @@ interface FlowAnnotationProps {
     idx: number;
     type: string;
     date: string;
-    asset: string;
+    assetName: string;
     value: number;
     exchageRate: number; // 전달 받는거로 하자 그냥. 그래프 만들 때 필요하니까 애초에.. // 기본은 해당 국가 통화로. 따라서 원화로 바꾸려면 exchangeRate를 곱하도록.. (원과 자산은 rate를 1로 하면 되자너..)
   };
@@ -22,7 +22,7 @@ interface FlowAnnotationProps {
 
 const ChartAnnotation = ({
   positionData: { constraintsRef, y, x },
-  contentsData: { idx, type, date, asset, value, exchageRate },
+  contentsData: { idx, type, date, assetName, value, exchageRate },
   onClick,
 }: FlowAnnotationProps) => {
   const [isMemoOpen, setIsMemoOpen] = useState(false);
@@ -66,7 +66,7 @@ const ChartAnnotation = ({
           <p>{idx}</p>
         </div>
         <div>
-          <p>{asset}</p>
+          <p>{assetName}</p>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <p>평가금</p>
             <p>{value}</p>

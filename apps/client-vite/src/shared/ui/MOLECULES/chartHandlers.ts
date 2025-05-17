@@ -13,7 +13,7 @@ const seriesCommon = {
   stack: 'Total',
   type: 'line',
   //   symbol: 'none',
-  symbolSize: 10,
+  symbolSize: 12,
   showSymbol: false,
 
   sampling: 'lttb',
@@ -270,7 +270,7 @@ interface ParamData extends echarts.ECElementEvent {
 //       );
 //       // focusInfo.accumulatedValue === paramData.yAxis &&
 //       // focusInfo.date === paramData.xAxis &&
-//       // focusInfo.asset === paramData.name &&
+//       // focusInfo.assetName === paramData.name &&
 //       // focusInfo.isExist; // 포커스랑 동일 위치, 동일 시리즈
 
 //       //   const focusedKey = isFocus ? focusInfo.original : '';
@@ -316,7 +316,7 @@ const getYcoord = (
 
 const addEventHandlerNew = (
   param: echarts.ECElementEvent,
-  valueOnDate,
+  // valueOnDate,
   determineFocus
 ): {
   type: 'mark' | 'focus';
@@ -326,19 +326,26 @@ const addEventHandlerNew = (
   if (param.componentType !== 'markPoint' && param.componentType !== 'series') {
     return [];
   }
-
+  //test
+  console.log('PARAM: ', param);
   if (param.componentType === 'series') {
+    const valueOnDate = param.value as FlowValue;
+
     const accumulatedValue = getYcoord(
       // defaultDatum,
       valueOnDate
       // param.seriesIndex as number,
       // param.dataIndex
     );
+    // 시리즈 인덱스가 없다면 없는 자산 id로 일단 할당
+    const assetId = param.seriesIndex ? param.seriesIndex + 1 : 0;
+
     const markDataTemplate: any = {
-      asset: param.seriesName || '이름 없음',
+      assetName: param.seriesName || '이름 없음',
+      assetId: assetId,
       date: param.name,
       type: 'normal',
-      value: Number.isInteger(Number(param.value)) ? Number(param.value) : 0,
+      value: valueOnDate[assetId],
       viewPos: [param.event!.offsetX, param.event!.offsetY],
       dataIndex: param.dataIndex || 0,
       seriesIndex: param.seriesIndex as number,
@@ -374,7 +381,7 @@ const makeMarkPoints = (markData, focusInfo) => {
     label?: object;
   }[] = markDataEntries.map(([key, data], idx) => {
     const template = {
-      name: `${data.asset}`,
+      name: `${data.assetName}`,
       xAxis: data.date,
       yAxis: data.accumulatedValue,
       itemStyle: { borderColor: 'black' }, // type에 따라 모양이나 색 처리
@@ -387,7 +394,7 @@ const makeMarkPoints = (markData, focusInfo) => {
 
     if (
       focusInfo &&
-      data.asset === focusInfo.asset &&
+      data.assetName === focusInfo.assetName &&
       data.date === focusInfo.date
     ) {
       hasAlready = true;
@@ -409,7 +416,7 @@ const makeMarkPoints = (markData, focusInfo) => {
   // const isFocusExist = focusInfo.isExist;
   if (focusInfo && !hasAlready) {
     markPointData.push({
-      name: `${focusInfo.asset}`,
+      name: `${focusInfo.assetName}`,
       xAxis: focusInfo.date,
       yAxis: focusInfo.accumulatedValue,
       itemStyle: {

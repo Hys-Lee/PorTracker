@@ -65,7 +65,7 @@ const ActualFlowEchartNew = () => {
   // console.log('data, isPending, isError', data, isPending, isError);
   // const { accData: graphData, wonPerDollarUpdateDate } = data;
 
-  console.log('markdata: ', markData);
+  console.log('markdata,focus: ', markData, focusInfo);
 
   const markPoints = useMemo(
     () => makeMarkPoints(markData, focusInfo),
@@ -90,9 +90,6 @@ const ActualFlowEchartNew = () => {
           return {
             lineStyle: {
               width: 0,
-            },
-            itemStyle: {
-              // color: `rgb(255, ${70 + idx * 10}, 131)`,
             },
             areaStyle: {
               // color: chartInstance.graphic.LinearGradient(0, 0, 0, 1, [
@@ -153,51 +150,34 @@ const ActualFlowEchartNew = () => {
 
   useEffect(() => {
     if (!chartInstance) return;
-    (chartInstance as EChartsInstance).on('click', (params) =>
-      console.log('click PARAM: ', params)
-    );
-    (chartInstance as EChartsInstance).on('mousedown', (params) =>
-      console.log('mousedown PARAM: ', params)
-    );
-    (chartInstance as EChartsInstance).on('mouseover', (params) =>
-      console.log('mouseover PARAM: ', params)
-    );
-
-    return () => {
-      (chartInstance as EChartsInstance).off('click');
-      (chartInstance as EChartsInstance).off('mousedown');
-      (chartInstance as EChartsInstance).off('mouseover');
-    };
-  }, [chartInstance, mixedData, focusInfo]);
-
-  useEffect(() => {
-    if (!chartInstance) return;
     (chartInstance as EChartsInstance).on(
       'click',
       (param: echarts.ECElementEvent) => {
-        //test
-        console.log('PARAM: ', param);
-        const valuesOnDate = param.value as FlowValue;
+        // //test
+        // console.log('PARAM: ', param);
+        // const valuesOnDate = param.value as FlowValue;
 
         const determineFocus = (yAxis, xAxis, name) => {
           return (
             focusInfo &&
             focusInfo.accumulatedValue === yAxis &&
             focusInfo.date === xAxis &&
-            focusInfo.asset === name
+            focusInfo.assetName === name
           );
         };
 
         const evaluations = addEventHandlerNew(
           param,
           // mixedData,
-          valuesOnDate,
+          // valuesOnDate,
           determineFocus
         );
+        //test
+        console.log('EVALU: ', evaluations);
 
         evaluations.forEach((eachEvaluation) => {
           if (eachEvaluation.type === 'mark') {
-            const markDataKey = `${focusInfo.asset}-${focusInfo.date}`;
+            const markDataKey = `${focusInfo.assetName}-${focusInfo.date}`;
 
             setMarkData((prev) => ({ ...prev, [markDataKey]: focusInfo }));
           } else if (eachEvaluation.type === 'focus') {
@@ -208,7 +188,8 @@ const ActualFlowEchartNew = () => {
               // data 처리
               const newFocusInfo = eachEvaluation.data
                 ? eachEvaluation.data
-                : ActualFlowFocusInfoAtomInit;
+                : // : ActualFlowFocusInfoAtomInit;
+                  undefined;
 
               setFocusInfo(newFocusInfo);
             }
@@ -243,7 +224,8 @@ const ActualFlowEchartNew = () => {
               [
                 key,
                 {
-                  asset,
+                  assetName,
+                  assetId,
                   date,
                   value,
                   viewPos,
@@ -258,7 +240,8 @@ const ActualFlowEchartNew = () => {
               <ChartAnnotation
                 onClick={() => {
                   setFocusInfo((prev) => ({
-                    asset,
+                    assetName,
+                    assetId,
                     date,
                     value,
                     viewPos,
@@ -267,17 +250,17 @@ const ActualFlowEchartNew = () => {
                     dataIndex,
                     seriesIndex,
                     isExist: true,
-                    original: `${asset}-${date}`,
+                    original: `${assetName}-${date}`,
                   }));
                 }}
-                key={`${asset}-${date}-${value}`}
+                key={`${assetName}-${date}-${value}`}
                 positionData={{
                   constraintsRef,
                   y: viewPos[1],
                   x: viewPos[0],
                 }}
                 contentsData={{
-                  asset,
+                  assetName,
                   date,
                   exchageRate: 1, // 추후 수정
                   idx,

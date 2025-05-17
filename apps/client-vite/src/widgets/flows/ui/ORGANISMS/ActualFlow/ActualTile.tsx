@@ -5,7 +5,7 @@ import Tile from 'src/shared/ui/ATOMS/Tile';
 import { z } from 'zod';
 import { css } from '@styled-system/css';
 import { useEffect, useState } from 'react';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { ActualFlowFocusInfoAtom } from 'src/entities/flows/atoms/actualFlowFocusAtoms';
 import { putTradeData } from 'src/shared/ui/MOLECULES/chartDataHandler';
 import DividingLine from 'src/shared/ui/ATOMS/DividingLine';
@@ -32,36 +32,49 @@ const defaultActualFlowForm: ActualFlowForm = {
   content: '',
   tags: [''],
   customTemplate: 0,
+  transactionType: 'allocation',
 };
 
 const ActualTile = () => {
-  const tmpGlobalState: {
-    date?: Date;
-    assetId?: number;
-    transactionType?: 'allocation' | 'withdrawal';
-  } = {
-    date: undefined,
-    assetId: undefined,
-    transactionType: undefined,
-  };
+  const [focusInfo, setFocusInfo] = useAtom(ActualFlowFocusInfoAtom);
+  const commonDate = focusInfo?.date ? new Date(focusInfo.date) : undefined;
+  const commonDateString = commonDate
+    ? `${commonDate.getFullYear()}-${String(commonDate.getMonth() + 1).padStart(
+        2,
+        '0'
+      )}-${String(commonDate.getDate()).padStart(2, '0')}`
+    : '';
+  const commonAssetId = focusInfo?.assetId;
+  // const tmpGlobalState: {
+  //   date?: Date;
+  //   assetId?: number;
+  //   transactionType?: 'allocation' | 'withdrawal';
+  // } = {
+  //   date: undefined,
+  //   assetId: undefined,
+  //   transactionType: undefined,
+  // };
+  // const commonDate = tmpGlobalState.date;
+  // const commonDateString = 'datestring';
+  // const commonAssetId = tmpGlobalState.assetId;
 
-  const { data, isError, isPending, isFetching } = useQuery({
-    ...queryFactory.combinedByDateAsset(
-      tmpGlobalState.date,
-      tmpGlobalState.assetId
-    ),
-    enabled: tmpGlobalState.date && tmpGlobalState.assetId ? true : false,
+  const { data, isError, isFetching } = useQuery({
+    ...queryFactory.combinedByDateAsset(commonDate, commonAssetId),
+    enabled: focusInfo ? true : false,
+    staleTime: 1000 * 60, //1분
   });
 
+  console.log('focusInfo,data:', !!focusInfo, data);
   const [formPage, setFormPage] = useState(0);
-  const maxFormPageIndex = (data?.data.length ?? 0) - 1;
+  const maxFormPageIndex = data?.data?.length ? data?.data?.length - 1 : 0;
 
   const methods = useForm<ActualFlowForm>({
     defaultValues: defaultActualFlowForm,
   });
   // const [actualForm, setActualForm] =
   //   useState<ActualFlowForm>(defaultActualForm);
-  const { handleSubmit, reset } = methods;
+  const { handleSubmit, reset, watch } = methods;
+  const transactionType = watch('transactionType');
 
   //test
   console.log('fetchdata: ', data);
@@ -70,33 +83,32 @@ const ActualTile = () => {
     if (formPage > maxFormPageIndex || !data) return;
 
     console.log('언제 실행되는가');
-    const formContents: ActualFlowForm[] = data.data.map(
+    const formContents: ActualFlowForm[] = data.data?.map(
       (dataOnTransaction) => ({
         content: dataOnTransaction.linkedMemo.content,
         currency: dataOnTransaction.currency,
         exchangeRate: dataOnTransaction.exchange_rate,
         price: dataOnTransaction.price,
         shares: dataOnTransaction.shares,
+        transactionType: dataOnTransaction.transaction_type,
         tags: dataOnTransaction.linkedMemo.tags,
         title: dataOnTransaction.linkedMemo.title,
         customTemplate:
           dataOnTransaction.linkedMemo.custom_template_value ?? undefined,
       })
-    );
+    ) ?? [defaultActualFlowForm];
     // test
     console.log('리셋에 사용되는 놈: ', formContents[formPage]);
 
     reset(formContents[formPage]);
   }, [formPage, maxFormPageIndex, data, reset]);
 
-  if (isFetching) return <div>로딩중</div>;
-
   const transactionTypeLabel = {
     // 언젠가 다른 곳으로 이동시켜야 함. 상수니까.
     allocation: '투입',
     withdrawal: '인출',
   };
-
+  if (isFetching) return <div>로딩중</div>;
   return (
     <>
       <Tile style={{ width: '300px', borderRadius: '16px', padding: '8px' }}>
@@ -132,24 +144,14 @@ const ActualTile = () => {
                   justifyContent: 'space-between',
                 }}
               >
-                <p>
-                  {tmpGlobalState.date
-                    ? `${tmpGlobalState.date.getFullYear()}-${String(
-                        tmpGlobalState.date.getMonth() + 1
-                      ).padStart(2, '0')}-${String(
-                        tmpGlobalState.date.getDate()
-                      ).padStart(2, '0')}`
-                    : ''}
-                </p>
+                <p>{commonDateString}</p>
                 <button>
-                  {tmpGlobalState.transactionType
-                    ? transactionTypeLabel[tmpGlobalState.transactionType]
-                    : ''}
+                  {transactionType ? transactionTypeLabel[transactionType] : ''}
                 </button>
               </div>
               <h4>
-                {data?.data[formPage].asset.name ?? // 일단 임시로 이렇게
-                  (tmpGlobalState.assetId || '재산 미선택')}
+                {data?.data?.[formPage]?.asset?.name ?? // 일단 임시로 이렇게
+                  (commonAssetId || '재산 미선택')}
               </h4>
             </section>
 

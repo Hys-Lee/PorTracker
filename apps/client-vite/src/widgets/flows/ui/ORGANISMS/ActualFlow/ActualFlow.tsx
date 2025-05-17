@@ -35,9 +35,11 @@ const ActualFlow = () => {
           gap: '8px',
           width: '100%',
         }}
-        className={css({ bg: 'white', width: 'fit-content' })}
+        // className={css({ bg: 'white', width: 'fit-content', height: '100%' })}
       >
-        <ActualFlowChartView />
+        <div style={{ height: '100% !important' }}>
+          <ActualFlowChartView />
+        </div>
         <div
           style={{
             width: '260px',

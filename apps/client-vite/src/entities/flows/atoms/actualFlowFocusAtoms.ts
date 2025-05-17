@@ -2,7 +2,8 @@ import { atom } from 'jotai';
 
 interface MarkDataContent {
   type: 'normal' | 'trade-only' | 'memo-only' | 'all';
-  asset: string;
+  assetName: string;
+  assetId: number;
   date: string; // x
   value: number; // y
   // chartPos: [string, number];
@@ -18,7 +19,8 @@ export type FocusContent = MarkDataContent;
 
 export const ActualFlowFocusInfoAtomInit: FocusContent = {
   date: '',
-  asset: '',
+  assetName: '',
+  assetId: 0,
   type: 'normal',
   value: 0,
   viewPos: [0, 0],
@@ -26,6 +28,7 @@ export const ActualFlowFocusInfoAtomInit: FocusContent = {
   dataIndex: 0,
   accumulatedValue: 0,
 };
-const ActualFlowFocusInfoAtom = atom<FocusContent>(ActualFlowFocusInfoAtomInit);
+const ActualFlowFocusInfoAtom = atom<FocusContent | undefined>();
+// ActualFlowFocusInfoAtomInit
 
 export { MarkDataContent, ActualFlowFocusInfoAtom };

@@ -1,4 +1,6 @@
-import getCombined from 'src/features/fetching/flows/getCombined';
+import getCombined, {
+  CombinedResponse,
+} from 'src/features/fetching/flows/getCombined';
 import getActuals, {
   GetActualsParam,
 } from 'src/features/fetching/flows/getActuals';
@@ -20,10 +22,12 @@ const queryFactory = {
       queryKey: [{ type: 'combined', date, assetId }] as const,
       queryFn: async ({ queryKey }) => {
         const { date, assetId } = queryKey[0];
-        if (!date || !assetId) return;
+        if (!date || !assetId) throw new Error('date랑 assetId는 줘야해요');
 
         return await getCombined(date, assetId);
       },
+
+      // initialData: {} as CombinedResponse,
     }),
 
   actualInfinite: (

@@ -36,3 +36,5 @@ const getCombined = async (
 };
 
 export default getCombined;
+
+export { CombinedResponse };
