@@ -3,6 +3,7 @@ import { MarkDataContent } from 'src/entities/flows/atoms/actualFlowFocusAtoms';
 import // FlowDataValuesType,
 // FlowDataValuesMetaDataType,
 'src/features/hooks/queries/flows/useFlowsActualQuery';
+import { FlowValue } from 'src/features/hooks/queries/flows/useFlowsActualQuery';
 
 /** 아래는 dataset사용 전 series 공통 옵션 */
 const seriesCommon = {
@@ -217,97 +218,105 @@ interface ParamData extends echarts.ECElementEvent {
   xAxis: string;
   name: string;
 }
-const addEventHandler = (
-  echartInstance,
-  defaultDatum,
-  handleMakrPoints,
-  handleFocus,
-  determineFocus
-) => {
-  if (!echartInstance) return null;
+// const addEventHandler = (
+//   echartInstance,
+//   defaultDatum,
+//   handleMakrPoints,
+//   handleFocus,
+//   determineFocus
+// ) => {
+//   if (!echartInstance) return null;
 
-  echartInstance.on('click', (param: echarts.ECElementEvent) => {
-    if (
-      param.componentType !== 'markPoint' &&
-      param.componentType !== 'series'
-    ) {
-      return;
-    }
+//   echartInstance.on('click', (param: echarts.ECElementEvent) => {
+//     if (
+//       param.componentType !== 'markPoint' &&
+//       param.componentType !== 'series'
+//     ) {
+//       return;
+//     }
 
-    const accumulatedValue = defaultDatum.reduce(
-      (acc: number, cur: number[], idx: number) => {
-        if (idx > (param.seriesIndex as number)) return acc;
-        return acc + cur[param.dataIndex as number];
-      },
-      0
-    );
-    //test
-    console.log('parma:', param);
-    const markDataTemplate: any =
-      //MarkDataContent
-      {
-        asset: param.seriesName || '이름 없음',
-        date: param.name,
-        type: 'normal',
-        value: Number.isInteger(Number(param.value)) ? Number(param.value) : 0,
-        viewPos: [param.event!.offsetX, param.event!.offsetY],
-        dataIndex: param.dataIndex || 0,
-        seriesIndex: param.seriesIndex as number,
-        accumulatedValue,
-      };
+//     const accumulatedValue = defaultDatum.reduce(
+//       (acc: number, cur: number[], idx: number) => {
+//         if (idx > (param.seriesIndex as number)) return acc;
+//         return acc + cur[param.dataIndex as number];
+//       },
+//       0
+//     );
+//     //test
+//     console.log('parma:', param);
+//     const markDataTemplate: any =
+//       //MarkDataContent
+//       {
+//         asset: param.seriesName || '이름 없음',
+//         date: param.name,
+//         type: 'normal',
+//         value: Number.isInteger(Number(param.value)) ? Number(param.value) : 0,
+//         viewPos: [param.event!.offsetX, param.event!.offsetY],
+//         dataIndex: param.dataIndex || 0,
+//         seriesIndex: param.seriesIndex as number,
+//         accumulatedValue,
+//       };
 
-    if (param.componentType === 'series') {
-      handleFocus(markDataTemplate, null);
-      //   setFocusInfo({ ...markDataTemplate, isExist: true, original: '' });
-    } else if (param.componentType === 'markPoint') {
-      //   const focusInfo = focusInfoRef.current as FocusContent;
-      const paramData = param.data as ParamData;
-      const isFocus = determineFocus(
-        paramData.yAxis,
-        paramData.xAxis,
-        paramData.name
-      );
-      // focusInfo.accumulatedValue === paramData.yAxis &&
-      // focusInfo.date === paramData.xAxis &&
-      // focusInfo.asset === paramData.name &&
-      // focusInfo.isExist; // 포커스랑 동일 위치, 동일 시리즈
+//     if (param.componentType === 'series') {
+//       handleFocus(markDataTemplate, null);
+//       //   setFocusInfo({ ...markDataTemplate, isExist: true, original: '' });
+//     } else if (param.componentType === 'markPoint') {
+//       //   const focusInfo = focusInfoRef.current as FocusContent;
+//       const paramData = param.data as ParamData;
+//       const isFocus = determineFocus(
+//         paramData.yAxis,
+//         paramData.xAxis,
+//         paramData.name
+//       );
+//       // focusInfo.accumulatedValue === paramData.yAxis &&
+//       // focusInfo.date === paramData.xAxis &&
+//       // focusInfo.asset === paramData.name &&
+//       // focusInfo.isExist; // 포커스랑 동일 위치, 동일 시리즈
 
-      //   const focusedKey = isFocus ? focusInfo.original : '';
+//       //   const focusedKey = isFocus ? focusInfo.original : '';
 
-      const metaData = { seriesName: paramData.name, date: paramData.xAxis };
+//       const metaData = { seriesName: paramData.name, date: paramData.xAxis };
 
-      if (isFocus) {
-        // handleMakrPoints(markDataTemplate);
-        handleMakrPoints();
-        handleFocus(null, null);
-      } else {
-        // const originalKey = `${paramData.name}-${paramData.xAxis}`;
-        handleFocus(null, metaData);
-      }
-    }
-  });
-};
+//       if (isFocus) {
+//         // handleMakrPoints(markDataTemplate);
+//         handleMakrPoints();
+//         handleFocus(null, null);
+//       } else {
+//         // const originalKey = `${paramData.name}-${paramData.xAxis}`;
+//         handleFocus(null, metaData);
+//       }
+//     }
+//   });
+// };
 
 const getYcoord = (
-  data: { asset: string; value: number[] }[],
-  targetSeriesIndex: number,
-  targetDataIndex: number
+  valueOnDate: FlowValue //{ asset: string; value: number[] }[],
+  // targetSeriesIndex: number,
+  // targetDataIndex: number
 ) =>
-  data.reduce(
-    (
-      accumulatedSum: number,
-      curSeriesData: { asset: string; value: number[] },
-      seriesIdx: number
-    ) => {
-      if (seriesIdx > targetSeriesIndex) return accumulatedSum;
-      return accumulatedSum + curSeriesData.value[targetDataIndex];
-    },
-    0
-  );
+  Object.entries(valueOnDate).reduce((accSum, [fieldName, value]) => {
+    // assetId가 아닌 경우 -date- 는 제외
+    if (Number.isNaN(Number(fieldName))) return accSum;
+
+    // assetId가 있는 경우
+    return value + accSum;
+  }, 0);
+// data.reduce(
+//   (
+//     accumulatedSum: number,
+//     curSeriesData: { asset: string; value: number[] },
+//     seriesIdx: number
+//   ) => {
+//     if (seriesIdx > targetSeriesIndex) return accumulatedSum;
+//     return accumulatedSum + curSeriesData.value[targetDataIndex];
+//   },
+
+//   0
+// );
 
 const addEventHandlerNew = (
   param: echarts.ECElementEvent,
-  defaultDatum,
+  valueOnDate,
   determineFocus
 ): {
   type: 'mark' | 'focus';
@@ -320,9 +329,10 @@ const addEventHandlerNew = (
 
   if (param.componentType === 'series') {
     const accumulatedValue = getYcoord(
-      defaultDatum,
-      param.seriesIndex as number,
-      param.dataIndex
+      // defaultDatum,
+      valueOnDate
+      // param.seriesIndex as number,
+      // param.dataIndex
     );
     const markDataTemplate: any = {
       asset: param.seriesName || '이름 없음',
@@ -414,7 +424,7 @@ const makeMarkPoints = (markData, focusInfo) => {
 
 export {
   // makeActualFlowEchartOption,
-  addEventHandler,
+  // addEventHandler,
   addEventHandlerNew,
   makeMarkPoints,
   defaultFlowsActualOption,

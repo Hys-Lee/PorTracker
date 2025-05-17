@@ -26,6 +26,7 @@ const ActualFlowChartView = () => {
     <>
       <div
         style={{
+          height: '100%',
           minWidth: '480px',
           width: '100% !important',
           display: 'flex',
@@ -122,8 +123,8 @@ const ActualFlowChartView = () => {
             borderRadius: '16px',
             padding: '8px',
             flexGrow: 1,
-            width: '100% !important',
-            height: '100% !important',
+            width: '100% ',
+            height: '100%',
           }}
         >
           <ActualFlowEcharts />

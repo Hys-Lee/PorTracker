@@ -25,7 +25,9 @@ import { useAtom } from 'jotai';
 import ChartAnnotation from './ChartAnnotation';
 import { MarkDataContent } from 'src/entities/flows/atoms/actualFlowFocusAtoms';
 import { EChartsInstance } from 'echarts-for-react';
-import useFlowsActualQuery from 'src/features/hooks/queries/flows/useFlowsActualQuery';
+import useFlowsActualQuery, {
+  FlowValue,
+} from 'src/features/hooks/queries/flows/useFlowsActualQuery';
 import { ActualDataResponse } from 'src/features/fetching/flows/getActuals';
 
 interface MarkData {
@@ -60,34 +62,15 @@ const ActualFlowEchartNew = () => {
   const { data, isPending, isError, hasNextPage, fetchNextPage } =
     useFlowsActualQuery(new Date(Date.now()), 1);
 
-  console.log('data, isPending, isError', data, isPending, isError);
-  const { accData: graphData, wonPerDollarUpdateDate } = data;
+  // console.log('data, isPending, isError', data, isPending, isError);
+  // const { accData: graphData, wonPerDollarUpdateDate } = data;
+
+  console.log('markdata: ', markData);
 
   const markPoints = useMemo(
     () => makeMarkPoints(markData, focusInfo),
     [markData, focusInfo]
   );
-
-  // const decidedValues = useMemo(() => {
-  //   if (!graphData?.values) return {}; /// 이거 방어 코드 어케 쓰지?
-  //   return Object.entries(graphData?.values).reduce(
-  //     (acc, [asset, valueInfos]) => {
-  //       //test
-  //       console.log('valueInfos: ', valueInfos);
-  //       const decidedValueInfos = valueInfos.map((valueInfo) => ({
-  //         metaData: valueInfo.metaData,
-  //         value: usingKRW ? valueInfo.krwValue : valueInfo.localCurrencyValue,
-  //       }));
-  //       return { ...acc, [asset]: decidedValueInfos };
-  //     },
-  //     {} as {
-  //       [asset: string]: {
-  //         value: number;
-  //         metaData: FlowDataValuesMetaDataType[];
-  //       }[];
-  //     }
-  //   );
-  // }, [usingKRW, graphData]);
 
   /**
    * data를 차트에 적용 -- dataset사용 이후 버전
@@ -105,6 +88,9 @@ const ActualFlowEchartNew = () => {
       const seriesOptions = Object.entries(data.latestAssetInfo).map(
         ([assetId, { name }], idx) => {
           return {
+            lineStyle: {
+              width: 0,
+            },
             itemStyle: {
               // color: `rgb(255, ${70 + idx * 10}, 131)`,
             },
@@ -122,7 +108,7 @@ const ActualFlowEchartNew = () => {
             },
 
             ...seriesCommon,
-            zlevel: datasetDimensions.length - idx,
+            // zlevel: datasetDimensions.length - idx,
             name,
             encode: {
               x: xAxisName,
@@ -142,28 +128,6 @@ const ActualFlowEchartNew = () => {
     },
     [chartInstance, data.accData.values, data.latestAssetInfo] //  나중에 krwValue <-> localCurrencyValue 토글도 들어가야 함
   );
-
-  // /**
-  //  * data를 차트에 적용 -- dataset사용 이전 버전
-  //  */
-  // useEffect(() => {
-  //   // data 추가하는 로직
-  //   if (!chartInstance) return;
-  //   if (hasNextPage) {
-  //     //test
-  //     console.log('더 불러와');
-  //     // fetchNextPage();
-  //   }
-
-  //   chartInstance.setOption({
-  //     xAxis: {
-  //       data: graphData.date,
-  //     },
-  //     series: Object.entries(decidedValues).map(([key, value], idx) => {
-  //       return makeSeriesCommon(key, value, idx);
-  //     }),
-  //   });
-  // }, [graphData.date, decidedValues, chartInstance, hasNextPage]);
 
   /**
    * 마크포인트 그래프에 적용
@@ -186,11 +150,35 @@ const ActualFlowEchartNew = () => {
   /**
    * 클릭 이벤트 핸들러 등록 -- markPoint및 focus관련
    */
+
+  useEffect(() => {
+    if (!chartInstance) return;
+    (chartInstance as EChartsInstance).on('click', (params) =>
+      console.log('click PARAM: ', params)
+    );
+    (chartInstance as EChartsInstance).on('mousedown', (params) =>
+      console.log('mousedown PARAM: ', params)
+    );
+    (chartInstance as EChartsInstance).on('mouseover', (params) =>
+      console.log('mouseover PARAM: ', params)
+    );
+
+    return () => {
+      (chartInstance as EChartsInstance).off('click');
+      (chartInstance as EChartsInstance).off('mousedown');
+      (chartInstance as EChartsInstance).off('mouseover');
+    };
+  }, [chartInstance, mixedData, focusInfo]);
+
   useEffect(() => {
     if (!chartInstance) return;
     (chartInstance as EChartsInstance).on(
       'click',
       (param: echarts.ECElementEvent) => {
+        //test
+        console.log('PARAM: ', param);
+        const valuesOnDate = param.value as FlowValue;
+
         const determineFocus = (yAxis, xAxis, name) => {
           return (
             focusInfo &&
@@ -202,7 +190,8 @@ const ActualFlowEchartNew = () => {
 
         const evaluations = addEventHandlerNew(
           param,
-          mixedData,
+          // mixedData,
+          valuesOnDate,
           determineFocus
         );
 

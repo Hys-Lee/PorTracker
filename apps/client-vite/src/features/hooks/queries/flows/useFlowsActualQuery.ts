@@ -163,6 +163,7 @@ const useFlowsActualQuery = (
 
 export default useFlowsActualQuery;
 export {
+  FlowValue,
   FlowData,
   FlowTransaction,
   FlowOtherData,

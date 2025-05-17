@@ -4,6 +4,7 @@ import ReactECharts, {
 } from 'echarts-for-react';
 import * as echarts from 'echarts';
 import { useEffect, useRef, useState, memo, Ref, RefAttributes } from 'react';
+import { css } from '@styled-system/css';
 
 /////    Any 타입 다 찾으셈..
 
@@ -27,6 +28,7 @@ const ReusableEchart = memo(
         chartInstance = echarts.init(chartRef.current);
         chartInstance.setOption(defaultOption);
         cachedGetInstance(chartInstance);
+        // chartInstance.resize();
       }
       return () => {
         if (chartInstance) {
@@ -41,8 +43,16 @@ const ReusableEchart = memo(
       //     style={{ width: '100%', height: '100%' }}
       //     option={defaultOption}
       //   />
-      <div ref={chartRef} style={{ width: '100%', height: '100%' }}></div>
+      <div
+        className={EchartDefaultStyle}
+        ref={chartRef}
+        style={{ width: '100%', height: '100%' }}
+      ></div>
     );
   }
 );
 export default ReusableEchart;
+
+const EchartDefaultStyle = css({
+  '& > div': { height: '100% !important' },
+});
