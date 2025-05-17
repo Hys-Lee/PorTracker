@@ -1,3 +1,4 @@
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { FormProvider, useForm } from 'react-hook-form';
 import ActualFlow from './ActualFlow';
 import {
@@ -14,14 +15,15 @@ export default {
   excludeStories: /.*Data$/,
   // args: {  },
 };
+const client = new QueryClient();
 
 const Template = (args) => {
   const methods = useForm();
-  const client = new QueryClient();
   return (
     <QueryClientProvider client={client}>
       <FormProvider {...methods}>
         <div
+          style={{ height: '500px' }}
           onSubmit={(e) => {
             e.preventDefault();
           }}
@@ -29,6 +31,7 @@ const Template = (args) => {
           <ActualFlow {...args} />
         </div>
       </FormProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 };

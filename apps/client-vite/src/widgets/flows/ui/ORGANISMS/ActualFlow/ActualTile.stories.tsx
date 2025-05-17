@@ -11,9 +11,8 @@ export default {
   // args: {  },
 };
 
+const queryClient = new QueryClient();
 const Template = () => {
-  const queryClient = new QueryClient();
-
   return (
     <QueryClientProvider client={queryClient}>
       <div
