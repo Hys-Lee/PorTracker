@@ -1,40 +1,19 @@
 import Text from 'src/shared/ui/ATOMS/Text';
 import CompoundForm from 'src/shared/ui/MOLECULES/CompoundForm/CompoundForm';
-import CompoundSegmentControl from 'src/shared/ui/MOLECULES/CompoundSegmentControl/CompoundSegmentControl';
-import Tile from 'src/shared/ui/ATOMS/Tile';
-import { Controller, useForm, useFormContext } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { css } from '@styled-system/css';
-import { useState } from 'react';
-import { memoMinSchema } from 'src/shared/forms/memoSchema';
+import { Controller, useFormContext } from 'react-hook-form';
 import {
-  FieldDefaultStyle,
   FormContentsDefaultStyle,
   FormControlDefaultStyle,
-  LabelDefaultStyle,
 } from './commonStyles';
 
 const MemoContents = () => {
-  const {
-    register,
-    control,
-    formState: { errors },
-  } = useFormContext();
+  const { register, control } = useFormContext();
 
   return (
     <section>
       <div style={{ display: 'flex', justifyContent: 'start', width: '100%' }}>
         <Text as="h2" textContent={'메모'} style={{ fontWeight: 'bold' }} />
       </div>
-      {/* <CompoundForm
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px',
-            width: '100%',
-          }}
-        > */}
       <div className={FormContentsDefaultStyle}>
         <div>
           <CompoundForm.Input
@@ -61,12 +40,13 @@ const MemoContents = () => {
           name="tags"
           control={control}
           render={({ field: { value, onChange } }) => {
-            console.log('TAGSVALEU: ', value);
+            const tagValues = (value as string[]).map((eachVal) => ({
+              value: eachVal,
+              label: eachVal,
+            }));
             return (
               <CompoundForm.Tags
-                // value={value}
-                // value={['1', '2']}
-                defaultValue={[{ value, label: value }]}
+                defaultValue={tagValues}
                 onChange={(newValue) => onChange(newValue)}
                 isLoading={false}
               />
