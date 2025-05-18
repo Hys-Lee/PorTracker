@@ -1,7 +1,7 @@
 import ReusableEchart from 'src/shared/ui/MOLECULES/ReusableEchart';
 import {
   // makeActualFlowEchartOption,
-  addEventHandler,
+  // addEventHandler,
   makeMarkPoints,
   addEventHandlerNew,
   // makeSeriesCommon,
@@ -33,6 +33,12 @@ import { ActualDataResponse } from 'src/features/fetching/flows/getActuals';
 interface MarkData {
   [id: string]: MarkDataContent;
 }
+
+interface AssetMetaInfo {
+  id: number;
+  name: string;
+}
+
 const ActualFlowEchartNew = () => {
   const [chartInstance, setChartInstance] = useState<EChartsInstance | null>(
     null
@@ -67,6 +73,15 @@ const ActualFlowEchartNew = () => {
 
   console.log('markdata,focus: ', markData, focusInfo);
 
+  const assetsOrdered: AssetMetaInfo[] = useMemo(
+    () =>
+      Object.entries(data.latestAssetInfo).map(([assetId, assetInfo]) => ({
+        id: Number(assetId) || 0,
+        name: assetInfo.name,
+      })),
+    [data.latestAssetInfo]
+  );
+
   const markPoints = useMemo(
     () => makeMarkPoints(markData, focusInfo),
     [markData, focusInfo]
@@ -82,11 +97,12 @@ const ActualFlowEchartNew = () => {
       // 일단 local을 적용하는걸로 해보자.
       const datasetSource = data.accData.values.localCurrencyValues;
       const xAxisName = 'date';
-      const assetIds = Object.keys(data.latestAssetInfo);
+      const assetIds = assetsOrdered.map((assetInfo) => assetInfo.id);
       const datasetDimensions = [xAxisName, ...assetIds];
 
-      const seriesOptions = Object.entries(data.latestAssetInfo).map(
-        ([assetId, { name }], idx) => {
+      const seriesOptions = assetsOrdered.map(
+        // const seriesOptions = Object.entries(data.latestAssetInfo).map(
+        ({ id: assetId, name }, idx) => {
           return {
             lineStyle: {
               width: 0,
@@ -123,7 +139,7 @@ const ActualFlowEchartNew = () => {
         series: seriesOptions,
       });
     },
-    [chartInstance, data.accData.values, data.latestAssetInfo] //  나중에 krwValue <-> localCurrencyValue 토글도 들어가야 함
+    [chartInstance, data.accData.values, assetsOrdered] //  나중에 krwValue <-> localCurrencyValue 토글도 들어가야 함
   );
 
   /**
@@ -170,6 +186,7 @@ const ActualFlowEchartNew = () => {
           param,
           // mixedData,
           // valuesOnDate,
+          assetsOrdered,
           determineFocus
         );
         //test
@@ -177,9 +194,14 @@ const ActualFlowEchartNew = () => {
 
         evaluations.forEach((eachEvaluation) => {
           if (eachEvaluation.type === 'mark') {
-            const markDataKey = `${focusInfo.assetName}-${focusInfo.date}`;
+            // 아래는 임시.
+            const focusInfoFilled = focusInfo as MarkDataContent;
+            const markDataKey = `${focusInfoFilled.assetName}-${focusInfoFilled.date}`;
 
-            setMarkData((prev) => ({ ...prev, [markDataKey]: focusInfo }));
+            setMarkData((prev) => ({
+              ...prev,
+              [markDataKey]: focusInfoFilled,
+            }));
           } else if (eachEvaluation.type === 'focus') {
             if (eachEvaluation.origin) {
               // origin처리
@@ -199,7 +221,7 @@ const ActualFlowEchartNew = () => {
     );
 
     return () => (chartInstance as EChartsInstance).off('click');
-  }, [chartInstance, mixedData, focusInfo]);
+  }, [chartInstance, focusInfo, assetsOrdered]);
 
   return (
     <>
@@ -276,3 +298,4 @@ const ActualFlowEchartNew = () => {
 };
 
 export default ActualFlowEchartNew;
+export { MarkData, AssetMetaInfo };

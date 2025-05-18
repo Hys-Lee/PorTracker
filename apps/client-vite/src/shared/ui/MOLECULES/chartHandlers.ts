@@ -4,6 +4,7 @@ import // FlowDataValuesType,
 // FlowDataValuesMetaDataType,
 'src/features/hooks/queries/flows/useFlowsActualQuery';
 import { FlowValue } from 'src/features/hooks/queries/flows/useFlowsActualQuery';
+import { AssetMetaInfo } from 'src/widgets/flows/ui/ORGANISMS/ActualFlowChart/ActualFlowEchartsNew';
 
 /** 아래는 dataset사용 전 series 공통 옵션 */
 const seriesCommon = {
@@ -290,15 +291,20 @@ interface ParamData extends echarts.ECElementEvent {
 // };
 
 const getYcoord = (
-  valueOnDate: FlowValue //{ asset: string; value: number[] }[],
-  // targetSeriesIndex: number,
+  valueOnDate: FlowValue, //{ asset: string; value: number[] }[],
+  assetsOrdered: AssetMetaInfo[],
+  seriesIndexInClickParam: number
   // targetDataIndex: number
 ) =>
-  Object.entries(valueOnDate).reduce((accSum, [fieldName, value]) => {
-    // assetId가 아닌 경우 -date- 는 제외
-    if (Number.isNaN(Number(fieldName))) return accSum;
+  assetsOrdered.reduce((accSum, { id: assetId, name }, idx) => {
+    // 현재 시리즈 위에 있는 것들은 누적합 제외
+    if (seriesIndexInClickParam < idx) return accSum;
 
-    // assetId가 있는 경우
+    const hasAssetIdOnDate = valueOnDate?.[assetId] ? true : false;
+    if (!hasAssetIdOnDate) return accSum;
+
+    // 클릭 지점에 있는 assetId에 대한 값들만 처리
+    const value = valueOnDate[assetId];
     return value + accSum;
   }, 0);
 // data.reduce(
@@ -317,6 +323,7 @@ const getYcoord = (
 const addEventHandlerNew = (
   param: echarts.ECElementEvent,
   // valueOnDate,
+  assetsOrdered: AssetMetaInfo[],
   determineFocus
 ): {
   type: 'mark' | 'focus';
@@ -333,11 +340,22 @@ const addEventHandlerNew = (
 
     const accumulatedValue = getYcoord(
       // defaultDatum,
-      valueOnDate
-      // param.seriesIndex as number,
+      valueOnDate,
+      assetsOrdered,
+      param.seriesIndex as number
       // param.dataIndex
     );
+
+    //test
+    console.log(
+      'valueOnDate,      assetsOrdered,      param.seriesIndex as number: ',
+      valueOnDate,
+      assetsOrdered,
+      param.seriesIndex as number
+    );
+
     // 시리즈 인덱스가 없다면 없는 자산 id로 일단 할당
+
     const assetId = param.seriesIndex ? param.seriesIndex + 1 : 0;
 
     const markDataTemplate: any = {
