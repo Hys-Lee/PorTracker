@@ -1,9 +1,23 @@
 {
-  "global": {},
+  "global": {
+    "first-token": {
+      "value": "#e89e9e",
+      "type": "color"
+    }
+  },
+  "other": {
+    "second": {
+      "token": {
+        "value": "#c58d8d",
+        "type": "color"
+      }
+    }
+  },
   "$themes": [],
   "$metadata": {
     "tokenSetOrder": [
-      "global"
+      "global",
+      "other"
     ]
   }
 }
