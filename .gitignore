@@ -52,3 +52,9 @@ storybook-static
 ## Panda
 styled-system
 styled-system-studio
+
+# Next.js
+.next
+out
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
