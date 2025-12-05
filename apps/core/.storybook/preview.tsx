@@ -1,5 +1,6 @@
-import '../src/styles.css';
-import '@styled-system/styles.css';
+// import { spyOn } from 'storybook/';
+// import '../src/styles.css';
+// import '@styled-system/styles.css';
 import {
   Title,
   Subtitle,
@@ -7,8 +8,8 @@ import {
   Primary,
   Controls,
   Stories,
-} from '@storybook/blocks';
-import type { Preview } from '@storybook/react';
+} from '@storybook//blocks';
+import type { Preview } from '@storybook/nextjs';
 
 const preview: Preview = {
   decorators: [
@@ -50,3 +51,15 @@ const preview: Preview = {
 };
 
 export default preview;
+
+export const beforeEach = function beforeEach() {
+  spyOn(console, 'log').mockName('console.log');
+  spyOn(console, 'warn').mockName('console.warn');
+  spyOn(console, 'error').mockName('console.error');
+  spyOn(console, 'info').mockName('console.info');
+  spyOn(console, 'debug').mockName('console.debug');
+  spyOn(console, 'trace').mockName('console.trace');
+  spyOn(console, 'count').mockName('console.count');
+  spyOn(console, 'dir').mockName('console.dir');
+  spyOn(console, 'assert').mockName('console.assert');
+};

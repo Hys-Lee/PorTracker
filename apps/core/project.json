@@ -1,7 +1,7 @@
 {
   "name": "core",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/core/src",
+  "sourceRoot": "apps/core",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -43,6 +43,13 @@
       "options": {
         "jestConfig": "apps/core/jest.config.ts",
         "passWithNoTests": true
+      }
+    },
+    "storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node node_modules/storybook/dist/bin/dispatcher.js dev -p 6006 -c apps/core/.storybook",
+        "cwd": "."
       }
     }
   }
