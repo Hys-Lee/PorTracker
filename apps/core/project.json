@@ -45,6 +45,13 @@
         "passWithNoTests": true
       }
     },
+    "build-storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node node_modules/storybook/dist/bin/dispatcher.js build -c apps/core/.storybook -o dist/storybook/core",
+        "cwd": "."
+      }
+    },
     "storybook": {
       "executor": "nx:run-commands",
       "options": {

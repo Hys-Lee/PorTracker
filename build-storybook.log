@@ -1,0 +1,65 @@
+
+> @por-tracker/source@0.0.0 build-storybook C:\Users\dltkd\PorTracker\PorTracker
+> pnpm exec nx run core:build-storybook "--output-dir=C:\\Users\\dltkd\\AppData\\Local\\Temp\\chromatic--24028-GQ2t6ohUyqzn"
+
+
+> nx run core:build-storybook --output-dir=C:\\Users\\dltkd\\AppData\\Local\\Temp\\chromatic--24028-GQ2t6ohUyqzn
+
+> node node_modules/storybook/dist/bin/dispatcher.js build -c apps/core/.storybook -o dist/storybook/core --output-dir=C:\\Users\\dltkd\\AppData\\Local\\Temp\\chromatic--24028-GQ2t6ohUyqzn
+
+
+[90m┌[39m  Building storybook v10.1.4
+[90m│[39m
+[32m◇[39m  Cleaning outputDir:
+[90m│[39m  [36m../../AppData/Local/Temp/chromatic--24028-GQ2t6ohUyqzn[39m
+[90m│[39m
+[32m◇[39m  Loading presets
+[90m│[39m
+[32m◇[39m  Building manager..
+[90m│[39m
+[34m●[39m  Building preview..
+[90m│[39m
+[34m●[39m  Using implicit CSS loaders
+[90m│[39m
+[33m▲[39m  No story files found for the specified pattern: [34mapps\core\**\*.mdx[39m
+[90m│[39m
+[34m●[39m  Copying static files: [36mapps\core\public[39m at
+[90m│[39m  [36m..\..\AppData\Local\Temp\chromatic--24028-GQ2t6ohUyqzn[39m
+[90m│[39m
+[34m●[39m  Using SWC as compiler
+[90m│[39m
+[34m●[39m  Using default Webpack5 setup
+[90m│[39m
+[33m▲[39m  asset size limit: The following asset(s) exceed the recommended size
+[90m│[39m  limit (244 KiB).
+[90m│[39m  This can impact web performance.
+[90m│[39m  Assets:
+[90m│[39m  37.255190f6.iframe.bundle.js (428 KiB)
+[90m│[39m  505.bad8380d.iframe.bundle.js (1.2 MiB)
+[90m│[39m
+[33m▲[39m  entrypoint size limit: The following entrypoint(s) combined asset size
+[90m│[39m  exceeds the recommended limit (244 KiB). This can impact web
+[90m│[39m  performance.
+[90m│[39m  Entrypoints:
+[90m│[39m  main (1.21 MiB)
+[90m│[39m  runtime~main.d969f3b6.iframe.bundle.js
+[90m│[39m  505.bad8380d.iframe.bundle.js
+[90m│[39m  main.ea4d495b.iframe.bundle.js
+
+[90m│[39m
+[32m◇[39m  Output directory:
+[90m│[39m  C:/Users/dltkd/AppData/Local/Temp/chromatic--24028-GQ2t6ohUyqzn
+[90m│[39m
+[90m└[39m  Storybook build completed successfully
+
+
+
+
+ NX   Successfully ran target build-storybook for project core
+
+
+
+ NX   Nx Cloud encountered some problems
+
+This workspace is more than three days old and is not connected. Workspaces must be connected within 3 days of creation. Claim your workspace at https://cloud.nx.app. (code: 401)
+

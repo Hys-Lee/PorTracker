@@ -18,6 +18,14 @@ const nextConfig = {
     // Nx 관련 옵션 (svgr 등)
     // svgr: false,
   },
+  // webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+  //   // tsconfig.base.json의 paths와 동일하게 설정
+  //   config.resolve.alias = {
+  //     ...config.resolve.alias,
+  //     '@core': join(workspaceRoot, 'apps/core'),
+  //   };
+  //   return config;
+  // },
 };
 
 const plugins = [

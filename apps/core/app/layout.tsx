@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'My App',
@@ -11,17 +12,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <html lang="en">
-        <head>
-          {/* <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <html lang="en">
+      <head>
+        {/* <link rel="icon" type="image/x-icon" href="/favicon.ico" />
           <link rel="stylesheet" href="/src/styles.css" /> */}
-        </head>
-        <body>
-          {children}
-          {/* <script type="module" src="/src/main.tsx"></script> */}
-        </body>
-      </html>
-    </>
+      </head>
+      <body>
+        {children}
+        {/* <script type="module" src="/src/main.tsx"></script> */}
+      </body>
+    </html>
   );
 }

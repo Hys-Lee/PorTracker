@@ -5,14 +5,18 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "types": ["vite/client"],
-    "plugins":[{"name":"next"}],
+    "types": ["node"],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "forceConsistentCasingInFileNames": true,
     "incremental": true
   },
   "files": [],
   "include": ["./dist/types/**/*.ts", "./next-env.d.ts"],
-  "exclude":["./node_modules"],
+  "exclude": ["./node_modules"],
   "references": [
     {
       "path": "./tsconfig.app.json"
