@@ -41,10 +41,35 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+        # ✅ [디버깅] 전체 파일 구조 확인 (node_modules, .git 제외)
+      - name: 📂 Debug - Show File Structure
+        run: |
+          # 1. tree 유틸리티 설치
+          sudo apt-get update && sudo apt-get install -y tree
+
+          echo "=========================================="
+          echo "📍 PROJECT ROOT TREE (node_modules 제외)"
+          echo "=========================================="
+          # -I 옵션으로 불필요한 폴더 제외하고 전체 구조 출력
+          tree -I 'node_modules|.git|dist|.nx'
+
+          echo " "
+          echo "=========================================="
+          echo "📍 APPS/CORE DETAILED CHECK"
+          echo "=========================================="
+          # 문제가 되는 apps/core 내부는 숨김 파일(.으로 시작)까지 포함해서 자세히 리스트 출력
+          ls -Rla apps/core
+
       # 5. Storybook 빌드 (단계 분리)
       # 이 단계에서 Storybook 정적 파일을 'dist/storybook/core' 경로에 생성합니다.
       - name: Build Storybook
-        run: pnpm nx run core:build-storybook --no-cloud
+        run: pnpm nx run core:build-storybook --no-cloud --stats-json
+
+      # ✅ [디버깅용] 빌드 결과물 확인 단계 추가
+      - name: Check build output
+        run: |
+          echo "--- Listing files in dist/storybook/core ---"
+          ls -R dist/storybook/core
 
       # 6. Chromatic에 배포 (action 대신 CLI 직접 실행)
       - name: Publish to Chromatic

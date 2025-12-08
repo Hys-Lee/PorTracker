@@ -46,13 +46,11 @@
       }
     },
     "build-storybook": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/storybook:build",
+      "outputs": ["{options.outputDir}"],
       "options": {
-        "command": "node node_modules/storybook/dist/bin/dispatcher.js build -c apps/core/.storybook -o dist/storybook/core",
-        "cwd": ".",
-        "builder-options": {
-          "useSWC": false
-        }
+        "configDir": "apps/core/.storybook",
+        "outputDir": "dist/storybook/core"
       }
     },
     "storybook": {

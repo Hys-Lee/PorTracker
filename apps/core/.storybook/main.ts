@@ -13,14 +13,20 @@ const require = createRequire(import.meta.url);
 function getAbsolutePath(value: string): string {
   return dirname(require.resolve(`${value}/package.json`));
 }
-
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const config: StorybookConfig = {
-  stories: ['../**/*.mdx', '../**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  stories: [
+    path.resolve(__dirname, '..', 'components') + '/**/*.mdx',
+    path.resolve(__dirname, '..', 'components') +
+      '/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    // '../components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+  ],
   addons: [
     // getAbsolutePath('@storybook/addon-essentials'),
     // getAbsolutePath('@storybook/addon-a11y'),
     getAbsolutePath('@storybook/addon-webpack5-compiler-babel'),
     '@storybook/addon-docs',
+    '@nx/storybook/preset',
   ],
   framework: {
     name: getAbsolutePath('@storybook/nextjs'),
@@ -30,6 +36,20 @@ const config: StorybookConfig = {
     defaultName: 'Documentation',
   },
   staticDirs: ['../public'],
+  webpackFinal: async (config) => {
+    // ✅ [핵심] Webpack이 모듈을 찾을 때 "프로젝트 루트"도 찾아보게 설정
+    if (config.resolve) {
+      config.resolve.modules = [
+        ...(config.resolve.modules || []),
+        // 현재 파일(.storybook/main.ts) 기준 3칸 위(Root)를 모듈 탐색 경로에 추가
+        path.resolve(dirname(fileURLToPath(import.meta.url)), '../../../'),
+      ];
+    }
+
+    // ... 기존 StyleX 관련 설정이 있다면 유지 ...
+
+    return config;
+  },
   babel: async (options: any) => {
     return {
       ...options,
@@ -51,7 +71,7 @@ const config: StorybookConfig = {
               // 현재 파일(.storybook/main.ts) 위치 기준으로 상위 폴더를 지정합니다.
               rootDir: path.resolve(
                 dirname(fileURLToPath(import.meta.url)),
-                '../'
+                '../../../'
               ),
             },
           },
