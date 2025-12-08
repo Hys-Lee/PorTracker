@@ -35,6 +35,20 @@ const config: StorybookConfig = {
     defaultName: 'Documentation',
   },
   staticDirs: ['../public'],
+  webpackFinal: async (config) => {
+    // ✅ [핵심] Webpack이 모듈을 찾을 때 "프로젝트 루트"도 찾아보게 설정
+    if (config.resolve) {
+      config.resolve.modules = [
+        ...(config.resolve.modules || []),
+        // 현재 파일(.storybook/main.ts) 기준 3칸 위(Root)를 모듈 탐색 경로에 추가
+        path.resolve(dirname(fileURLToPath(import.meta.url)), '../../../'),
+      ];
+    }
+
+    // ... 기존 StyleX 관련 설정이 있다면 유지 ...
+
+    return config;
+  },
   babel: async (options: any) => {
     return {
       ...options,
