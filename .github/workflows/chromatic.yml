@@ -27,8 +27,6 @@ jobs:
       # package.json에 명시된 pnpm 버전을 사용합니다.
       - name: Set up PNPM
         uses: pnpm/action-setup@v4
-        with:
-          version: 9 # package.json의 packageManager 버전과 맞춰주세요.
 
       # 3. Node.js 설치
       # 프로젝트에서 사용하는 Node.js 버전을 지정합니다.
