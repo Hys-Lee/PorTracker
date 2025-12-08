@@ -71,6 +71,13 @@
         "command": "pnpm stylex build --input ./components --output ./.storybook --watch",
         "cwd": "apps/core"
       }
+    },
+    "gen:story": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm exec plop --plopfile ./plopfile.js",
+        "cwd": "apps/core"
+      }
     }
   }
 }

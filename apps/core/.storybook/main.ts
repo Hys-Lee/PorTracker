@@ -20,6 +20,7 @@ const config: StorybookConfig = {
     // getAbsolutePath('@storybook/addon-essentials'),
     // getAbsolutePath('@storybook/addon-a11y'),
     getAbsolutePath('@storybook/addon-webpack5-compiler-babel'),
+    '@storybook/addon-docs',
   ],
   framework: {
     name: getAbsolutePath('@storybook/nextjs'),
