@@ -53,7 +53,7 @@ jobs:
           # Nx를 통해 Storybook 빌드를 실행하는 명령어입니다.
           # 'core'는 프로젝트 이름이므로, 실제 프로젝트 이름에 맞게 수정하세요.
           buildCommand:
-            'pnpm nx run core:build-storybook'
+            'pnpm nx run core:build-storybook --no-cloud'
 
             # buildCommand 실행 후 Storybook 정적 파일이 생성되는 경로입니다.
           outputDir: 'dist/storybook/core'
