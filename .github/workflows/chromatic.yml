@@ -41,16 +41,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      # 5. Storybook 빌드 (단계 분리)
+      # 이 단계에서 Storybook 정적 파일을 'dist/storybook/core' 경로에 생성합니다.
+      - name: Build Storybook
+        run: pnpm nx run core:build-storybook --no-cloud --stats-json
+
       # ✅ [디버깅용] 빌드 결과물 확인 단계 추가
       - name: Check build output
         run: |
           echo "--- Listing files in dist/storybook/core ---"
           ls -R dist/storybook/core
-
-      # 5. Storybook 빌드 (단계 분리)
-      # 이 단계에서 Storybook 정적 파일을 'dist/storybook/core' 경로에 생성합니다.
-      - name: Build Storybook
-        run: pnpm nx run core:build-storybook --no-cloud --stats-json
 
       # 6. Chromatic에 배포 (action 대신 CLI 직접 실행)
       - name: Publish to Chromatic
