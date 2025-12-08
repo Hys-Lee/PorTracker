@@ -41,23 +41,21 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      # 5. Chromatic 실행
-      # Nx를 통해 Storybook을 빌드하고 Chromatic에 배포합니다.
+      # 5. Storybook 빌드 (단계 분리)
+      # 이 단계에서 Storybook 정적 파일을 'dist/storybook/core' 경로에 생성합니다.
+      - name: Build Storybook
+        run: pnpm nx run core:build-storybook --no-cloud
+
+      # 6. Chromatic에 배포
+      # 빌드된 결과물의 위치를 'storybookBuildDir' 옵션으로 명확하게 지정합니다.
       - name: Publish to Chromatic
         uses: chromaui/action@v11
-        # Chromatic에 필요한 옵션들
         with:
-          # GitHub 레포지토리 설정에서 추가해야 할 Secret 이름입니다.
+          # GitHub 레포지토리 설정에 저장된 Secret 토큰
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
 
-          # Nx를 통해 Storybook 빌드를 실행하는 명령어입니다.
-          # 'core'는 프로젝트 이름이므로, 실제 프로젝트 이름에 맞게 수정하세요.
-          buildCommand:
-            'pnpm nx run core:build-storybook --no-cloud'
+          # ✅ 빌드된 Storybook 결과물이 있는 디렉토리 경로를 지정
+          storybookBuildDir: 'dist/storybook/core'
 
-            # buildCommand 실행 후 Storybook 정적 파일이 생성되는 경로입니다.
-          outputDir: 'dist/storybook/core'
-
-          # PR에서 시각적 변경이 감지되어도 워크플로우를 실패로 처리하지 않습니다.
-          # 리뷰는 Chromatic UI에서 진행합니다.
+          # PR에서 시각적 변경이 감지되어도 워크플로우를 실패로 처리하지 않음
           exitZeroOnChanges: true
