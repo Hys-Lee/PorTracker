@@ -46,16 +46,7 @@ jobs:
       - name: Build Storybook
         run: pnpm nx run core:build-storybook --no-cloud
 
-      # 6. Chromatic에 배포
-      # 빌드된 결과물의 위치를 'storybookBuildDir' 옵션으로 명확하게 지정합니다.
+      # 6. Chromatic에 배포 (action 대신 CLI 직접 실행)
       - name: Publish to Chromatic
-        uses: chromaui/action@v11
-        with:
-          # GitHub 레포지토리 설정에 저장된 Secret 토큰
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-
-          # ✅ 빌드된 Storybook 결과물이 있는 디렉토리 경로를 지정
-          storybookBuildDir: 'dist/storybook/core'
-
-          # PR에서 시각적 변경이 감지되어도 워크플로우를 실패로 처리하지 않음
-          exitZeroOnChanges: true
+        run: |
+          pnpm chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN }} --storybook-build-dir=dist/storybook/core --exit-zero-on-changes
