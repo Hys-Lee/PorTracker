@@ -26,7 +26,9 @@
     ".storybook/*.js",
     ".storybook/*.ts",
     ".storybook/preview.tsx",
-    ".storybook/Introduction.mdx"
+    ".storybook/Introduction.mdx",
+    "./babel.config.js",
+    ".storybook/main.ts"
   ],
   "files": [
     "../../node_modules/@nx/react/typings/styled-jsx.d.ts",

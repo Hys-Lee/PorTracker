@@ -26,6 +26,13 @@ const nextConfig = {
   //   };
   //   return config;
   // },
+  // turbopack:{
+  //   rules:{
+  //     '**/*.{js,jsx,ts,tsx}': {
+  //       loaders:[{loader:'@next/babel-loader'}]
+  //     }
+  //   }
+  // }
 };
 
 const plugins = [

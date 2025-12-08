@@ -3,6 +3,7 @@ const babelConfig = require('./babel.config');
 module.exports = {
   plugins: {
     '@stylexjs/postcss-plugin': {
+      stylexBundlePath: './stylex-bundle.css',
       include: [
         // app router:
         'app/**/*.{js,jsx,ts,tsx}',

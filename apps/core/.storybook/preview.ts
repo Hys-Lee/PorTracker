@@ -1,6 +1,9 @@
-import type { Preview } from '@storybook/react/dist';
+import type { Preview } from '@storybook/react';
+
+import './stylex_bundle.css';
 
 const preview: Preview = {
+  tags: ['autodocs'],
   parameters: {
     // 액션 탭 설정 (클릭 이벤트 등 감지)
     actions: { argTypesRegex: '^on[A-Z].*' },
