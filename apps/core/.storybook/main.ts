@@ -26,6 +26,7 @@ const config: StorybookConfig = {
     // getAbsolutePath('@storybook/addon-a11y'),
     getAbsolutePath('@storybook/addon-webpack5-compiler-babel'),
     '@storybook/addon-docs',
+    '@nx/storybook/preset',
   ],
   framework: {
     name: getAbsolutePath('@storybook/nextjs'),
