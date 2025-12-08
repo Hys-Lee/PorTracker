@@ -13,11 +13,13 @@ const require = createRequire(import.meta.url);
 function getAbsolutePath(value: string): string {
   return dirname(require.resolve(`${value}/package.json`));
 }
-
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const config: StorybookConfig = {
   stories: [
-    '../components/**/*.mdx',
-    '../components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    path.resolve(__dirname, '..', 'components') + '/**/*.mdx',
+    path.resolve(__dirname, '..', 'components') +
+      '/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    // '../components/**/*.stories.@(js|jsx|mjs|ts|tsx)',
   ],
   addons: [
     // getAbsolutePath('@storybook/addon-essentials'),
