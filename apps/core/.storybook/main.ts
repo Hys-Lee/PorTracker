@@ -54,7 +54,7 @@ const config: StorybookConfig = {
               // 현재 파일(.storybook/main.ts) 위치 기준으로 상위 폴더를 지정합니다.
               rootDir: path.resolve(
                 dirname(fileURLToPath(import.meta.url)),
-                '../'
+                '../../../'
               ),
             },
           },
