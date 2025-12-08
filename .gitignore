@@ -5,6 +5,9 @@ dist
 tmp
 out-tsc
 
+# dotenv
+.env
+
 # dependencies
 node_modules
 
@@ -41,7 +44,18 @@ Thumbs.db
 .nx/cache
 .nx/workspace-data
 
+.eslintcache
+
 vite.config.*.timestamp*
+
+storybook-static
+
+# Next.js
+.next
+out
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
+
 
 # Env
 .env

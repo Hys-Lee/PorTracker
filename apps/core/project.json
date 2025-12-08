@@ -1,0 +1,83 @@
+{
+  "name": "core",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/core",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "root": "apps/core",
+        "outputPath": "dist/apps/core"
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "core:build",
+        "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "core:build",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "core:build",
+          "dev": false
+        }
+      }
+    },
+    "start": {
+      "executor": "@nx:run-commands",
+      "options": {
+        "command": "next start",
+        "cwd": "dist/apps/core"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "apps/core/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "build-storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node node_modules/storybook/dist/bin/dispatcher.js build -c apps/core/.storybook -o dist/storybook/core",
+        "cwd": ".",
+        "builder-options": {
+          "useSWC": false
+        }
+      }
+    },
+    "storybook": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node node_modules/storybook/dist/bin/dispatcher.js dev -p 6006 -c apps/core/.storybook",
+        "cwd": ".",
+        "builder-options": {
+          "useSWC": false
+        }
+      }
+    },
+    "stylex": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm stylex build --input ./components --output ./.storybook --watch",
+        "cwd": "apps/core"
+      }
+    },
+    "gen:story": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm exec plop --plopfile ./plopfile.js",
+        "cwd": "apps/core"
+      }
+    }
+  }
+}

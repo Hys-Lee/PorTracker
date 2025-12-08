@@ -1,0 +1,61 @@
+# .github/workflows/chromatic.yml
+
+name: 'Chromatic Visual Regression Testing'
+
+# main 브랜치에 push 되거나, main 브랜치로 향하는 PR이 열릴 때 실행됩니다.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  chromatic-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. 코드 체크아웃
+      # fetch-depth: 0은 Chromatic이 브랜치 간의 변경 사항을 정확히 비교하기 위해
+      # 전체 Git 히스토리를 가져오도록 하는 중요한 옵션입니다.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 2. PNPM 설치
+      # package.json에 명시된 pnpm 버전을 사용합니다.
+      - name: Set up PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9 # package.json의 packageManager 버전과 맞춰주세요.
+
+      # 3. Node.js 설치
+      # 프로젝트에서 사용하는 Node.js 버전을 지정합니다.
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'pnpm' # pnpm 의존성 캐싱 활성화
+
+      # 4. 의존성 설치
+      # pnpm install을 실행하여 모든 의존성을 설치합니다.
+      - name: Install dependencies
+        run: pnpm install
+
+      # 5. Chromatic 실행
+      # Nx를 통해 Storybook을 빌드하고 Chromatic에 배포합니다.
+      - name: Publish to Chromatic
+        uses: chromaui/action@v11
+        # Chromatic에 필요한 옵션들
+        with:
+          # GitHub 레포지토리 설정에서 추가해야 할 Secret 이름입니다.
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+
+          # Nx를 통해 Storybook 빌드를 실행하는 명령어입니다.
+          # 'core'는 프로젝트 이름이므로, 실제 프로젝트 이름에 맞게 수정하세요.
+          buildCommand: 'pnpm nx run core:build-storybook'
+
+          # PR에서 시각적 변경이 감지되어도 워크플로우를 실패로 처리하지 않습니다.
+          # 리뷰는 Chromatic UI에서 진행합니다.
+          exitZeroOnChanges: true

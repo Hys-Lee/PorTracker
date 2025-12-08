@@ -1,0 +1,173 @@
+[
+  {
+    "asset": "a",
+    "date": "2019/2/10",
+    "transactionType": "allocation",
+    "price": 320,
+    "currency": "dollar",
+    "exchangeRate": 1120.3,
+    "shares": 3
+  },
+  {
+    "asset": "b",
+    "date": "2019/2/10",
+    "transactionType": "allocation",
+    "price": 240,
+    "currency": "dollar",
+    "exchangeRate": 1120.3,
+    "shares": 5
+  },
+  {
+    "asset": "c",
+    "date": "2019/2/10",
+    "transactionType": "allocation",
+    "price": 160,
+    "currency": "dollar",
+    "exchangeRate": 1120.3,
+    "shares": 3
+  },
+  {
+    "asset": "d",
+    "date": "2019/2/10",
+    "transactionType": "allocation",
+    "price": 50,
+    "currency": "dollar",
+    "exchangeRate": 1120.3,
+    "shares": 6
+  },
+  {
+    "asset": "e",
+    "date": "2019/2/11",
+    "transactionType": "allocation",
+    "price": 130,
+    "currency": "dollar",
+    "exchangeRate": 1122,
+    "shares": 3
+  },
+  {
+    "asset": "f",
+    "date": "2019/2/11",
+    "transactionType": "allocation",
+    "price": 50,
+    "currency": "dollar",
+    "exchangeRate": 1122,
+    "shares": 2
+  },
+  {
+    "asset": "g",
+    "date": "2019/2/11",
+    "transactionType": "allocation",
+    "price": 170,
+    "currency": "dollar",
+    "exchangeRate": 1122,
+    "shares": 4
+  },
+  {
+    "asset": "h",
+    "date": "2019/2/11",
+    "transactionType": "allocation",
+    "price": 70,
+    "currency": "dollar",
+    "exchangeRate": 1122,
+    "shares": 5
+  },
+  {
+    "asset": "i",
+    "date": "2019/2/15",
+    "transactionType": "allocation",
+    "price": 500,
+    "currency": "dollar",
+    "exchangeRate": 1223,
+    "shares": 1
+  },
+  {
+    "asset": "j",
+    "date": "2019/2/15",
+    "transactionType": "allocation",
+    "price": 70,
+    "currency": "dollar",
+    "exchangeRate": 1223,
+    "shares": 9
+  },
+  {
+    "asset": "a",
+    "date": "2019/5/19",
+    "transactionType": "allocation",
+    "price": 700,
+    "currency": "dollar",
+    "exchangeRate": 1430.6,
+    "shares": 1
+  },
+  {
+    "asset": "b",
+    "date": "2019/5/19",
+    "transactionType": "allocation",
+    "price": 100,
+    "currency": "dollar",
+    "exchangeRate": 1430.6,
+    "shares": 8
+  },
+  {
+    "asset": "c",
+    "date": "2019/5/20",
+    "transactionType": "withdrawal",
+    "price": 1000,
+    "currency": "dollar",
+    "exchangeRate": 1441,
+    "shares": 3
+  },
+  {
+    "asset": "a",
+    "date": "2019/6/13",
+    "transactionType": "allocation",
+    "price": 330,
+    "currency": "dollar",
+    "exchangeRate": 1322.1,
+    "shares": 3
+  },
+  {
+    "asset": "b",
+    "date": "2019/6/14",
+    "transactionType": "withdrawal",
+    "price": 240,
+    "currency": "dollar",
+    "exchangeRate": 1311.5,
+    "shares": 3
+  },
+  {
+    "asset": "b",
+    "date": "2019/6/15",
+    "transactionType": "withdrawal",
+    "price": 400,
+    "currency": "dollar",
+    "exchangeRate": 1287,
+    "shares": 5
+  },
+  {
+    "asset": "a",
+    "date": "2019/8/7",
+    "transactionType": "withdrawal",
+    "price": 600,
+    "currency": "dollar",
+    "exchangeRate": 1370,
+    "shares": 7
+  },
+  {
+    "asset": "b",
+    "date": "2019/8/7",
+    "transactionType": "withdrawal",
+    "price": 20,
+    "currency": "dollar",
+    "exchangeRate": 1370,
+    "shares": 5
+  },
+  {
+    "asset": "b",
+    "date": "2019/8/8",
+    "transactionType": "allocation",
+    "price": 310,
+    "currency": "dollar",
+    "exchangeRate": 1377,
+    "shares": 3
+  }
+]
