@@ -1,0 +1,71 @@
+import * as stylex from '@stylexjs/stylex';
+// const PALLETE = {
+//   primary: '#8fc8b6',
+//   primaryVariant100: '#c3e3d8',
+//   primaryVariant200: '#9ad9c5',
+//   primaryVariant300: '#a1c5b9',
+//   primaryVariant400: '#79c0aa',
+//   primaryVariant500: '#36bf9d',
+//   primaryVariant600: '#6ca895',
+//   primaryVariant700: '#00a07d',
+//   primaryVariant800: '#027e65',
+//   primaryVariant900: '#608579',
+//   primaryVariant1000: '#005E4B',
+//   secondary: '#476988',
+// };
+
+export const colors = stylex.defineVars({
+  /** Theme */
+  primary: '#8fc8b6',
+  secondary: '#476988',
+  /** Theme Primary Variants */
+  primaryVariant100: '#c3e3d8',
+  primaryVariant200: '#9ad9c5',
+  primaryVariant300: '#a1c5b9',
+  primaryVariant400: '#79c0aa',
+  primaryVariant500: '#36bf9d',
+  primaryVariant600: '#6ca895',
+  primaryVariant700: '#00a07d',
+  primaryVariant800: '#027e65',
+  primaryVariant900: '#608579',
+  primaryVariant1000: '#005E4B',
+  /** Profit & Loss */
+  profit: '#02b04a',
+  loss: '#ee5572',
+  /** Text */
+  textStrong: '#1F2937',
+  textNormal: '#6d7e95',
+  textWeek: '#c4c4c4',
+  /** Background */
+  bgStrong: '#e1e2e4',
+  bgNormal: '#F3F4F6',
+  bgWeek: '#F9FAFB',
+  /** Importance */
+  importanceCriticalStrong: '#ff898f',
+  importanceCriticalWeek: '#fee2e2',
+  importanceUsefulStrong: '#68a0ea',
+  importanceUsefulWeek: '#DBEAFE',
+  importanceNormalStrong: '#a4a7ad',
+  importanceNormalWeek: '#F3F4F6',
+  /** Category */
+  category1Strong: '#82c6e7',
+  category1Week: '#d9ebf5',
+  category2Strong: '#A7BAF2',
+  category2Week: '#e0e8ff',
+  category3Strong: '#CBAEE5',
+  category3Week: '#f0e1ff',
+  category4Strong: '#E1A7CC',
+  category4Week: '#ffdcf2',
+  category5Strong: '#EBA6AE',
+  category5Week: '#ffdfe2',
+  category6Strong: '#E5AF87',
+  category6Week: '#ffe2cd',
+  category7Strong: '#D4B87E',
+  category7Week: '#ffe5af',
+  category8Strong: '#B1C58A',
+  category8Week: '#e1eeca',
+  category9Strong: '#8BCDAC',
+  category9Week: '#ccf3de',
+  category10Strong: '#79cdca',
+  category10Week: '#ccf1ef',
+});
