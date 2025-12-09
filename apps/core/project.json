@@ -63,7 +63,7 @@
     "stylex": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "pnpm stylex build --input ./components --output ./.storybook --watch",
+        "command": "pnpm stylex build --input ./ --output ./.storybook --watch",
         "cwd": "apps/core"
       }
     },

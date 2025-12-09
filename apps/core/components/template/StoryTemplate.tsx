@@ -1,5 +1,5 @@
 import * as stylex from '@stylexjs/stylex';
-import { tokens } from './tokens.stylex';
+import { tokens } from '../../tokens/tokens.stylex';
 const styles = stylex.create({
   base: {
     backgroundColor: tokens.primary,
