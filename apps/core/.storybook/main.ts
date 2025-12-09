@@ -28,6 +28,9 @@ const config: StorybookConfig = {
     '@storybook/addon-docs',
     '@nx/storybook/preset',
   ],
+  typescript: {
+    reactDocgen: 'react-docgen-typescript',
+  },
   framework: {
     name: getAbsolutePath('@storybook/nextjs'),
     options: {},
