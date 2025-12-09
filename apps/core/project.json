@@ -54,13 +54,10 @@
       }
     },
     "storybook": {
-      "executor": "nx:run-commands",
+      "executor": "@nx/storybook:storybook",
       "options": {
-        "command": "node node_modules/storybook/dist/bin/dispatcher.js dev -p 6006 -c apps/core/.storybook",
-        "cwd": ".",
-        "builder-options": {
-          "useSWC": false
-        }
+        "port": 6006,
+        "configDir": "apps/core/.storybook"
       }
     },
     "stylex": {

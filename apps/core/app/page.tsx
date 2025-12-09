@@ -1,4 +1,4 @@
-import StoryTemplate from '@core/components/tmp/StoryTemplate';
+import StoryTemplate from '@core/components/template/StoryTemplate';
 
 export default function Page() {
   return (
