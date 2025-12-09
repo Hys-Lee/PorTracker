@@ -4,7 +4,8 @@
     "declaration": true,
     "composite": true,
     "emitDecoratorMetadata": true,
-    "outDir": ""
+    "outDir": "",
+    "moduleResolution": "bundler"
   },
   "exclude": [
     "./**/*.spec.ts",

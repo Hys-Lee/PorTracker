@@ -1,6 +1,7 @@
-import type { Preview } from '@storybook/react';
+import type { Preview } from '@storybook/nextjs-vite';
 
-import './stylex_bundle.css';
+// import './stylex_bundle.css';
+import './stylex.css';
 
 const preview: Preview = {
   tags: ['autodocs'],
