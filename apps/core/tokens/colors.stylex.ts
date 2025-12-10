@@ -33,6 +33,7 @@ export const colors = stylex.defineVars({
   profit: '#02b04a',
   loss: '#ee5572',
   /** Text */
+  textPrimary: '#568d7c',
   textStrong: '#1F2937',
   textNormal: '#6d7e95',
   textWeek: '#c4c4c4',

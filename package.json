@@ -11,7 +11,7 @@
     "start": "pnpm exec nx start core",
     "supaDeploy": "pnpm exec supabase functions deploy",
     "build-storybook": "pnpm exec nx run core:build-storybook",
-    "storybook": "pnpm exec concurrently   \"nx run core:storybook\"",
+    "storybook": "pnpm exec nx run core:storybook",
     "gen:story": "pnpm exec plop --plopfile apps/core/plopfile.js"
   },
   "lint-staged": {

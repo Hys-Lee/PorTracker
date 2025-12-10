@@ -28,18 +28,23 @@ const config: StorybookConfig = {
       plugins: [
         // StyleX 플러그인 추가 (설정 끝)
         stylex.vite({
+          dev: process.env.NODE_ENV === 'development',
           useCSSLayers: true,
           // ... other StyleX configuration options
           unstable_moduleResolution: {
             type: 'commonJS',
-            rootDir: rootDir,
+            rootDir: path.resolve(rootDir, '../../../'),
+          },
+          aliases: {
+            '@core': rootDir,
           },
         }),
       ],
       resolve: {
         alias: {
           // Next.js의 @/ 경로를 apps/core 폴더로 연결
-          '@': rootDir,
+          '@core': rootDir,
+          // '@core': path.resolve(rootDir, 'apps/core'),
         },
       },
     });

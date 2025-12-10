@@ -1,1 +1,11 @@
 @layer stylex;
+
+@font-face {
+  font-family: 'Suite';
+  src: url('/fonts/SUITE-Variable.woff2');
+  font-weight: 100 900;
+}
+
+body {
+  font-family: 'Suite';
+}
