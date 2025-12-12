@@ -1,0 +1,21 @@
+.SelectItem[data-disabled] {
+  color: var(--gray-t);
+  pointer-events: none;
+}
+.SelectItem[data-highlighted] {
+  outline: none;
+  background-color: rgb(from var(--jade-p-1) r g b / 0.5);
+  /* color: var(--blue-t); */
+}
+.SelectTrigger[data-placeholder] {
+  color: var(--blue-t);
+}
+
+.SelectContent {
+  width: var(--radix-select-trigger-width);
+}
+
+.SelectItem[data-state='checked'] {
+  box-shadow: inset 0 0 0px 1px var(--jade-p);
+  background-color: rgb(from var(--jade-p-1) r g b / 0.7);
+}
