@@ -4,6 +4,7 @@ import { fonts } from '../tokens/fonts.stylex';
 import * as stylex from '@stylexjs/stylex';
 
 // import './stylex_bundle.css';
+import '../tokens/colors.css';
 import './stylex.css';
 import { useEffect } from 'react';
 
@@ -29,7 +30,7 @@ const preview: Preview = {
   decorators: (Story) => {
     return (
       <div className={suite.variable}>
-        <Story />;
+        <Story />
       </div>
     );
   },
