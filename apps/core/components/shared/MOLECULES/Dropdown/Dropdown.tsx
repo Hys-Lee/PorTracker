@@ -118,7 +118,7 @@ const triggerStyles = stylex.create({
     // borderRadius: '24px',
     padding: '0 15px',
     fontSize: '16px',
-    fontWeight: '700',
+    fontWeight: '600',
     lineHeight: 1,
     height: '48px',
     width: '300px',
@@ -171,9 +171,10 @@ const viewportStyles = stylex.create({
 
 const selectItemStyles = stylex.create({
   base: {
-    fontSize: '13px',
+    fontSize: '16px',
     lineHeight: 1,
-    color: 'var(--violet-11)',
+    color: colors.textNormal,
+    fontWeight: '600',
     borderRadius: '3px',
     display: 'flex',
     justifyContent: 'start',
@@ -223,7 +224,7 @@ const selectScrollButtonStyles = stylex.create({
     justifyContent: 'center',
     height: '25px',
     backgroundColor: 'white',
-    color: 'var(--violet-11)',
+    color: colors.primary,
     cursor: 'default',
   },
 });
