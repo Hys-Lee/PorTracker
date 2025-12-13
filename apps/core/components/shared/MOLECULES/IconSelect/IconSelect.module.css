@@ -2,6 +2,9 @@
   pointer-events: none;
   opacity: 0.8;
 }
+.SelectIcon[data-disabled] {
+  opacity: 0.8;
+}
 .SelectItem[data-disabled] {
   color: var(--gray-t);
   pointer-events: none;
