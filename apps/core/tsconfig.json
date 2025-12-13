@@ -15,7 +15,7 @@
     "incremental": true
   },
   "files": [],
-  "include": ["./dist/types/**/*.ts", "./next-env.d.ts"],
+  "include": ["./dist/types/**/*.ts", "./next-env.d.ts", "./types/svg.d.ts"],
   "exclude": ["./node_modules"],
   "references": [
     {

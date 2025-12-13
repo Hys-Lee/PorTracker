@@ -4,6 +4,7 @@ import stylex from '@stylexjs/unplugin';
 import { dirname } from 'path';
 import path from 'path';
 import { fileURLToPath } from 'node:url';
+import svgr from 'vite-plugin-svgr';
 
 const currentDir = dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(currentDir, '../');
@@ -38,6 +39,9 @@ const config: StorybookConfig = {
           aliases: {
             '@core': rootDir,
           },
+        }),
+        svgr({
+          include: '../**/*.svg?react',
         }),
       ],
       resolve: {
