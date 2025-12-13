@@ -8,6 +8,7 @@ import * as stylex from '@stylexjs/stylex';
 import cssStyles from './Dropdown.module.css';
 import { colors } from '../../../../tokens/colors.stylex';
 import { useStateReducer } from '@core/hooks/useStateReducer.ts/useStateReducer';
+import { ReactNode } from 'react';
 
 export interface DropdownItem {
   text: string;
@@ -17,7 +18,7 @@ export interface DropdownItem {
 interface ItemDropdownProps extends Select.SelectProps {
   items: DropdownItem[];
   placeholder?: string;
-  selectedText?: string;
+  selectedText?: ReactNode;
   triggerStylex?: stylex.StyleXStyles;
 }
 

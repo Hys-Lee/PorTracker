@@ -86,7 +86,14 @@ export const Primary: Story = {
         {...args}
         triggerStylex={finalValue !== '' ? activeStyle.active : undefined}
         items={items}
-        selectedText={idx === -1 ? undefined : '결과: ' + items[idx].text}
+        selectedText={
+          idx === -1 ? undefined : (
+            <>
+              <span>ReactNode</span>
+              {'결과: ' + items[idx].text}
+            </>
+          )
+        }
         value={finalValue}
         onValueChange={(newValue) => {
           const idx = items.reduce((acc, cur, idx) => {
