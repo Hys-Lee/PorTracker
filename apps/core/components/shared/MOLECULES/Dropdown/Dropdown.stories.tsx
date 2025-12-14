@@ -10,14 +10,14 @@ const meta: Meta<typeof Dropdown> = {
   title: 'ProTracker/Dropdown',
   tags: ['autodocs'],
   argTypes: {
-    value: {
-      control: 'text',
-      description:
-        '제어방식으로 사용할 때. 빈문자열("")라면 placeholder가 나타남',
+    multi: { control: 'boolean', description: 'Multi-Selection 여부' },
+    items: { description: '드랍다운 아이템 정보' },
+    triggerStylex: { description: '외부에서 트리거 스타일 주입 가능' },
+    selectedText: {
+      description: '외부에서 트리거에 표시될 ReactNode 주입 가능',
     },
-    onValueChange: {
-      description: '제어방식으로 사용할 때',
-    },
+    placeholder: { description: '플레이스홀더' },
+
     name: {
       control: 'text',
       description: 'form에 사용될 name',
@@ -33,6 +33,17 @@ const meta: Meta<typeof Dropdown> = {
     disabled: {
       control: 'boolean',
       description: 'form에서의 disabled',
+    },
+    value: {
+      // control: 'text',
+      control: {
+        type: 'object',
+      },
+      description:
+        '제어방식으로 사용할 때. 빈문자열("")라면 placeholder가 나타남',
+    },
+    onValueChange: {
+      description: '제어방식으로 사용할 때',
     },
   },
 };
@@ -79,30 +90,26 @@ export const Primary: Story = {
       { text: '야호', value: 'yaho' },
       { text: 'dldldldldl', value: 'dldldldldl' },
     ];
-    const [idx, setIdx] = useState(-1);
-    const finalValue = idx === -1 ? '' : items[idx].value;
+    const [selected, setSelected] = useState<typeof items | undefined>(
+      undefined
+    );
     return (
       <Dropdown
         {...args}
-        triggerStylex={finalValue !== '' ? activeStyle.active : undefined}
+        triggerStylex={selected ? activeStyle.active : undefined}
         items={items}
         selectedText={
-          idx === -1 ? undefined : (
+          selected?.length && selected.length > 0 ? (
             <>
               <span>ReactNode</span>
-              {'결과: ' + items[idx].text}
+              {'결과: ' + selected.map(({ text }) => text)}
             </>
-          )
+          ) : undefined
         }
-        value={finalValue}
+        // value={selected?.[0]?.value}
+        value={selected}
         onValueChange={(newValue) => {
-          const idx = items.reduce((acc, cur, idx) => {
-            if (cur.value === newValue) return idx;
-            else return acc;
-          }, -1);
-          if (idx != -1) {
-            setIdx(idx);
-          }
+          setSelected(newValue);
         }}
       />
     );
@@ -140,5 +147,44 @@ export const Uncontrolled: Story = {
         disable: true,
       },
     },
+  },
+};
+
+export const MultiSelection: Story = {
+  args: {},
+  render: (args) => {
+    const items = [];
+    for (let i = 0; i < 10; i++) {
+      items.push({ text: `${i}`, value: `${i}` });
+    }
+    return <Dropdown multi={true} items={items} />;
+  },
+};
+export const Scroll: Story = {
+  args: {},
+  render: (args) => {
+    const items = [];
+    for (let i = 0; i < 20; i++) {
+      items.push({ text: `${i}`, value: `${i}` });
+    }
+    return <Dropdown multi={false} items={items} />;
+  },
+};
+/**  */
+export const TooMany: Story = {
+  args: {},
+  parameters: {
+    docs: {
+      description: {
+        story: '가상화를 통한 최적화 필요... Radix의 DropdownMenu기반이라..',
+      },
+    },
+  },
+  render: (args) => {
+    const items = [];
+    for (let i = 0; i < 100; i++) {
+      items.push({ text: `${i}`, value: `${i}` });
+    }
+    return <Dropdown multi={false} items={items} />;
   },
 };
