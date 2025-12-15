@@ -171,6 +171,11 @@ export const Scroll: Story = {
   },
 };
 /**  */
+
+const items: { text: string; value: string }[] = [];
+for (let i = 0; i < 1_000; i++) {
+  items.push({ text: `${i}`, value: `${i}` });
+}
 export const TooMany: Story = {
   args: {},
   parameters: {
@@ -181,10 +186,6 @@ export const TooMany: Story = {
     },
   },
   render: (args) => {
-    const items = [];
-    for (let i = 0; i < 100; i++) {
-      items.push({ text: `${i}`, value: `${i}` });
-    }
-    return <Dropdown multi={false} items={items} />;
+    return <Dropdown multi={true} items={items} />;
   },
 };

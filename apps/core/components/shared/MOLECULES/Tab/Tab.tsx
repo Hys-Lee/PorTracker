@@ -4,7 +4,7 @@ import { Tabs } from 'radix-ui';
 import * as stylex from '@stylexjs/stylex';
 import { colors } from '../../../../tokens/colors.stylex';
 import { ReactNode, useState } from 'react';
-import { useStateReducer } from '@core/hooks/utils/useStateReducer.ts/useStateReducer';
+import { useStateReducer } from '@core/utils/hooks/useStateReducer.ts/useStateReducer';
 // Prototype을 만들어서, 기본 형태를 만들어놔야겠는데? 다른 곳에서 변경할 수 있도록..
 // 너무 과하지 않도록 디자인쪽에서만 기본 만들어두자. 사용하는 곳에서 나머지 알아서 책임지도록
 

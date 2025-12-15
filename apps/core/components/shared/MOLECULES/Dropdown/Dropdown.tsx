@@ -7,7 +7,7 @@ import {
 import * as stylex from '@stylexjs/stylex';
 import cssStyles from './Dropdown.module.css';
 import { colors } from '../../../../tokens/colors.stylex';
-import { useStateReducer } from '@core/hooks/utils/useStateReducer.ts/useStateReducer';
+import { useStateReducer } from '@core/utils/hooks/useStateReducer.ts/useStateReducer';
 import {
   InputHTMLAttributes,
   ReactNode,
@@ -16,8 +16,12 @@ import {
   useState,
   useMemo,
   useCallback,
+  ComponentType,
 } from 'react';
-import { useSubmitIntercept } from '@core/hooks/utils/useSubmitIntercept/useSubmitIntercept';
+import { useSubmitIntercept } from '@core/utils/hooks/useSubmitIntercept/useSubmitIntercept';
+
+import { useVirtualizer } from '@tanstack/react-virtual';
+import Virtualizer from '@core/utils/components/Virtualizer/Virtualzier';
 
 export interface DropdownItem {
   text: string;
@@ -108,7 +112,7 @@ const Dropdown = ({
 
   return (
     <>
-      <DropdownMenu.Root>
+      <DropdownMenu.Root open>
         <DropdownMenu.Trigger
           className={`${cssStyles.SelectTrigger} ${
             stylex.props(triggerStyles.base, triggerStylex).className
@@ -138,39 +142,111 @@ const Dropdown = ({
             {/** // 스크롤 영역 */}
 
             <ScrollArea.Root {...stylex.props(scrollRootStyles.base)}>
-              {multi ? (
-                <>
+              <Virtualizer
+                Container={
                   <ScrollArea.Viewport
                     {...stylex.props(scrollViewportStyles.base)}
+                    // ref={setContainerElement}
                   >
-                    {/** Multi Select */}
-
-                    {items.map((dropdownItem) => (
-                      <DropdownMenu.CheckboxItem
-                        className={`${cssStyles.SelectItem}
-                       ${stylex.props(selectItemStyles.base).className}
-                      `}
-                        key={dropdownItem.value}
-                        checked={selected.has(dropdownItem.value)}
-                        onCheckedChange={() => {
-                          handleSelected(multi, dropdownItem);
-                        }}
-                      >
-                        {dropdownItem.text}
-                      </DropdownMenu.CheckboxItem>
-                    ))}
+                    {multi ? undefined : (
+                      <DropdownMenu.RadioGroup
+                        {...stylex.props(radioGroupStyles.base)}
+                        value={
+                          value ? value?.[0]?.value : [...selected.keys()][0]
+                        }
+                      />
+                    )}
                   </ScrollArea.Viewport>
-                </>
-              ) : (
-                <>
-                  <DropdownMenu.RadioGroup
-                    {...stylex.props(radioGroupStyles.base)}
-                    value={value ? value?.[0]?.value : [...selected.keys()][0]}
-                  >
-                    {/** Single Select */}
+                }
+                getKey={(itemInfo) => itemInfo.value}
+                estimateSize={24}
+                itemsInfo={items}
+                ItemAs={
+                  multi ? DropdownMenu.CheckboxItem : DropdownMenu.RadioItem
+                }
+                itemProps={(itemInfo) => {
+                  if (multi) {
+                    return {
+                      className: `${cssStyles.SelectItem} ${
+                        stylex.props(selectItemStyles.base).className
+                      }`,
+                      // key: itemInfo.value,
+                      checked: selected.has(itemInfo.value),
+                      onCheckedChange: () => {
+                        handleSelected(multi, itemInfo);
+                      },
+                      children: itemInfo.text,
+                    };
+                  }
 
-                    <ScrollArea.Viewport
-                      {...stylex.props(scrollViewportStyles.base)}
+                  return {
+                    className: `${cssStyles.SelectItem} ${
+                      stylex.props(selectItemStyles.base).className
+                    }`,
+                    // key: itemInfo.value,
+                    value: itemInfo.value,
+                    onSelect: () => {
+                      handleSelected(false, itemInfo);
+                      if (onValueChange) onValueChange([itemInfo]);
+                    },
+
+                    children: itemInfo.text,
+                  };
+                }}
+              />
+              {/* <ScrollArea.Viewport
+                {...stylex.props(scrollViewportStyles.base)}
+                // ref={setContainerElement}
+              > */}
+              {/* <div
+                  style={{
+                    height: `${rowVirtualizer.getTotalSize()}px`,
+                    position: 'relative',
+                  }}
+                > */}
+              {/* {multi ? (
+                  <> */}
+              {/** Multi Select */}
+              {/* {items.map((dropdownItem) => ( */}
+              {/* {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+                        const dropdownItem = items[virtualItem.index];
+                        return (
+                          <div
+                            key={dropdownItem.value}
+                            style={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              width: '100%',
+                              height: `${virtualItem.size}px`,
+                              transform: `translateY(${virtualItem.start}px)`,
+                            }}
+                          > */}
+              {/* <DropdownMenu.CheckboxItem
+                      className={`${cssStyles.SelectItem} ${
+                        stylex.props(selectItemStyles.base).className
+                      }`}
+                      key={dropdownItem.value}
+                      checked={selected.has(dropdownItem.value)}
+                      onCheckedChange={() => {
+                        handleSelected(multi, dropdownItem);
+                      }}
+                    >
+                      {dropdownItem.text}
+                    </DropdownMenu.CheckboxItem> */}
+              {/* </div>
+                        );
+                      })} */}
+              {/* ))} */}
+              {/* </>
+                ) : (
+                  <> */}
+              {/** Single Select */}
+              {/* <DropdownMenu.RadioGroup
+                      {...stylex.props(radioGroupStyles.base)}
+                      value={
+                        value ? value?.[0]?.value : [...selected.keys()][0]
+                      }
                     >
                       {items.map((dropdownItem) => (
                         <DropdownMenu.RadioItem
@@ -187,11 +263,11 @@ const Dropdown = ({
                           {dropdownItem.text}
                         </DropdownMenu.RadioItem>
                       ))}
-                    </ScrollArea.Viewport>
-                  </DropdownMenu.RadioGroup>
-                </>
-              )}
-
+                    </DropdownMenu.RadioGroup>
+                  </>
+                )} */}
+              {/* </div> */}
+              {/* </ScrollArea.Viewport> */}
               <ScrollArea.ScrollAreaScrollbar
                 {...stylex.props(scrollBarStyles.base)}
               >
@@ -207,6 +283,8 @@ const Dropdown = ({
   );
 };
 export default Dropdown;
+
+// 만약 Item이라고 renderProps를 대비해 외부에 변수로 저장시킨다면, Dropdown내 변수를 사용할 수 없어짐. 컨텍스트를 잃게 됨. -> useContext쓰지도 못할 것 같은데. 컴포넌트나 훅이 아니라.
 
 /** Styles */
 
@@ -262,7 +340,7 @@ const selectItemStyles = stylex.create({
     display: 'flex',
     justifyContent: 'start',
     alignItems: 'center',
-    height: '25px',
+    height: '24px',
     padding: '0 4px 0 4px',
     // padding: '0 35px 0 25px',
     position: 'relative',
@@ -305,6 +383,7 @@ const scrollViewportStyles = stylex.create({
   base: {
     width: '100%',
     maxHeight: '300px',
+    // height: '300px',
     borderRadius: 'inherit',
   },
 });
