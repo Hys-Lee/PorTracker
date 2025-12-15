@@ -17,11 +17,10 @@ import {
   ComponentPropsWithRef,
 } from 'react';
 
-interface VirtualzierProps<ItemInfoT, IA extends ElementType> {
+interface VirtualzierProps<ItemInfoT> {
   Container: ReactElement<ComponentPropsWithoutRef<ElementType>>;
   itemsInfo: ItemInfoT[];
-  ItemAs: IA; //({ eachItemInfo }: { eachItemInfo: ItemInfoT }) => ReactNode;
-  itemProps: (eachItemInfo: ItemInfoT) => ComponentProps<IA>;
+  renderItem: (eachItemInfo: ItemInfoT) => ReactNode;
   estimateSize: number;
   getKey: (itemInfo: ItemInfoT) => Key;
 }
@@ -30,14 +29,13 @@ interface VirtualzierProps<ItemInfoT, IA extends ElementType> {
  * @param Container : ref를 넘기면 덮어씌워지니, 넘기지 말 것.
  *
  */
-const Virtualizer = <InfoT, IA extends ElementType>({
+const Virtualizer = <InfoT,>({
   Container,
   itemsInfo,
   estimateSize,
-  ItemAs,
-  itemProps,
+  renderItem,
   getKey,
-}: VirtualzierProps<InfoT, IA>) => {
+}: VirtualzierProps<InfoT>) => {
   // 가상화
   // const containerRef = useRef<HTMLDivElement>(null);
   const [containerElement, setContainerElement] =
@@ -47,14 +45,7 @@ const Virtualizer = <InfoT, IA extends ElementType>({
     getScrollElement: () => containerElement,
     estimateSize: () => estimateSize,
   });
-  useEffect(() => {
-    console.log(
-      '엥? v: ',
-      itemsInfo.length,
-      rowVirtualizer.getVirtualItems().length,
-      containerElement
-    );
-  }, [containerElement]);
+
   return (
     <>
       {cloneElement(
@@ -70,8 +61,6 @@ const Virtualizer = <InfoT, IA extends ElementType>({
             {rowVirtualizer.getVirtualItems().map((virtualItem) => {
               const itemInfo = itemsInfo[virtualItem.index];
 
-              const finalItemProps = itemProps(itemInfo);
-
               return (
                 <div
                   key={getKey(itemInfo)}
@@ -84,13 +73,7 @@ const Virtualizer = <InfoT, IA extends ElementType>({
                     transform: `translateY(${virtualItem.start}px)`,
                   }}
                 >
-                  {/* <Item eachItemInfo={itemInfo} /> */}
-                  {/* {createElement(ItemAs, finalItemProps)} */}
-                  <ItemAs {...finalItemProps} />
-
-                  {/* <DropdownMenu.RadioItem value="123">
-                    TestTest
-                  </DropdownMenu.RadioItem> */}
+                  {renderItem(itemInfo)}
                 </div>
               );
             })}

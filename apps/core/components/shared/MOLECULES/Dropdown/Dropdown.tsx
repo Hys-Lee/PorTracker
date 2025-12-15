@@ -1,26 +1,11 @@
-import { Select, DropdownMenu, ScrollArea } from 'radix-ui';
-import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  CheckIcon,
-} from '@radix-ui/react-icons';
+import { DropdownMenu, ScrollArea } from 'radix-ui';
 import * as stylex from '@stylexjs/stylex';
 import cssStyles from './Dropdown.module.css';
 import { colors } from '../../../../tokens/colors.stylex';
 import { useStateReducer } from '@core/utils/hooks/useStateReducer.ts/useStateReducer';
-import {
-  InputHTMLAttributes,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-  useMemo,
-  useCallback,
-  ComponentType,
-} from 'react';
+import { ReactNode } from 'react';
 import { useSubmitIntercept } from '@core/utils/hooks/useSubmitIntercept/useSubmitIntercept';
 
-import { useVirtualizer } from '@tanstack/react-virtual';
 import Virtualizer from '@core/utils/components/Virtualizer/Virtualzier';
 
 export interface DropdownItem {
@@ -30,10 +15,6 @@ export interface DropdownItem {
 
 type Selected = Map<DropdownItem['value'], DropdownItem>;
 /**
- *
- * @param value : 제어 방식이더라도 value가 ''라면 placeholder사용 가능
- *
- * <br/>
  *
  * ### 설명
  *
@@ -114,14 +95,23 @@ const Dropdown = ({
     <>
       <DropdownMenu.Root open>
         <DropdownMenu.Trigger
-          className={`${cssStyles.SelectTrigger} ${
+          className={`${cssStyles.DropdownMenuTrigger} ${
             stylex.props(triggerStyles.base, triggerStylex).className
           } `}
         >
           {selected.size === 0
             ? placeholder
-            : selectedText ||
-              [...selected.values()].map(({ text }) => text).join(',')}
+            : selectedText || (
+                <p
+                  style={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {[...selected.values()].map(({ text }) => text).join(',')}
+                </p>
+              )}
         </DropdownMenu.Trigger>
         {value ? undefined : (
           <input
@@ -161,113 +151,38 @@ const Dropdown = ({
                 getKey={(itemInfo) => itemInfo.value}
                 estimateSize={24}
                 itemsInfo={items}
-                ItemAs={
-                  multi ? DropdownMenu.CheckboxItem : DropdownMenu.RadioItem
-                }
-                itemProps={(itemInfo) => {
-                  if (multi) {
-                    return {
-                      className: `${cssStyles.SelectItem} ${
-                        stylex.props(selectItemStyles.base).className
-                      }`,
-                      // key: itemInfo.value,
-                      checked: selected.has(itemInfo.value),
-                      onCheckedChange: () => {
-                        handleSelected(multi, itemInfo);
-                      },
-                      children: itemInfo.text,
-                    };
-                  }
-
-                  return {
-                    className: `${cssStyles.SelectItem} ${
-                      stylex.props(selectItemStyles.base).className
-                    }`,
-                    // key: itemInfo.value,
-                    value: itemInfo.value,
-                    onSelect: () => {
-                      handleSelected(false, itemInfo);
-                      if (onValueChange) onValueChange([itemInfo]);
-                    },
-
-                    children: itemInfo.text,
-                  };
-                }}
-              />
-              {/* <ScrollArea.Viewport
-                {...stylex.props(scrollViewportStyles.base)}
-                // ref={setContainerElement}
-              > */}
-              {/* <div
-                  style={{
-                    height: `${rowVirtualizer.getTotalSize()}px`,
-                    position: 'relative',
-                  }}
-                > */}
-              {/* {multi ? (
-                  <> */}
-              {/** Multi Select */}
-              {/* {items.map((dropdownItem) => ( */}
-              {/* {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-                        const dropdownItem = items[virtualItem.index];
-                        return (
-                          <div
-                            key={dropdownItem.value}
-                            style={{
-                              position: 'absolute',
-                              top: 0,
-                              left: 0,
-                              width: '100%',
-                              height: `${virtualItem.size}px`,
-                              transform: `translateY(${virtualItem.start}px)`,
-                            }}
-                          > */}
-              {/* <DropdownMenu.CheckboxItem
-                      className={`${cssStyles.SelectItem} ${
-                        stylex.props(selectItemStyles.base).className
-                      }`}
-                      key={dropdownItem.value}
-                      checked={selected.has(dropdownItem.value)}
-                      onCheckedChange={() => {
-                        handleSelected(multi, dropdownItem);
-                      }}
-                    >
-                      {dropdownItem.text}
-                    </DropdownMenu.CheckboxItem> */}
-              {/* </div>
-                        );
-                      })} */}
-              {/* ))} */}
-              {/* </>
-                ) : (
-                  <> */}
-              {/** Single Select */}
-              {/* <DropdownMenu.RadioGroup
-                      {...stylex.props(radioGroupStyles.base)}
-                      value={
-                        value ? value?.[0]?.value : [...selected.keys()][0]
-                      }
-                    >
-                      {items.map((dropdownItem) => (
-                        <DropdownMenu.RadioItem
-                          className={`${cssStyles.SelectItem} ${
-                            stylex.props(selectItemStyles.base).className
-                          }`}
-                          key={dropdownItem.value}
-                          value={dropdownItem.value}
-                          onSelect={useCallback(() => {
-                            handleSelected(false, dropdownItem);
-                            if (onValueChange) onValueChange([dropdownItem]);
-                          }, [handleSelected, onValueChange])}
-                        >
-                          {dropdownItem.text}
-                        </DropdownMenu.RadioItem>
-                      ))}
-                    </DropdownMenu.RadioGroup>
+                renderItem={(itemInfo) => (
+                  <>
+                    {multi ? (
+                      <DropdownMenu.CheckboxItem
+                        className={`${cssStyles.SelectItem} ${
+                          stylex.props(selectItemStyles.base).className
+                        }`}
+                        checked={selected.has(itemInfo.value)}
+                        onCheckedChange={() => {
+                          handleSelected(multi, itemInfo);
+                        }}
+                      >
+                        {itemInfo.text}
+                      </DropdownMenu.CheckboxItem>
+                    ) : (
+                      <DropdownMenu.RadioItem
+                        className={`${cssStyles.SelectItem} ${
+                          stylex.props(selectItemStyles.base).className
+                        }`}
+                        value={itemInfo.value}
+                        onSelect={() => {
+                          handleSelected(false, itemInfo);
+                          if (onValueChange) onValueChange([itemInfo]);
+                        }}
+                      >
+                        {itemInfo.text}
+                      </DropdownMenu.RadioItem>
+                    )}
                   </>
-                )} */}
-              {/* </div> */}
-              {/* </ScrollArea.Viewport> */}
+                )}
+              />
+
               <ScrollArea.ScrollAreaScrollbar
                 {...stylex.props(scrollBarStyles.base)}
               >
