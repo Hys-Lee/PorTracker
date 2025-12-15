@@ -6,11 +6,20 @@ import { useEffect, useRef } from 'react';
  * @param form : 등록할 form id
  * @returns input ref
  */
+
+type SubmitInterceptor = (inputElement: HTMLInputElement) => void;
+
 const useSubmitIntercept = (
-  submitInterceptor: (inputElement: HTMLInputElement) => void,
+  submitInterceptor: SubmitInterceptor,
   form?: string
 ) => {
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const savedInterseptor = useRef(submitInterceptor);
+
+  useEffect(() => {
+    savedInterseptor.current = submitInterceptor;
+  }, [submitInterceptor]);
 
   useEffect(() => {
     const inputElement = inputRef.current;
@@ -28,7 +37,8 @@ const useSubmitIntercept = (
 
     /** 등록 */
     const handleFormSubmit = () => {
-      submitInterceptor(inputElement);
+      const submitInterseptor = savedInterseptor.current;
+      submitInterseptor(inputElement);
     };
 
     targetForm.addEventListener('submit', handleFormSubmit);
@@ -37,7 +47,7 @@ const useSubmitIntercept = (
     return () => {
       targetForm.removeEventListener('submit', handleFormSubmit);
     };
-  }, [form, submitInterceptor, inputRef.current]);
+  }, [form, inputRef.current]);
 
   return inputRef;
 };
