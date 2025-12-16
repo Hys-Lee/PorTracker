@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import DatePicker from './DatePicker';
+import * as stylex from '@stylexjs/stylex';
+import { colors } from '../../../../tokens/colors.stylex';
 
 const meta: Meta<typeof DatePicker> = {
   component: DatePicker,
@@ -19,15 +21,28 @@ const meta: Meta<typeof DatePicker> = {
     onChange: { description: 'range에 따라 타입이 바뀜' },
     placeholder: { description: 'range에 따라 타입이 바뀜' },
     format: { description: '기본은 YYYY.MM.DD' },
+    rootStyleX: {
+      description: '!important를 잘 붙여 스타일 가능',
+    },
   },
 };
 
 export default meta;
 
 type Story = StoryObj<typeof DatePicker>;
-
+const rootStyles = stylex.create({
+  base: {
+    // borderStyle: 'none',
+    // backgroundColor: `${colors.bgNormal}`,
+    height: '48px',
+  },
+});
 export const Primary: Story = {
-  args: { suffix: <div>Suffix</div>, prefix: <div>프리픽스</div> },
+  args: {
+    suffix: <div>Suffix</div>,
+    prefix: <div>프리픽스</div>,
+    rootStyleX: rootStyles.base,
+  },
   argTypes: {
     range: {
       control: 'boolean',

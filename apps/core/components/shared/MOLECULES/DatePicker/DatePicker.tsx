@@ -20,6 +20,8 @@ type CommonType = {
   suffix?: ReactNode;
   // YYYY.MM.DD 나, MM.DD.YY 등등.
   format?: string;
+  // !important를 잘 붙이기
+  rootStyleX?: stylex.StyleXStyles;
 };
 
 type CustomDatePickerProps = CommonType & {
@@ -47,6 +49,7 @@ const DatePicker = ({
   onChange,
   defaultValue,
   placeholder,
+  rootStyleX,
   ...props
 }: DatePickerProps) => {
   return (
@@ -69,6 +72,11 @@ const DatePicker = ({
       {range ? (
         <AntdDatePicker.RangePicker
           {...props}
+          classNames={{
+            root: `${stylex.props(rootStyles.base, rootStyleX).className}`,
+
+            input: stylex.props(inputStyles.base).className,
+          }}
           format={props.format || 'YYYY.MM.DD'}
           suffixIcon={props.suffix}
           placeholder={placeholder}
@@ -97,6 +105,11 @@ const DatePicker = ({
       ) : (
         <AntdDatePicker
           {...props}
+          classNames={{
+            root: rootStyleX
+              ? stylex.props(rootStyles.base, rootStyleX).className
+              : undefined,
+          }}
           format={props.format || 'YYYY.MM.DD'}
           suffixIcon={props.suffix}
           placeholder={placeholder}
@@ -119,3 +132,28 @@ const DatePicker = ({
   );
 };
 export default DatePicker;
+
+// borderRadius: '12px',
+const rootStyles = stylex.create({
+  base: {
+    borderRadius: '12px !important',
+    borderWidth: '0px !important',
+    // backgroundColor: `${colors.bgNormal} !important`,
+    height: '48px',
+
+    //
+    boxShadow: {
+      default: 'none',
+      ':focus-visible': `inset 0 0 0 1px ${colors.primaryVariant900} !important`,
+    },
+    backgroundColor: {
+      default: `${colors.bgNormal} !important`,
+      ':hover': `${colors.bgStrong} !important`,
+    },
+  },
+});
+const inputStyles = stylex.create({
+  base: {
+    textAlign: 'center',
+  },
+});

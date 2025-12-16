@@ -93,7 +93,7 @@ const Dropdown = ({
 
   return (
     <>
-      <DropdownMenu.Root open>
+      <DropdownMenu.Root>
         <DropdownMenu.Trigger
           className={`${cssStyles.DropdownMenuTrigger} ${
             stylex.props(triggerStyles.base, triggerStylex).className
