@@ -18,6 +18,7 @@ const meta: Meta<typeof DatePicker> = {
     defaultValue: { description: 'range에 따라 타입이 바뀜' },
     onChange: { description: 'range에 따라 타입이 바뀜' },
     placeholder: { description: 'range에 따라 타입이 바뀜' },
+    format: { description: '기본은 YYYY.MM.DD' },
   },
 };
 
@@ -26,7 +27,7 @@ export default meta;
 type Story = StoryObj<typeof DatePicker>;
 
 export const Primary: Story = {
-  args: {},
+  args: { suffix: <div>Suffix</div>, prefix: <div>프리픽스</div> },
   argTypes: {
     range: {
       control: 'boolean',

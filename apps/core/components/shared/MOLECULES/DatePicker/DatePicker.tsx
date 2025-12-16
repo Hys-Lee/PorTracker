@@ -3,6 +3,7 @@ import dayjs, { Dayjs } from 'dayjs';
 
 import * as stylex from '@stylexjs/stylex';
 import { colors } from '../../../../tokens/colors.stylex';
+import { ReactNode } from 'react';
 
 /** Antd 내부 위한 타입 */
 type AntdDate = Dayjs | null | undefined;
@@ -10,21 +11,25 @@ type AntdRangeDate = [AntdDate, AntdDate] | null | undefined;
 
 /** 외부 위한 타입 */
 
-type CommonUncontrolledType = {
+type CommonType = {
   name?: string;
   form?: string;
   disabled?: boolean;
   required?: boolean;
+  prefix?: ReactNode;
+  suffix?: ReactNode;
+  // YYYY.MM.DD 나, MM.DD.YY 등등.
+  format?: string;
 };
 
-type CustomDatePickerProps = CommonUncontrolledType & {
+type CustomDatePickerProps = CommonType & {
   range: false;
   value?: Date | null;
   defaultValue?: Date | null;
   onChange: (date: Date | null, dateString: string) => void;
   placeholder?: string;
 };
-type CustomRangeDatePickerProps = CommonUncontrolledType & {
+type CustomRangeDatePickerProps = CommonType & {
   range: true;
   value?: [Date, Date] | null;
   defaultValue?: [Date, Date] | null;
@@ -41,6 +46,7 @@ const DatePicker = ({
   value,
   onChange,
   defaultValue,
+  placeholder,
   ...props
 }: DatePickerProps) => {
   return (
@@ -62,6 +68,10 @@ const DatePicker = ({
     >
       {range ? (
         <AntdDatePicker.RangePicker
+          {...props}
+          format={props.format || 'YYYY.MM.DD'}
+          suffixIcon={props.suffix}
+          placeholder={placeholder}
           defaultValue={
             Array.isArray(value) && !(value instanceof Date)
               ? (value.map((val) => dayjs(val)) as NonNullable<AntdRangeDate>)
@@ -86,6 +96,10 @@ const DatePicker = ({
         />
       ) : (
         <AntdDatePicker
+          {...props}
+          format={props.format || 'YYYY.MM.DD'}
+          suffixIcon={props.suffix}
+          placeholder={placeholder}
           defaultValue={
             !Array.isArray(value) && value
               ? dayjs(value)
