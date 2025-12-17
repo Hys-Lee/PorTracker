@@ -1,12 +1,12 @@
 import { ToggleGroup } from 'radix-ui';
-import { PointerEvent } from 'react';
+import { MouseEvent, PointerEvent } from 'react';
 
 const radixToggleStateName = 'state';
 
-const preventRadixToggleDeselect = (e: PointerEvent) => {
-  const element = e.target as HTMLElement;
+const preventRadixToggleDeselect = (e: MouseEvent) => {
+  const element = e.currentTarget as HTMLElement;
 
-  const isOn = element.dataset[radixToggleStateName] === 'on';
+  const isOn = element.dataset.state === 'on';
   if (isOn) {
     e.preventDefault();
   }
@@ -38,9 +38,9 @@ const NonDeselectableItem = ({
   return (
     <ToggleGroup.Item
       {...props}
-      onPointerDown={(pointerEvent) => {
+      onClick={(pointerEvent) => {
         preventRadixToggleDeselect(pointerEvent);
-        props.onPointerDown && props.onPointerDown(pointerEvent);
+        props.onClick && props.onClick(pointerEvent);
       }}
     />
   );
