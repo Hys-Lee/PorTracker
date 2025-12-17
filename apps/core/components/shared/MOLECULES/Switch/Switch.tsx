@@ -9,6 +9,7 @@ type Selected = { value: string; text: ReactNode };
 interface SwitchProps {
   items: [Selected, Selected];
   selected?: Selected;
+  defaultSelected?: Selected;
   onChange?: (selected: Selected) => void;
   name?: string;
   form?: string;
@@ -18,6 +19,7 @@ interface SwitchProps {
 const Switch = ({
   items,
   selected,
+  defaultSelected,
   onChange,
   name,
   form,
@@ -27,6 +29,7 @@ const Switch = ({
     <>
       <RadioSwitchGroup.Root
         value={selected?.value}
+        defaultValue={defaultSelected?.value || items[0].value}
         onValueChange={
           onChange
             ? (value) => {
