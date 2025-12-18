@@ -1,0 +1,6 @@
+.ToggleGroupItem[data-state='on'] {
+  /* background-color: rgb(from var(--jade-t) r g b / 0.7); */
+  background-color: rgb(from var(--jade-p) r g b);
+  color: #ffffff;
+  /* font-weight: 700; */
+}

@@ -1,7 +1,12 @@
 import type { Preview } from '@storybook/nextjs-vite';
+import { suite } from '@core/app/fonts';
+import { fonts } from '../tokens/fonts.stylex';
+import * as stylex from '@stylexjs/stylex';
 
 // import './stylex_bundle.css';
+import '../tokens/colors.css';
 import './stylex.css';
+import { useEffect } from 'react';
 
 const preview: Preview = {
   tags: ['autodocs'],
@@ -22,6 +27,19 @@ const preview: Preview = {
       appDirectory: true,
     },
   },
+  decorators: (Story) => {
+    return (
+      <div className={suite.variable}>
+        <Story />
+      </div>
+    );
+  },
 };
 
 export default preview;
+
+const wrapperStyles = stylex.create({
+  font: {
+    fontFamily: fonts.suite,
+  },
+});
