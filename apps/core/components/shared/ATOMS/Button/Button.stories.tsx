@@ -6,7 +6,7 @@ import { colors } from '../../../../tokens/colors.stylex';
 const meta: Meta<typeof Button> = {
   component: Button,
   // 앱 내부이므로 title에 앱 이름을 고정하거나 생략해도 됩니다.
-  title: 'ProTracker/Button',
+  title: 'ProTracker/Shared/Button',
   tags: ['autodocs'],
   argTypes: {
     buttonStylex: {

@@ -7,7 +7,7 @@ import { colors } from '../../../../tokens/colors.stylex';
 const meta: Meta<typeof Dropdown> = {
   component: Dropdown,
   // 앱 내부이므로 title에 앱 이름을 고정하거나 생략해도 됩니다.
-  title: 'ProTracker/Dropdown',
+  title: 'ProTracker/Shared/Dropdown',
   tags: ['autodocs'],
   argTypes: {
     multi: { control: 'boolean', description: 'Multi-Selection 여부' },

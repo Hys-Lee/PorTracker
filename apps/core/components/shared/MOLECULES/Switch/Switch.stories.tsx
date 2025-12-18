@@ -5,7 +5,7 @@ import { useState } from 'react';
 const meta: Meta<typeof Switch> = {
   component: Switch,
   // 앱 내부이므로 title에 앱 이름을 고정하거나 생략해도 됩니다.
-  title: 'ProTracker/Switch',
+  title: 'ProTracker/Shared/Switch',
   tags: ['autodocs'],
   argTypes: {},
 };

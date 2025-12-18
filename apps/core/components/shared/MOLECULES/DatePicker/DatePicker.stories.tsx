@@ -6,7 +6,7 @@ import { colors } from '../../../../tokens/colors.stylex';
 const meta: Meta<typeof DatePicker> = {
   component: DatePicker,
   // 앱 내부이므로 title에 앱 이름을 고정하거나 생략해도 됩니다.
-  title: 'ProTracker/DatePicker',
+  title: 'ProTracker/Shared/DatePicker',
   tags: ['autodocs'],
   argTypes: {
     range: {

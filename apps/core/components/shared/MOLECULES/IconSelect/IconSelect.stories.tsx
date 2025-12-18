@@ -4,7 +4,7 @@ import IconSelect from './IconSelect';
 const meta: Meta<typeof IconSelect> = {
   component: IconSelect,
   // 앱 내부이므로 title에 앱 이름을 고정하거나 생략해도 됩니다.
-  title: 'ProTracker/IconSelect',
+  title: 'ProTracker/Shared/IconSelect',
   tags: ['autodocs'],
   argTypes: {
     name: {
