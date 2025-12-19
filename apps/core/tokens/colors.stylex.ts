@@ -55,4 +55,6 @@ export const colors = stylex.defineVars({
   category9Week: 'var(--green-c-w)',
   category10Strong: 'var(--cyan-c-s)',
   category10Week: 'var(--cyan-c-w)',
+  /** Icon */
+  icon: 'var(--gray-ic)',
 });
