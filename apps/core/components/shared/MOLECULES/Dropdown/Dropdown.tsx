@@ -8,12 +8,15 @@ import { useSubmitIntercept } from '@core/utils/hooks/useSubmitIntercept/useSubm
 
 import Virtualizer from '@core/utils/components/Virtualizer/Virtualzier';
 
-export interface DropdownItem {
+export interface DropdownItem<T extends string> {
   text: string;
-  value: string;
+  value: T;
 }
 
-type Selected = Map<DropdownItem['value'], DropdownItem>;
+type Selected<T extends string> = Map<
+  DropdownItem<T>['value'],
+  DropdownItem<T>
+>;
 /**
  *
  * ### 설명
@@ -23,9 +26,9 @@ type Selected = Map<DropdownItem['value'], DropdownItem>;
  * triggerStyleX를 통해 외부 박스 스타일 주입 가능
  */
 
-interface Dropdown extends DropdownMenu.DropdownMenuProps {
+interface Dropdown<T extends string> extends DropdownMenu.DropdownMenuProps {
   multi: boolean;
-  items: DropdownItem[];
+  items: DropdownItem<T>[];
   triggerStylex?: stylex.StyleXStyles;
   selectedText?: ReactNode;
   placeholder?: ReactNode;
@@ -35,11 +38,11 @@ interface Dropdown extends DropdownMenu.DropdownMenuProps {
   required?: boolean;
   disabled?: boolean;
   /** 제어 방식 */
-  value?: DropdownItem[];
-  onValueChange?: (value: DropdownItem[]) => void;
+  value?: DropdownItem<T>[];
+  onValueChange?: (value: DropdownItem<T>[]) => void;
 }
 
-const Dropdown = ({
+const Dropdown = <T extends string>({
   multi,
   items,
   triggerStylex,
@@ -51,8 +54,8 @@ const Dropdown = ({
   disabled,
   value,
   onValueChange,
-}: Dropdown) => {
-  const [selected, setSelected] = useStateReducer<Selected>(
+}: Dropdown<T>) => {
+  const [selected, setSelected] = useStateReducer<Selected<T>>(
     new Map(),
     (_, nextState) => {
       if (onValueChange) {
@@ -62,7 +65,7 @@ const Dropdown = ({
       return nextState;
     }
   );
-  const handleSelected = (multi: boolean, dropdownItem: DropdownItem) =>
+  const handleSelected = (multi: boolean, dropdownItem: DropdownItem<T>) =>
     // : Selected
     {
       // let newSelected = null;

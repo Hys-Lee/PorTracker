@@ -4,19 +4,20 @@ import * as stylex from '@stylexjs/stylex';
 import { colors } from '../../../../tokens/colors.stylex';
 import cssStyles from './Switch.module.css';
 
-type Selected = { value: string; text: ReactNode };
+export type SwitchSelected<T extends string> = { value: T; text: ReactNode };
 
-interface SwitchProps {
-  items: [Selected, Selected];
-  selected?: Selected;
-  defaultSelected?: Selected;
-  onChange?: (selected: Selected) => void;
+interface SwitchProps<T extends string> {
+  items: [SwitchSelected<T>, SwitchSelected<T>];
+  selected?: SwitchSelected<T>;
+  defaultSelected?: SwitchSelected<T>;
+  onChange?: (selected: SwitchSelected<T>) => void;
   name?: string;
   form?: string;
   disabled?: boolean;
   // required는 직접 구현해야함...
+  rootStylex?: stylex.StyleXStyles;
 }
-const Switch = ({
+const Switch = <T extends string>({
   items,
   selected,
   defaultSelected,
@@ -24,7 +25,8 @@ const Switch = ({
   name,
   form,
   disabled,
-}: SwitchProps) => {
+  rootStylex,
+}: SwitchProps<T>) => {
   return (
     <>
       <RadioSwitchGroup.Root
@@ -43,7 +45,7 @@ const Switch = ({
             : undefined
         }
         className={`${cssStyles.root} ${
-          stylex.props(rootStyles.base).className
+          stylex.props(rootStyles.base, rootStylex).className
         }`}
         // {...stylex.props(rootStyles.base)}
       >

@@ -28,14 +28,14 @@ type CustomDatePickerProps = CommonType & {
   range: false;
   value?: Date | null;
   defaultValue?: Date | null;
-  onChange: (date: Date | null, dateString: string) => void;
+  onChange?: (date: Date | null, dateString: string) => void;
   placeholder?: string;
 };
 type CustomRangeDatePickerProps = CommonType & {
   range: true;
   value?: [Date, Date] | null;
   defaultValue?: [Date, Date] | null;
-  onChange: (
+  onChange?: (
     date: [Date | null, Date | null] | null, /////////////// 1개일 수도 있나
     dateString: [string, string]
   ) => void;
@@ -91,15 +91,16 @@ const DatePicker = ({
               : (value as null | undefined)
           }
           onChange={(value, valueString) => {
-            onChange(
-              !value || value.length !== 2
-                ? null
-                : (value.map((val) => val && val.toDate()) as [
-                    Date | null,
-                    Date | null
-                  ]),
-              valueString
-            );
+            onChange &&
+              onChange(
+                !value || value.length !== 2
+                  ? null
+                  : (value.map((val) => val && val.toDate()) as [
+                      Date | null,
+                      Date | null
+                    ]),
+                valueString
+              );
           }}
         />
       ) : (
@@ -124,7 +125,8 @@ const DatePicker = ({
               : (value as null | undefined)
           }
           onChange={(value, valueString) => {
-            onChange(value ? value.toDate() : null, valueString || '');
+            onChange &&
+              onChange(value ? value.toDate() : null, valueString || '');
           }}
         />
       )}
