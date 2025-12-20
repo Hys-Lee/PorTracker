@@ -180,6 +180,7 @@ const Filter = ({ assetInfo, transactionInfo, currencyInfo }: FilterProps) => {
               alignItems: 'center',
               gap: '8px',
               fontSize: '14px',
+              color: colors.iconFilter,
             }}
           >
             <CurrencyIcon width={14} height={14} />
@@ -209,7 +210,7 @@ const AssetText = ({ content }: { content?: string }) => (
   <p
     style={{ lineHeight: 1, display: 'flex', alignItems: 'center', gap: '8px' }}
   >
-    <div>
+    <div style={{ color: colors.iconFilter }}>
       <AssetIcon width={12} height={12} />
     </div>
     <span>{`Assets: ${content || ''}`}</span>
@@ -230,7 +231,7 @@ const AssetFilterStyles = stylex.create({
 const DatePrefix = () => {
   return (
     <p style={{ lineHeight: 1, padding: '3px', margin: 0 }}>
-      <span>
+      <span style={{ color: colors.iconFilter }}>
         <DateIcon width={14} height={14} />
       </span>
     </p>
@@ -259,7 +260,7 @@ const TransactionText = ({ content }: { content?: string }) => {
         gap: '8px',
       }}
     >
-      <div style={{ width: '14px', height: '14px' }}>
+      <div style={{ width: '14px', height: '14px', color: colors.iconFilter }}>
         <TransactionIcon width={14} height={14} />
       </div>
       <span>{`Transaction: `}</span>

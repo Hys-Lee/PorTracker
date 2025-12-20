@@ -15,7 +15,19 @@ export default meta;
 type Story = StoryObj<typeof Filter>;
 
 export const Primary: Story = {
-  args: {},
+  args: {
+    assetInfo: [{ name: '1', value: '1' }],
+    currencyInfo: [
+      { name: 'c1', value: 'krw' },
+      { name: 'c2', value: 'usd' },
+    ],
+    transactionInfo: [
+      { name: 't1', value: 'allocation' },
+      { name: 't2', value: 'dividend' },
+      { name: 't3', value: 'fee' },
+      { name: 't4', value: 'withdrawal' },
+    ],
+  },
   // parameters: {
   //   nextjs: {
   //     appDirectory: true,
