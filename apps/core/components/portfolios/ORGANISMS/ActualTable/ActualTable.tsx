@@ -12,8 +12,9 @@ import FeeIcon from '@core/public/images/svgs/Reciept.svg?react';
 
 interface ActualTableProps {
   actualData: RowProps[];
+  onRowClick: (dataId: string) => void;
 }
-const ActualTable = ({ actualData }: ActualTableProps) => {
+const ActualTable = ({ actualData, onRowClick }: ActualTableProps) => {
   return (
     <>
       <section style={{ color: colors.textNormal }}>
@@ -37,7 +38,7 @@ const ActualTable = ({ actualData }: ActualTableProps) => {
         {/** 가상화 해야함 */}
         <ul style={{ listStyle: 'none', padding: 0 }}>
           {actualData.map((data) => (
-            <Row {...data} />
+            <Row {...data} key={data.id} onClick={() => onRowClick(data.id)} />
           ))}
         </ul>
       </section>
@@ -66,7 +67,6 @@ interface RowProps {
     description: string;
   };
   date: Date;
-  id: string;
   transactionType: TransactionValue;
   changeInfo: {
     ratio: number;
@@ -74,6 +74,10 @@ interface RowProps {
   };
   value: number;
   currency: CurrencyValue;
+
+  // 외부용
+  id: string;
+  onClick: () => void;
 }
 const Row = ({
   categoryInfo,
@@ -81,14 +85,14 @@ const Row = ({
   changeInfo,
   currency,
   date,
-  id,
   transactionType,
   value,
+  onClick,
 }: RowProps) => {
   return (
     <>
       <li
-        key={id}
+        onClick={() => onClick()}
         style={{
           // display: 'flex',
           // alignItems: 'center',
