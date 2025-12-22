@@ -1,4 +1,5 @@
 import { DropdownMenu, ScrollArea } from 'radix-ui';
+import { ChevronDownIcon } from '@radix-ui/react-icons';
 import * as stylex from '@stylexjs/stylex';
 import cssStyles from './Dropdown.module.css';
 import { colors } from '../../../../tokens/colors.stylex';
@@ -7,6 +8,7 @@ import { ReactNode } from 'react';
 import { useSubmitIntercept } from '@core/utils/hooks/useSubmitIntercept/useSubmitIntercept';
 
 import Virtualizer from '@core/utils/components/Virtualizer/Virtualzier';
+import { inputBase } from '@core/styles/input.stylex';
 
 export interface DropdownItem<T extends string> {
   text: string;
@@ -32,6 +34,7 @@ interface Dropdown<T extends string> extends DropdownMenu.DropdownMenuProps {
   triggerStylex?: stylex.StyleXStyles;
   selectedText?: ReactNode;
   placeholder?: ReactNode;
+  defaultValue?: DropdownItem<T>[];
   /** 비제어 방식, form을 위해 */
   name?: string;
   form?: string;
@@ -40,6 +43,7 @@ interface Dropdown<T extends string> extends DropdownMenu.DropdownMenuProps {
   /** 제어 방식 */
   value?: DropdownItem<T>[];
   onValueChange?: (value: DropdownItem<T>[]) => void;
+  icon?: boolean;
 }
 
 const Dropdown = <T extends string>({
@@ -48,15 +52,17 @@ const Dropdown = <T extends string>({
   triggerStylex,
   selectedText,
   placeholder,
+  defaultValue,
   name,
   form,
   required,
   disabled,
   value,
   onValueChange,
+  icon = false,
 }: Dropdown<T>) => {
   const [selected, setSelected] = useStateReducer<Selected<T>>(
-    new Map(),
+    initializer(defaultValue),
     (_, nextState) => {
       if (onValueChange) {
         const nextStateIterable = nextState.values();
@@ -99,7 +105,7 @@ const Dropdown = <T extends string>({
       <DropdownMenu.Root>
         <DropdownMenu.Trigger
           className={`${cssStyles.DropdownMenuTrigger} ${
-            stylex.props(triggerStyles.base, triggerStylex).className
+            stylex.props(inputBase.base, triggerStylex).className
           } `}
         >
           {selected.size === 0
@@ -115,6 +121,9 @@ const Dropdown = <T extends string>({
                   {[...selected.values()].map(({ text }) => text).join(',')}
                 </p>
               )}
+          {icon && (
+            <ChevronDownIcon style={{ position: 'absolute', right: '12px' }} />
+          )}
         </DropdownMenu.Trigger>
         {value ? undefined : (
           <input
@@ -202,37 +211,50 @@ const Dropdown = <T extends string>({
 };
 export default Dropdown;
 
+const initializer = <T extends string>(
+  defaultValue?: DropdownItem<T>[]
+): Selected<T> => {
+  if (!defaultValue) return new Map();
+
+  const init: Selected<T> = new Map();
+  defaultValue.forEach(({ text, value }) => {
+    init.set(value, { text, value });
+  });
+
+  return init;
+};
+
 // 만약 Item이라고 renderProps를 대비해 외부에 변수로 저장시킨다면, Dropdown내 변수를 사용할 수 없어짐. 컨텍스트를 잃게 됨. -> useContext쓰지도 못할 것 같은데. 컴포넌트나 훅이 아니라.
 
 /** Styles */
 
-const triggerStyles = stylex.create({
-  base: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '12px',
-    // borderRadius: '24px',
-    padding: '0 15px',
-    fontSize: '16px',
-    fontWeight: '600',
-    lineHeight: 1,
-    height: '48px',
-    width: '300px',
-    gap: '5px',
-    borderStyle: 'none',
-    outline: 'none',
-    boxShadow: {
-      default: 'none',
-      ':focus-visible': `inset 0 0 0 1px ${colors.primaryVariant900}`,
-    },
-    backgroundColor: {
-      default: colors.bgNormal,
-      ':hover': colors.bgStrong,
-    },
-    color: colors.textNormal,
-  },
-});
+// const triggerStyles = stylex.create({
+//   base: {
+//     display: 'inline-flex',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     borderRadius: '12px',
+//     // borderRadius: '24px',
+//     padding: '0 15px',
+//     fontSize: '16px',
+//     fontWeight: '600',
+//     lineHeight: 1,
+//     height: '48px',
+//     width: '300px',
+//     gap: '5px',
+//     borderStyle: 'none',
+//     outline: 'none',
+//     boxShadow: {
+//       default: 'none',
+//       ':focus-visible': `inset 0 0 0 1px ${colors.primaryVariant900}`,
+//     },
+//     backgroundColor: {
+//       default: colors.bgNormal,
+//       ':hover': colors.bgStrong,
+//     },
+//     color: colors.textNormal,
+//   },
+// });
 
 const contentStyles = stylex.create({
   base: {

@@ -1,8 +1,9 @@
-import { ReactNode } from 'react';
+import { ReactNode, useRef } from 'react';
 import RadioSwitchGroup from '../../_prototypes/RadioSwitchGroup/RadioSwitchGroup';
 import * as stylex from '@stylexjs/stylex';
 import { colors } from '../../../../tokens/colors.stylex';
 import cssStyles from './Switch.module.css';
+import { useStateReducer } from '@core/utils/hooks/useStateReducer.ts/useStateReducer';
 
 export type SwitchSelected<T extends string> = { value: T; text: ReactNode };
 
@@ -27,28 +28,62 @@ const Switch = <T extends string>({
   disabled,
   rootStylex,
 }: SwitchProps<T>) => {
+  // const [innerSelected, setInnerSelected] = useStateReducer(
+  //   defaultSelected || items[0],
+  //   (prev, next) => {
+  //     onChange && onChange(next);
+  //     return next;
+  //   }
+  // );
+  const hiddenRef = useRef<HTMLInputElement>(null);
   return (
     <>
       <RadioSwitchGroup.Root
         value={selected?.value}
         defaultValue={defaultSelected?.value || items[0].value}
         onValueChange={
-          onChange
-            ? (value) => {
-                const target = items.find(
-                  ({ value: itemValue }) => value === itemValue
-                );
-                if (target) {
-                  onChange(target);
-                }
-              }
-            : undefined
+          (value) => {
+            const target = items.find(
+              ({ value: itemValue }) => value === itemValue
+            );
+            if (target) {
+              // setInnerSelected(target);
+              onChange && onChange(target);
+
+              // // 이벤트 버블링 (비제어 방식 대비)
+              // if (hiddenRef.current) {
+              //   hiddenRef.current.value = target.value;
+              //   const inputEvent = new Event('input', { bubbles: true });
+              //   hiddenRef.current?.dispatchEvent(inputEvent);
+              // }
+            }
+          }
+          // onChange
+          //   ? (value) => {
+          //       const target = items.find(
+          //         ({ value: itemValue }) => value === itemValue
+          //       );
+          //       if (target) {
+          //         onChange(target);
+          //       }
+          //     }
+          //   : undefined
         }
         className={`${cssStyles.root} ${
           stylex.props(rootStyles.base, rootStylex).className
         }`}
         // {...stylex.props(rootStyles.base)}
       >
+        {selected ? undefined : (
+          <input
+            ref={hiddenRef}
+            type="hidden"
+            name={name}
+            form={form}
+            // data-default={defaultSelected?.value || items[0].value}
+            // value={innerSelected.value}
+          />
+        )}
         <div className={cssStyles.thumb} />
         {items.map((item, idx) => (
           <RadioSwitchGroup.Item
@@ -57,8 +92,8 @@ const Switch = <T extends string>({
             }`}
             key={item.value}
             value={item.value}
-            name={name}
-            form={form}
+            // name={name}
+            // form={form}
             disabled={disabled}
             // 애니메이션 위한 처리
             data-index={`${idx}`}

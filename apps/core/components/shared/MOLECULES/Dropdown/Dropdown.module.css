@@ -16,5 +16,7 @@
 }
 
 .DropdownMenuContent {
-  width: var(--radix-dropdown-menu-trigger-width);
+  min-width: var(--radix-dropdown-menu-trigger-width);
+  width: max-content;
+  max-width: 100vw;
 }
