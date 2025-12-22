@@ -35,7 +35,7 @@ const Switch = <T extends string>({
   //     return next;
   //   }
   // );
-  const hiddenRef = useRef<HTMLInputElement>(null);
+  // const hiddenRef = useRef<HTMLInputElement>(null);
   return (
     <>
       <RadioSwitchGroup.Root
@@ -76,7 +76,7 @@ const Switch = <T extends string>({
       >
         {selected ? undefined : (
           <input
-            ref={hiddenRef}
+            // ref={hiddenRef}
             type="hidden"
             name={name}
             form={form}

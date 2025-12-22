@@ -12,7 +12,7 @@ const Tips = ({ content }: TipsProps) => {
   return (
     <>
       <Tooltip.Provider>
-        <Tooltip.Root>
+        <Tooltip.Root delayDuration={300}>
           <Tooltip.Trigger asChild {...stylex.props(buttonStyles.base)}>
             <button type="button">
               <QuestionMarkIcon width={'100%'} height={'100%'} />
@@ -46,13 +46,14 @@ const buttonStyles = stylex.create({
     justifyContent: 'center',
     backgroundColor: {
       default: 'rgb(from black r g b / 0)',
-      ':hover': 'rgb(from var(--gray-t) r g b / 0.1)',
+      // ':hover': 'rgb(from var(--gray-t) r g b / 0.1)',
     },
     boxShadow: {
       default: '0 0  0 1px var(--gray-ic)',
+      ':hover': '0 0 0 1px var(--jade-p)',
       ':focus': '0 0  0 2px var(--gray-ic)',
     },
-    color: 'var(--gray-ic)',
+    color: { default: 'var(--gray-ic)', ':hover': 'var(--jade-p)' },
     userSelect: 'none',
     borderWidth: '0px',
     // padding: '0px',
