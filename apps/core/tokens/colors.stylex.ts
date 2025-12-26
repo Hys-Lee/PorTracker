@@ -61,4 +61,7 @@ export const colors = stylex.defineVars({
   iconTransactionMinor: 'var(--jade-ic-w)',
   iconTransactionProfit: 'var(--green-ic)',
   iconTransactionLoss: 'var(--red-ic)',
+  iconMemoImportanceHigh: 'var(--red-ic-m)',
+  iconMemoImportanceMiddle: 'var(--blue-ic-m)',
+  iconMemoImportanceLow: 'var(--gray-ic-m)',
 });
