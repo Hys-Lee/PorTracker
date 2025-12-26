@@ -4,11 +4,8 @@ import { colors } from '../../../../tokens/colors.stylex';
 import { CurrencyValue, TransactionValue } from '@core/types';
 import * as stylex from '@stylexjs/stylex';
 
-// icons
-import AllocationIcon from '@core/public/images/svgs/ArrowUp.svg?react';
-import WithdrawalIcon from '@core/public/images/svgs/ArrowDown.svg?react';
-import DividendIcon from '@core/public/images/svgs/Part.svg?react';
-import FeeIcon from '@core/public/images/svgs/Reciept.svg?react';
+// icon
+import { transactionIconSelector } from '@core/utils/renderers/iconSelector';
 
 interface ActualTableProps {
   actualData: RowProps[];
@@ -139,7 +136,7 @@ const Row = ({
             minWidth: 'min-content',
           }}
         >
-          {transactionIconSelector(transactionType)}
+          {transactionIconSelector(transactionType, 32, 32)}
           <p style={{ whiteSpace: 'nowrap', fontWeight: '700' }}>
             {TRANSACTION_MAP[transactionType]}
           </p>
@@ -165,36 +162,36 @@ const Row = ({
   );
 };
 
-const transactionIconSelector = (type: TransactionValue) => {
-  switch (type) {
-    case 'allocation':
-      return (
-        <div style={{ color: colors.iconTransactionMajor }}>
-          <AllocationIcon width={32} height={32} />
-        </div>
-      );
-    case 'withdrawal':
-      return (
-        <div style={{ color: colors.iconTransactionMinor }}>
-          <WithdrawalIcon width={32} height={32} />
-        </div>
-      );
-    case 'dividend':
-      return (
-        <div style={{ color: colors.iconTransactionProfit }}>
-          <DividendIcon width={32} height={32} />
-        </div>
-      );
-    case 'fee':
-      return (
-        <div style={{ color: colors.iconTransactionLoss }}>
-          <FeeIcon width={32} height={32} />
-        </div>
-      );
-    default:
-      return null;
-  }
-};
+// const transactionIconSelector = (type: TransactionValue) => {
+//   switch (type) {
+//     case 'allocation':
+//       return (
+//         <div style={{ color: colors.iconTransactionMajor }}>
+//           <AllocationIcon width={32} height={32} />
+//         </div>
+//       );
+//     case 'withdrawal':
+//       return (
+//         <div style={{ color: colors.iconTransactionMinor }}>
+//           <WithdrawalIcon width={32} height={32} />
+//         </div>
+//       );
+//     case 'dividend':
+//       return (
+//         <div style={{ color: colors.iconTransactionProfit }}>
+//           <DividendIcon width={32} height={32} />
+//         </div>
+//       );
+//     case 'fee':
+//       return (
+//         <div style={{ color: colors.iconTransactionLoss }}>
+//           <FeeIcon width={32} height={32} />
+//         </div>
+//       );
+//     default:
+//       return null;
+//   }
+// };
 
 /** styles */
 
