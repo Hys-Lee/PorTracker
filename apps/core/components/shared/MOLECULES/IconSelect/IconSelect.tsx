@@ -1,5 +1,6 @@
 import { Select } from 'radix-ui';
-import RightTriangle from '@core/public/images/svgs/RightTriangle.svg?react';
+import RightTriangle from '@core/assets/images/svgs/RightTriangle.svg?react';
+import Asdf from '@core/assets/images/svgs/ArrowDown.svg?react';
 import * as stylex from '@stylexjs/stylex';
 import { ReactNode } from 'react';
 import { colors } from '../../../../tokens/colors.stylex';
@@ -47,7 +48,7 @@ const IconSelect = ({
         >
           <Select.Value placeholder={placeholderIcon} />
           <Select.Icon {...stylex.props(iconStyles.base)}>
-            <RightTriangle width={'10px'} height={'10px'} />
+            <RightTriangle />
           </Select.Icon>
         </Select.Trigger>
         <Select.Portal>

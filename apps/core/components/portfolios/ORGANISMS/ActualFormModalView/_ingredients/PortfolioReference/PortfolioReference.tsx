@@ -1,3 +1,5 @@
+'use client';
+
 import { dateFormatter } from '@core/utils/helpers/dateFormatter';
 import { colors } from '../../../../../../tokens/colors.stylex';
 import { TransactionValue } from '@core/types';
@@ -6,7 +8,7 @@ import { ScrollArea } from 'radix-ui';
 import { useState } from 'react';
 import Separator from '@core/components/shared/ATOMS/Separator/Separator';
 import * as stylex from '@stylexjs/stylex';
-import PasteIcon from '@core/public/images/svgs/Paste.svg?react';
+import PasteIcon from '@core/assets/images/svgs/Paste.svg?react';
 
 interface PortfolioReferenceProps {
   itemsInfo: {

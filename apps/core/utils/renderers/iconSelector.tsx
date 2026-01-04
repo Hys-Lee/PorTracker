@@ -6,20 +6,20 @@ import {
 import { colors } from '../../tokens/colors.stylex';
 import * as stylex from '@stylexjs/stylex';
 // transaction
-import AllocationIcon from '@core/public/images/svgs/ArrowUp.svg?react';
-import WithdrawalIcon from '@core/public/images/svgs/ArrowDown.svg?react';
-import DividendIcon from '@core/public/images/svgs/Part.svg?react';
-import FeeIcon from '@core/public/images/svgs/Reciept.svg?react';
+import AllocationIcon from '@core/assets/images/svgs/ArrowUp.svg?react';
+import WithdrawalIcon from '@core/assets/images/svgs/ArrowDown.svg?react';
+import DividendIcon from '@core/assets/images/svgs/Part.svg?react';
+import FeeIcon from '@core/assets/images/svgs/Reciept.svg?react';
 // memoImportance
-import CriticalIcon from '@core/public/images/svgs/Exclamation.svg?react';
-import UsefulIcon from '@core/public/images/svgs/Bulb.svg?react';
-import NormalIcon from '@core/public/images/svgs/Tag.svg?react';
+import CriticalIcon from '@core/assets/images/svgs/Exclamation.svg?react';
+import UsefulIcon from '@core/assets/images/svgs/Bulb.svg?react';
+import NormalIcon from '@core/assets/images/svgs/Tag.svg?react';
 // memoEvaluation
-import BetterIcon from '@core/public/images/svgs/Face_Laugh.svg?react';
-import GoodIcon from '@core/public/images/svgs/Face_Smile.svg?react';
-import SosoIcon from '@core/public/images/svgs/Face_Plain.svg?react';
-import BadIcon from '@core/public/images/svgs/Face_Sad.svg?react';
-import WorseIcon from '@core/public/images/svgs/Face_Crying.svg?react';
+import BetterIcon from '@core/assets/images/svgs/Face_Laugh.svg?react';
+import GoodIcon from '@core/assets/images/svgs/Face_Smile.svg?react';
+import SosoIcon from '@core/assets/images/svgs/Face_Plain.svg?react';
+import BadIcon from '@core/assets/images/svgs/Face_Sad.svg?react';
+import WorseIcon from '@core/assets/images/svgs/Face_Crying.svg?react';
 
 /** Transaction */
 const transactionIconSelector = (

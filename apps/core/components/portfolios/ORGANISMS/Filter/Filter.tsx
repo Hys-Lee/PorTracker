@@ -11,10 +11,10 @@ import { colors } from '../../../../tokens/colors.stylex';
 import * as stylex from '@stylexjs/stylex';
 
 // icons
-import AssetIcon from '@core/public/images/svgs/BusinessCase.svg?react';
-import DateIcon from '@core/public/images/svgs/Calendar.svg?react';
-import TransactionIcon from '@core/public/images/svgs/Exchange.svg?react';
-import CurrencyIcon from '@core/public/images/svgs/Dollar.svg?react';
+import AssetIcon from '@core/assets/images/svgs/BusinessCase.svg?react';
+import DateIcon from '@core/assets/images/svgs/Calendar.svg?react';
+import TransactionIcon from '@core/assets/images/svgs/Exchange.svg?react';
+import CurrencyIcon from '@core/assets/images/svgs/Dollar.svg?react';
 import { ComponentProps, useState } from 'react';
 import {
   useParams,
