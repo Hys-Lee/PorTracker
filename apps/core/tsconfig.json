@@ -1,32 +1,49 @@
+// apps/core/tsconfig.json <-- 이 파일의 내용을 통째로 바꾸세요.
+
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "jsx": "react-jsx",
+    // Next.js 빌드를 위한 필수 옵션들
+    "jsx": "preserve",
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "types": ["node"],
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true, // Next.js 빌드에서는 JS 파일을 생성하지 않으므로 true가 맞습니다.
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true,
     "plugins": [
       {
         "name": "next"
       }
     ],
-    "forceConsistentCasingInFileNames": true,
-    "incremental": true
+    "types": ["jest", "node"]
   },
-  "files": [],
-  "include": ["./dist/types/**/*.ts", "./next-env.d.ts", "./types/svg.d.ts"],
-  "exclude": ["./node_modules"],
+  "include": [
+    // 앱 빌드에 필요한 모든 소스코드와 타입 정의를 포함시킵니다.
+    "types/svg.d.ts",
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    // 빌드에 필요 없는 파일들을 명확하게 제외합니다.
+    "node_modules",
+    "jest.config.ts",
+    "dist",
+    ".storybook", // 스토리북 관련 폴더 제외
+    "**/*.spec.ts", // 테스트 파일 제외
+    "**/*.spec.tsx",
+    "**/*.stories.ts", // 스토리북 파일 제외
+    "**/*.stories.tsx"
+  ],
+  // "references"를 완전히 제거합니다.
   "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
-    },
     {
       "path": "./tsconfig.storybook.json"
     }
-  ],
-  "extends": "../../tsconfig.base.json"
+  ]
 }
