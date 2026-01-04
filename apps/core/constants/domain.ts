@@ -2,7 +2,32 @@ import {
   TransactionValue,
   CurrencyValue,
   MemoImportanceValue,
+  PortfolioTypeValue,
 } from '@core/types';
+
+/** Value Constants */
+export const TRANSACTION_VALUES = [
+  'allocation',
+  'withdrawal',
+  'dividend',
+  'fee',
+] as const;
+
+export const CURRENCY_VALUES = ['krw', 'usd'] as const;
+
+export const MEMO_IMPORTANCE_VALUES = ['critical', 'normal', 'useful'] as const;
+
+export const MEMO_EVALUATION_VALUES = [
+  'better',
+  'good',
+  'soso',
+  'bad',
+  'worse',
+] as const;
+
+export const PORTFOLIO_TYPE_VALUES = ['actual', 'target'] as const;
+
+/** Maps */
 
 export const TRANSACTION_MAP: Record<TransactionValue, string> = {
   allocation: '투자',
@@ -20,4 +45,9 @@ export const MEMO_IMPORTANCE_MAP: Record<MemoImportanceValue, string> = {
   critical: 'Critical',
   normal: 'Normal',
   useful: 'Useful',
+} as const;
+
+export const PORTFOLIO_TYPE_MAP: Record<PortfolioTypeValue, string> = {
+  actual: 'Actual',
+  target: 'Target',
 } as const;
