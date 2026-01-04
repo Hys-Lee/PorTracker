@@ -5,17 +5,23 @@ import { dirname } from 'path';
 import path from 'path';
 import { fileURLToPath } from 'node:url';
 import svgr from 'vite-plugin-svgr';
+// import tsconfigPaths from 'vite-tsconfig-paths';
 
 const currentDir = dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(currentDir, '../');
 
 const config: StorybookConfig = {
+  features: { experimentalRSC: true },
   stories: [
     path.resolve(currentDir, '..', 'components') + '/**/*.mdx',
     path.resolve(currentDir, '..', 'components') +
       '/**/*.stories.@(js|jsx|mjs|ts|tsx)',
   ],
-  addons: ['@storybook/addon-docs', '@nx/storybook/preset'],
+  addons: [
+    '@storybook/addon-docs',
+    '@nx/storybook/preset',
+    'msw-storybook-addon',
+  ],
 
   framework: { name: '@storybook/nextjs-vite', options: {} },
 
