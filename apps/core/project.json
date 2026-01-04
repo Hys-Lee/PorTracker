@@ -10,7 +10,8 @@
       "outputs": ["{options.outputPath}"],
       "options": {
         "root": "apps/core",
-        "outputPath": "dist/apps/core"
+        "outputPath": "dist/apps/core",
+        "buildLibsFromSource": true
       }
     },
     "serve": {

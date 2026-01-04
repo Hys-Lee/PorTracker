@@ -5,7 +5,8 @@
     "composite": true,
     "emitDecoratorMetadata": true,
     "outDir": "",
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "noEmit": false
   },
   "exclude": [
     "./**/*.spec.ts",
@@ -19,6 +20,7 @@
   ],
   "include": [
     "./**/*.tsx",
+    "./**/*.ts",
     "./**/*.stories.ts",
     "./**/*.stories.js",
     "./**/*.stories.jsx",
@@ -28,8 +30,10 @@
     ".storybook/*.ts",
     ".storybook/preview.tsx",
     ".storybook/Introduction.mdx",
-    "./babel.config.js",
-    ".storybook/main.ts"
+    "babel.config.asdfjs",
+    ".storybook/main.ts",
+    "./mocks/handlers/**/*",
+    "./tokens/**/*"
   ],
   "files": [
     "../../node_modules/@nx/react/typings/styled-jsx.d.ts",
