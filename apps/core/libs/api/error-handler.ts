@@ -8,7 +8,6 @@ import {
   NetworkError,
   UnknownError,
 } from '../errors/errors';
-import { cursorTo } from 'readline';
 
 export function handleApiError<T>(error: unknown): Response<T> {
   const customError = normalizeError(error);

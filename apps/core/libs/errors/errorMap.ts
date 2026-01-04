@@ -1,4 +1,4 @@
-import { ApiError, AppError, NetworkError, UnknownError } from './errors';
+import { AppError, NetworkError, UnknownError } from './errors';
 
 export const normalizeError = (error: unknown) => {
   if (error instanceof AppError) {
