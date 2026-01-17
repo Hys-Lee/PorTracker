@@ -1,0 +1,65 @@
+:root {
+  /*테마*/
+  --jade-p: #8fc8b6;
+  --blue-s: #476988;
+  /*테마 변형*/
+  --jade-p-1: #c3e3d8;
+  --jade-p-2: #9ad9c5;
+  --jade-p-3: #a1c5b9;
+  --jade-p-4: #79c0aa;
+  --jade-p-5: #36bf9d;
+  --jade-p-6: #6ca895;
+  --jade-p-7: #00a07d;
+  --jade-p-8: #027e65;
+  --jade-p-9: #608579;
+  --jade-p-10: #005e4b;
+  /*이익/손실*/
+  --green-pr: #02b04a;
+  --red-lo: #ee5572;
+  /*텍스트*/
+  --jade-t: #568d7c;
+  --black-t: #1f2937;
+  --blue-t: #6d7e95;
+  --gray-t: #c4c4c4;
+  /*배경*/
+  --gray-b-s: #e1e2e4;
+  --gray-b-n: #f3f4f6;
+  --gray-b-w: #f9fafb;
+  /*정보*/
+  --red-i-s: #ff898f;
+  --red-i-w: #fee2e2;
+  --blue-i-s: #68a0ea;
+  --blue-i-w: #dbeafe;
+  --gray-i-s: #a4a7ad;
+  --gray-i-w: #f3f4f6;
+  /*케이스*/
+  --blue-c-s: #82c6e7;
+  --blue-c-w: #d9ebf5;
+  --dblue-c-s: #a7baf2;
+  --dblue-c-w: #e0e8ff;
+  --purple-c-s: #cbaee5;
+  --purple-c-w: #f0e1ff;
+  --pink-c-s: #e1a7cc;
+  --pink-c-w: #ffdcf2;
+  --red-c-s: #eba6ae;
+  --red-c-w: #ffdfe2;
+  --orange-c-s: #e5af87;
+  --orange-c-w: #ffe2cd;
+  --yellow-c-s: #d4b87e;
+  --yellow-c-w: #ffe5af;
+  --lime-c-s: #b1c58a;
+  --lime-c-w: #e1eeca;
+  --green-c-s: #8bcdac;
+  --green-c-w: #ccf3de;
+  --cyan-c-s: #79cdca;
+  --cyan-c-w: #ccf1ef;
+  /* 아이콘 */
+  --gray-ic: #868686;
+  --jade-ic-s: #8fc8b6;
+  --jade-ic-w: #b0beb9;
+  --green-ic: #a0e394;
+  --red-ic: #ffb3ab;
+  --red-ic-m: #ff898f;
+  --blue-ic-m: #68a0ea;
+  --gray-ic-m: #a4a7ad;
+}

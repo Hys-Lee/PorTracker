@@ -1,0 +1,79 @@
+{
+  "name": "core",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/core",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "root": "apps/core",
+        "outputPath": "dist/apps/core",
+        "buildLibsFromSource": true
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "core:build",
+        "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "core:build",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "core:build",
+          "dev": false
+        }
+      }
+    },
+    "start": {
+      "executor": "@nx:run-commands",
+      "options": {
+        "command": "next start",
+        "cwd": "dist/apps/core"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "apps/core/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "build-storybook": {
+      "executor": "@nx/storybook:build",
+      "outputs": ["{options.outputDir}"],
+      "options": {
+        "configDir": "apps/core/.storybook",
+        "outputDir": "dist/storybook/core"
+      }
+    },
+    "storybook": {
+      "executor": "@nx/storybook:storybook",
+      "options": {
+        "port": 6006,
+        "configDir": "apps/core/.storybook"
+      }
+    },
+    "stylex": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm stylex build --input ./ --output ./.storybook --watch",
+        "cwd": "apps/core"
+      }
+    },
+    "gen:story": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm exec plop --plopfile ./plopfile.js",
+        "cwd": "apps/core"
+      }
+    }
+  }
+}

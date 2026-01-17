@@ -1,0 +1,65 @@
+{
+  "name": "data-sync-worker",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/data-sync-worker/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/data-sync-worker",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/data-sync-worker/src/main.ts",
+        "tsConfig": "apps/data-sync-worker/tsconfig.app.json",
+        "assets": ["apps/data-sync-worker/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "data-sync-worker:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "data-sync-worker:build:development"
+        },
+        "production": {
+          "buildTarget": "data-sync-worker:build:production"
+        }
+      }
+    },
+
+    "run-sync": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ts-node apps/data-sync-worker/src/main.ts"
+      }
+    }
+  }
+}

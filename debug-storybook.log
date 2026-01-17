@@ -1,0 +1,26 @@
+[19:29:57.592] [INFO] storybook v10.1.4
+[19:29:59.714] [DEBUG] Getting package.json info for C:/Users/dltkd/PorTracker/PorTracker/package.json...
+[19:30:01.718] [DEBUG] Serving static files from [36mapps/core/public[39m at [36m/[39m
+[19:30:01.723] [INFO] Starting...
+[19:30:01.756] [WARN] No story files found for the specified pattern: [34mapps\core\components\**\*.mdx[39m
+[19:30:01.946] [DEBUG] Starting preview..
+[19:30:02.026] [INFO] Addon-docs: using MDX3
+[19:30:02.107] [INFO] Using implicit CSS loaders
+[19:30:02.915] [INFO] Using SWC as compiler
+[19:30:03.007] [INFO] Using default Webpack5 setup
+[19:30:12.188] [ERROR] [38;2;241;97;97mError: listen EFAULT: bad address in system call argument :::6006[39m
+    at Server.setupListenHandle [as _listen2] (node:net:1940:16)
+    at listenInCluster (node:net:1997:12)
+    at Server.listen (node:net:2102:7)
+    at _Polka.listen (file:///C:/Users/dltkd/PorTracker/PorTracker/node_modules/.pnpm/storybook@10.1.4_@testing-library+dom@10.4.1_prettier@2.8.8_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/storybook/dist/core-server/index.js:6100:110)
+    at file:///C:/Users/dltkd/PorTracker/PorTracker/node_modules/.pnpm/storybook@10.1.4_@testing-library+dom@10.4.1_prettier@2.8.8_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/storybook/dist/core-server/index.js:7190:39
+    at new Promise (<anonymous>)
+    at storybookDevServer (file:///C:/Users/dltkd/PorTracker/PorTracker/node_modules/.pnpm/storybook@10.1.4_@testing-library+dom@10.4.1_prettier@2.8.8_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/storybook/dist/core-server/index.js:7189:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async buildOrThrow (file:///C:/Users/dltkd/PorTracker/PorTracker/node_modules/.pnpm/storybook@10.1.4_@testing-library+dom@10.4.1_prettier@2.8.8_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/storybook/dist/core-server/index.js:5556:12)
+    at async buildDevStandalone (file:///C:/Users/dltkd/PorTracker/PorTracker/node_modules/.pnpm/storybook@10.1.4_@testing-library+dom@10.4.1_prettier@2.8.8_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/storybook/dist/core-server/index.js:7582:66)
+    at async withTelemetry (file:///C:/Users/dltkd/PorTracker/PorTracker/node_modules/.pnpm/storybook@10.1.4_@testing-library+dom@10.4.1_prettier@2.8.8_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/storybook/dist/_node-chunks/chunk-6KX7N5UF.js:205:12)
+    at async dev (file:///C:/Users/dltkd/PorTracker/PorTracker/node_modules/.pnpm/storybook@10.1.4_@testing-library+dom@10.4.1_prettier@2.8.8_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/storybook/dist/bin/core.js:2734:3)
+    at async _Command.<anonymous> (file:///C:/Users/dltkd/PorTracker/PorTracker/node_modules/.pnpm/storybook@10.1.4_@testing-library+dom@10.4.1_prettier@2.8.8_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/storybook/dist/bin/core.js:2801:92)
+[19:30:12.195] [WARN] Broken build, fix the error above.
+You may need to refresh the browser.
