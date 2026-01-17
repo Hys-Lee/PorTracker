@@ -31,6 +31,14 @@ const config: StorybookConfig = {
   staticDirs: ['../public'],
 
   viteFinal: async (config) => {
+    if (config.optimizeDeps) {
+      config.optimizeDeps.exclude = [
+        ...(config.optimizeDeps.exclude || []),
+        'msw',
+        '@mswjs/interceptors',
+      ];
+    }
+
     return mergeConfig(config, {
       plugins: [
         // StyleX 플러그인 추가 (설정 끝)
