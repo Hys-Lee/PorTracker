@@ -1,4 +1,4 @@
-import { ReactNode, useRef } from 'react';
+import React, { ReactNode, useRef } from 'react';
 import RadioSwitchGroup from '../../_prototypes/RadioSwitchGroup/RadioSwitchGroup';
 import * as stylex from '@stylexjs/stylex';
 import { colors } from '../../../../tokens/colors.stylex';
@@ -36,6 +36,10 @@ const Switch = <T extends string>({
   //   }
   // );
   // const hiddenRef = useRef<HTMLInputElement>(null);
+
+  //test
+  console.log('defaultSelected in Sewietch: ', defaultSelected);
+
   return (
     <>
       <RadioSwitchGroup.Root
@@ -72,6 +76,9 @@ const Switch = <T extends string>({
         className={`${cssStyles.root} ${
           stylex.props(rootStyles.base, rootStylex).className
         }`}
+        data-active-index={items.findIndex(
+          (data) => data === selected || defaultSelected || items[0]
+        )}
         // {...stylex.props(rootStyles.base)}
       >
         {selected ? undefined : (
@@ -84,7 +91,20 @@ const Switch = <T extends string>({
             // value={innerSelected.value}
           />
         )}
-        <div className={cssStyles.thumb} />
+        <div
+          className={cssStyles.thumb}
+          // data-position={items.findIndex(
+          //   (data) => data === selected || defaultSelected || items[0]
+          // )} // 0 or 1
+          style={
+            {
+              '--offset': 1,
+              // '--offset': items.findIndex(
+              //   (data) => data === selected || defaultSelected || items[0]
+              // ),
+            } as React.CSSProperties
+          }
+        />
         {items.map((item, idx) => (
           <RadioSwitchGroup.Item
             className={`${cssStyles.ToggleGroupItem} ${

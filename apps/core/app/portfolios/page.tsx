@@ -77,6 +77,13 @@ const PortfolioPage = async ({
         <section {...stylex.props(pageStyles.contents)}>
           <div {...stylex.props(pageStyles.filterLine)}>
             <Filter // 이거 fetch로 받아올지 이렇게 할지 고민 중..
+              init={{
+                assets: params.get('assets') || '',
+                currency: params.get('currency') || '',
+                startDate: params.get('startDate') || '',
+                endDate: params.get('endDate') || '',
+                transaction: params.get('transaction') || '',
+              }}
               currencyInfo={[
                 {
                   name: CURRENCY_MAP[CURRENCY_VALUES[0]],

@@ -13,7 +13,7 @@ export const TRANSACTION_VALUES = [
   'fee',
 ] as const;
 
-export const CURRENCY_VALUES = ['krw', 'usd'] as const;
+export const CURRENCY_VALUES = ['usd', 'krw'] as const;
 
 export const MEMO_IMPORTANCE_VALUES = ['critical', 'normal', 'useful'] as const;
 

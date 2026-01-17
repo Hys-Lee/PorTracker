@@ -24,7 +24,11 @@ import {
 } from 'next/navigation';
 
 import type { TransactionValue, CurrencyValue } from '@core/types';
-import { CURRENCY_MAP, TRANSACTION_MAP } from '@core/constants/domain';
+import {
+  CURRENCY_MAP,
+  CURRENCY_VALUES,
+  TRANSACTION_MAP,
+} from '@core/constants/domain';
 import Button from '@core/components/shared/ATOMS/Button/Button';
 
 type TransactionInfo = DropdownItem<TransactionValue>;
@@ -37,6 +41,19 @@ type FilterState = {
   currency: CurrencyInfo;
 };
 
+const defaultCurrency: CurrencyInfo = {
+  value: 'usd',
+  text: CURRENCY_MAP['usd'],
+};
+
+type QueryInfo = {
+  assets?: string;
+  startDate?: string;
+  endDate?: string;
+  transaction?: string;
+  currency?: string;
+};
+
 interface FilterProps {
   assetInfo: { value: string; name: string }[];
   transactionInfo: {
@@ -47,14 +64,68 @@ interface FilterProps {
     { value: CurrencyValue; name: (typeof CURRENCY_MAP)[CurrencyValue] },
     { value: CurrencyValue; name: (typeof CURRENCY_MAP)[CurrencyValue] }
   ];
+  init?: QueryInfo;
 }
-const Filter = ({ assetInfo, transactionInfo, currencyInfo }: FilterProps) => {
-  const [filterStates, setFilterStates] = useState<FilterState>({
-    assets: [],
-    dates: null,
-    transaction: [{ value: 'allocation', text: TRANSACTION_MAP['allocation'] }],
-    currency: { value: 'usd', text: CURRENCY_MAP['usd'] },
-  });
+const Filter = ({
+  assetInfo,
+  transactionInfo,
+  currencyInfo,
+  init,
+}: FilterProps) => {
+  const getInitData = (): FilterState => {
+    const assetInfoMap = new Map<
+      NonNullable<FilterState['assets']>[number]['value'],
+      NonNullable<FilterState['assets']>[number]
+    >();
+    assetInfo.forEach((data) =>
+      assetInfoMap.set(data.value, { value: data.value, text: data.name })
+    );
+
+    const dates =
+      init?.startDate && init.endDate
+        ? ([new Date(init.startDate), new Date(init.endDate)] as [Date, Date])
+        : null;
+
+    const validCurrency =
+      init?.currency &&
+      CURRENCY_VALUES.includes(
+        init?.currency as (typeof CURRENCY_VALUES)[number]
+      );
+
+    const transaction: TransactionInfo | undefined = transactionInfo
+      .map((data) => ({ value: data.value, text: data.name }))
+      .find((data) => init?.transaction === data.value);
+    return {
+      assets: init?.assets
+        ? init.assets
+            .split(',')
+            .map((value) => assetInfoMap.get(value))
+            .filter((data) => !!data)
+        : [],
+      dates,
+      currency: validCurrency
+        ? {
+            value: init.currency as CurrencyValue,
+            text: CURRENCY_MAP[init.currency as CurrencyValue],
+          }
+        : defaultCurrency,
+      transaction: transaction ? [transaction] : [],
+    };
+  };
+
+  const [filterStates, setFilterStates] = useState<FilterState>(
+    getInitData
+    // {
+    //   assets: [],
+    //   dates: null,
+    //   // transaction: [{ value: 'allocation', text: TRANSACTION_MAP['allocation'] }],
+    //   transaction: [],
+    //   currency: defaultCurrency,
+    // }
+  );
+
+  //test
+  console.log('filteState: ', filterStates);
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -64,7 +135,8 @@ const Filter = ({ assetInfo, transactionInfo, currencyInfo }: FilterProps) => {
   const handleFilter = <K extends keyof FilterState>(
     type: K,
     valueInfo: FilterState[K],
-    urlInfo: { name: string; value: string }[]
+    // urlInfo: { name: string; value: string }[]
+    urlInfo: { name: keyof QueryInfo; value: string }[]
   ) => {
     setFilterStates((prev) => {
       return { ...prev, [type]: valueInfo };
@@ -119,7 +191,8 @@ const Filter = ({ assetInfo, transactionInfo, currencyInfo }: FilterProps) => {
               { name: 'assets', value: valueString },
             ]);
           }}
-          value={filterStates.assets}
+          defaultValue={filterStates.assets}
+          // value={filterStates.assets}
         />
         <DatePicker
           rootStyleX={DateFilterStyles.base}
@@ -129,7 +202,10 @@ const Filter = ({ assetInfo, transactionInfo, currencyInfo }: FilterProps) => {
           onChange={(dates) => {
             const hasNull = !dates || !dates[0] || !dates[1];
             if (hasNull) {
-              handleFilter('dates', null, []);
+              handleFilter('dates', null, [
+                { name: 'startDate', value: '' },
+                { name: 'endDate', value: '' },
+              ]);
               return;
             } else {
             }
@@ -142,6 +218,7 @@ const Filter = ({ assetInfo, transactionInfo, currencyInfo }: FilterProps) => {
               { name: 'endDate', value: dateEndString },
             ]);
           }}
+          defaultValue={filterStates.dates as [Date, Date] | null}
         />
         <Dropdown
           triggerStylex={TransactionFilterStyles.base}
@@ -152,7 +229,17 @@ const Filter = ({ assetInfo, transactionInfo, currencyInfo }: FilterProps) => {
           }))}
           placeholder={<TransactionText />}
           // selectedText={<TransactionText />}
-          onValueChange={([value]) => {
+          onValueChange={(selected) => {
+            if (selected.length <= 0) {
+              handleFilter(
+                'transaction',
+                [],
+                [{ name: 'transaction', value: '' }]
+              );
+              return;
+            }
+            const value = selected[0];
+
             const valueString = value.value;
             handleFilter(
               'transaction',
@@ -160,8 +247,11 @@ const Filter = ({ assetInfo, transactionInfo, currencyInfo }: FilterProps) => {
               [{ name: 'transaction', value: valueString }]
             );
           }}
+          defaultValue={filterStates.transaction}
           selectedText={
-            <TransactionText content={filterStates.transaction[0].text} />
+            <TransactionText
+              content={filterStates.transaction?.[0]?.text ?? ''}
+            />
           }
         />
         <label
@@ -189,6 +279,7 @@ const Filter = ({ assetInfo, transactionInfo, currencyInfo }: FilterProps) => {
             <span>{`Currency: `}</span>
           </p>
           <Switch
+            defaultSelected={filterStates.currency}
             rootStylex={switchStyles.base}
             items={
               currencyInfo.map((data) => ({

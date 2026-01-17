@@ -44,16 +44,17 @@ const actualPortfolioServiceMock: ActualPortfolioQueryService = {
     transaction?: string;
     currency?: string;
   }) => {
-    const assetList = assets?.split(',');
+    const assetList = assets ? assets.split(',') : undefined;
+
     //test
-    console.log(
-      'assets, startDAte, endDate, transactino, currency',
-      assets,
-      startDate,
-      endDate,
-      transaction,
-      currency
-    );
+    // console.log(
+    //   'assets, startDAte, endDate, transactino, currency',
+    //   assets,
+    //   startDate,
+    //   endDate,
+    //   transaction,
+    //   currency
+    // );
     const actuals = Array.from(mockDB.actuals.values())
       .filter((data) => {
         // asset 필터

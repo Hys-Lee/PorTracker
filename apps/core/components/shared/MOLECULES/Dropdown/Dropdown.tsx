@@ -151,16 +151,16 @@ const Dropdown = <T extends string>({
                   <ScrollArea.Viewport
                     {...stylex.props(scrollViewportStyles.base)}
                     // ref={setContainerElement}
-                  >
-                    {multi ? undefined : (
-                      <DropdownMenu.RadioGroup
-                        {...stylex.props(radioGroupStyles.base)}
-                        value={
-                          value ? value?.[0]?.value : [...selected.keys()][0]
-                        }
-                      />
-                    )}
-                  </ScrollArea.Viewport>
+                  />
+                  //   {multi ? undefined : (
+                  //     <DropdownMenu.RadioGroup
+                  //       {...stylex.props(radioGroupStyles.base)}
+                  //       value={
+                  //         value ? value?.[0]?.value : [...selected.keys()][0]
+                  //       }
+                  //     />
+                  //   )}
+                  // </ScrollArea.Viewport>
                 }
                 getKey={(itemInfo) => itemInfo.value}
                 estimateSize={24}
