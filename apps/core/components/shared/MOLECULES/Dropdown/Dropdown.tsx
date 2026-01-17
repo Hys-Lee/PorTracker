@@ -86,8 +86,9 @@ const Dropdown = <T extends string>({
           return newSelected;
         });
       } else {
-        setSelected(() => {
+        setSelected((prev) => {
           const newSelected = new Map();
+          if (prev.has(dropdownItem.value)) return newSelected;
           newSelected.set(dropdownItem.value, dropdownItem);
           return newSelected;
         });
@@ -166,7 +167,20 @@ const Dropdown = <T extends string>({
                 itemsInfo={items}
                 renderItem={(itemInfo) => (
                   <>
-                    {multi ? (
+                    <DropdownMenu.CheckboxItem
+                      className={`${cssStyles.SelectItem} ${
+                        stylex.props(selectItemStyles.base).className
+                      }`}
+                      checked={selected.has(itemInfo.value)}
+                      onCheckedChange={(checked) => {
+                        handleSelected(multi, itemInfo);
+                        if (onValueChange)
+                          onValueChange(checked ? [itemInfo] : []); // unchecked => []
+                      }}
+                    >
+                      {itemInfo.text}
+                    </DropdownMenu.CheckboxItem>
+                    {/* {multi ? (
                       <DropdownMenu.CheckboxItem
                         className={`${cssStyles.SelectItem} ${
                           stylex.props(selectItemStyles.base).className
@@ -174,6 +188,7 @@ const Dropdown = <T extends string>({
                         checked={selected.has(itemInfo.value)}
                         onCheckedChange={() => {
                           handleSelected(multi, itemInfo);
+                          if (onValueChange) onValueChange([itemInfo]);
                         }}
                       >
                         {itemInfo.text}
@@ -191,7 +206,7 @@ const Dropdown = <T extends string>({
                       >
                         {itemInfo.text}
                       </DropdownMenu.RadioItem>
-                    )}
+                    )} */}
                   </>
                 )}
               />
