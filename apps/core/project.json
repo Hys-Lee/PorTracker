@@ -33,10 +33,12 @@
       }
     },
     "start": {
-      "executor": "@nx:run-commands",
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "production",
       "options": {
-        "command": "next start",
-        "cwd": "dist/apps/core"
+        "buildTarget": "core:build",
+        "dev": false,
+        "port": 4200
       }
     },
     "test": {

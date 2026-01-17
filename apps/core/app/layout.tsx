@@ -8,6 +8,7 @@ import BreadCrumb from './_components/Breadcrumb';
 import { colors } from '@core/tokens/colors.stylex';
 import Navbar from './_components/Navbar';
 import Link from 'next/link';
+import { AntdRegistry } from '@ant-design/nextjs-registry';
 
 export const metadata: Metadata = {
   title: 'My App',
@@ -29,20 +30,23 @@ export default function RootLayout({
         className={suite.variable}
         {...stylex.props(bodyStyles.font, bodyStyles.base)}
       >
-        <div {...stylex.props(bodyStyles.innerBase)}>
-          <header {...stylex.props(headerStyles.base)}>
-            <div {...stylex.props(headerStyles.leftPart)}>
-              <Link href={'/'} {...stylex.props(headerStyles.logo)}>
-                MyFancyLogo
-              </Link>
+        {/** Antd Next App Router에서 작동하도록 */}
+        <AntdRegistry>
+          <div {...stylex.props(bodyStyles.innerBase)}>
+            <header {...stylex.props(headerStyles.base)}>
+              <div {...stylex.props(headerStyles.leftPart)}>
+                <Link href={'/'} {...stylex.props(headerStyles.logo)}>
+                  MyFancyLogo
+                </Link>
 
-              <BreadCrumb />
-            </div>
-            <Navbar />
-          </header>
-          {children}
-          {/* <script type="module" src="/src/main.tsx"></script> */}
-        </div>
+                <BreadCrumb />
+              </div>
+              <Navbar />
+            </header>
+            {children}
+            {/* <script type="module" src="/src/main.tsx"></script> */}
+          </div>
+        </AntdRegistry>
       </body>
     </html>
   );
