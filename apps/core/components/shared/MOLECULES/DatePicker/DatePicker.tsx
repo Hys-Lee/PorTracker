@@ -28,14 +28,14 @@ type CustomDatePickerProps = CommonType & {
   range: false;
   value?: Date | null;
   defaultValue?: Date | null;
-  onChange: (date: Date | null, dateString: string) => void;
+  onChange?: (date: Date | null, dateString: string) => void;
   placeholder?: string;
 };
 type CustomRangeDatePickerProps = CommonType & {
   range: true;
   value?: [Date, Date] | null;
   defaultValue?: [Date, Date] | null;
-  onChange: (
+  onChange?: (
     date: [Date | null, Date | null] | null, /////////////// 1개일 수도 있나
     dateString: [string, string]
   ) => void;
@@ -81,8 +81,11 @@ const DatePicker = ({
           suffixIcon={props.suffix}
           placeholder={placeholder}
           defaultValue={
-            Array.isArray(value) && !(value instanceof Date)
-              ? (value.map((val) => dayjs(val)) as NonNullable<AntdRangeDate>)
+            // 수정해야 한ㄴ뎅
+            Array.isArray(defaultValue) && !(defaultValue instanceof Date)
+              ? (defaultValue.map((val) =>
+                  dayjs(val)
+                ) as NonNullable<AntdRangeDate>)
               : undefined
           }
           value={
@@ -91,15 +94,16 @@ const DatePicker = ({
               : (value as null | undefined)
           }
           onChange={(value, valueString) => {
-            onChange(
-              !value || value.length !== 2
-                ? null
-                : (value.map((val) => val && val.toDate()) as [
-                    Date | null,
-                    Date | null
-                  ]),
-              valueString
-            );
+            onChange &&
+              onChange(
+                !value || value.length !== 2
+                  ? null
+                  : (value.map((val) => val && val.toDate()) as [
+                      Date | null,
+                      Date | null
+                    ]),
+                valueString
+              );
           }}
         />
       ) : (
@@ -114,9 +118,9 @@ const DatePicker = ({
           suffixIcon={props.suffix}
           placeholder={placeholder}
           defaultValue={
-            !Array.isArray(value) && value
-              ? dayjs(value)
-              : (value as null | undefined)
+            !Array.isArray(defaultValue) && defaultValue
+              ? dayjs(defaultValue)
+              : (defaultValue as null | undefined)
           }
           value={
             !Array.isArray(value) && value
@@ -124,7 +128,8 @@ const DatePicker = ({
               : (value as null | undefined)
           }
           onChange={(value, valueString) => {
-            onChange(value ? value.toDate() : null, valueString || '');
+            onChange &&
+              onChange(value ? value.toDate() : null, valueString || '');
           }}
         />
       )}

@@ -4,7 +4,7 @@ import { colors } from '../../../../tokens/colors.stylex';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'solid' | 'outlined';
   rounded?: 'normal' | 'huge';
-  buttonStylex: stylex.StyleXStyles;
+  buttonStylex?: stylex.StyleXStyles;
 }
 const Button = ({ variant, rounded, buttonStylex, ...props }: ButtonProps) => {
   return (
