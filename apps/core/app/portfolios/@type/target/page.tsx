@@ -1,4 +1,5 @@
 const Page = () => {
-  return <>포폴페이지</>;
+  return <></>;
 };
+
 export default Page;

@@ -15,9 +15,9 @@ const portfolioTypeInfo: ComponentProps<typeof SegmentControl>['items'] = [
 
 const PortfolioTypeSwitch = () => {
   //   const [selected, setSelected] = useState(portfolioTypeInfo[0]);
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const { replace } = useRouter();
+  // const pathname = usePathname();
+  // const searchParams = useSearchParams();
+  const { replace, push } = useRouter();
 
   return (
     <>
@@ -34,11 +34,11 @@ const PortfolioTypeSwitch = () => {
         // selected={selected}
         defaultSelected={portfolioTypeInfo[0]}
         onChange={(newSelected) => {
-          const urlSearchParams = new URLSearchParams(searchParams);
-          urlSearchParams.set('portfolioType', newSelected.value);
-
-          const nextUrl = `${pathname}?${urlSearchParams.toString()}`;
-          replace(nextUrl);
+          // const urlSearchParams = new URLSearchParams(searchParams);
+          // urlSearchParams.set('portfolioType', newSelected.value);
+          // const nextUrl = `${pathname}?${urlSearchParams.toString()}`;
+          // replace(nextUrl);
+          push(`/portfolios/${newSelected.value}`, { scroll: false });
         }}
       />
     </>
