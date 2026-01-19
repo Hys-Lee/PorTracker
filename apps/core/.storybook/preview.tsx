@@ -6,11 +6,23 @@ import * as stylex from '@stylexjs/stylex';
 // import './stylex_bundle.css';
 import '../tokens/colors.css';
 import './stylex.css';
-import { useEffect } from 'react';
+
+// MSW
+import { initialize as mswInitialize, mswLoader } from 'msw-storybook-addon';
+import { allHandlers } from '@core/mocks/handlers';
+import { directServiceController } from '@core/mocks/services/utils';
+
+// MSW INIT
+mswInitialize();
 
 const preview: Preview = {
+  loaders: [mswLoader],
   tags: ['autodocs'],
+
   parameters: {
+    msw: {
+      handlers: allHandlers,
+    },
     // 액션 탭 설정 (클릭 이벤트 등 감지)
     actions: { argTypesRegex: '^on[A-Z].*' },
 
@@ -27,7 +39,9 @@ const preview: Preview = {
       appDirectory: true,
     },
   },
-  decorators: (Story) => {
+  decorators: (Story, context) => {
+    const isDirect = !!context.parameters.api?.directMock;
+    directServiceController.setDirectService(isDirect);
     return (
       <div className={suite.variable}>
         <Story />

@@ -96,7 +96,7 @@ export const Primary: Story = {
     return (
       <Dropdown
         {...args}
-        triggerStylex={selected ? activeStyle.active : undefined}
+        triggerStylex={selected?.length ? activeStyle.active : undefined}
         items={items}
         selectedText={
           selected?.length && selected.length > 0 ? (

@@ -16,9 +16,20 @@
   border-radius: 4px;
   box-shadow: 0 0 2px rgb(from var(--black-t) r g b / 0.5);
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateX(0%); /* 기본 위치 */
+  /* transform: translateX(0%); 기본 위치 */
+  /* transform: translateX(0%); */
 }
 
 .root:has(> :global([data-state='on'][data-index='1'])) .thumb {
   transform: translateX(100%);
 }
+.root:has(> :global([data-state='on'][data-index='0'])) .thumb {
+  transform: translateX(0%);
+}
+
+/* .root[data-active-index='0'] .thumb {
+  transform: translateX(0%);
+}
+.root[data-active-index='1'] .thumb {
+  transform: translateX(100%);
+} */

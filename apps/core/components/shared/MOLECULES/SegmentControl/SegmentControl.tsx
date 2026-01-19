@@ -18,6 +18,7 @@ interface SegmentControlProps {
   form?: string;
   disabled?: boolean;
   rootStylex?: stylex.StyleXStyles;
+  itemStylex?: stylex.StyleXStyles;
 }
 
 const SegmentControl = ({
@@ -29,6 +30,7 @@ const SegmentControl = ({
   form,
   disabled,
   rootStylex,
+  itemStylex,
 }: SegmentControlProps) => {
   return (
     <>
@@ -52,7 +54,7 @@ const SegmentControl = ({
         {items.map((item) => (
           <RadioSwitchGroup.Item
             className={`${cssStyles.ToggleGroupItem} ${
-              stylex.props(itemStyles.base).className
+              stylex.props(itemStyles.base, itemStylex).className
             }`}
             key={item.value}
             value={item.value}

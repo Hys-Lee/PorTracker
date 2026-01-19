@@ -1,4 +1,5 @@
 import { DropdownMenu, ScrollArea } from 'radix-ui';
+import { ChevronDownIcon } from '@radix-ui/react-icons';
 import * as stylex from '@stylexjs/stylex';
 import cssStyles from './Dropdown.module.css';
 import { colors } from '../../../../tokens/colors.stylex';
@@ -7,13 +8,17 @@ import { ReactNode } from 'react';
 import { useSubmitIntercept } from '@core/utils/hooks/useSubmitIntercept/useSubmitIntercept';
 
 import Virtualizer from '@core/utils/components/Virtualizer/Virtualzier';
+import { inputBase } from '@core/styles/input.stylex';
 
-export interface DropdownItem {
+export interface DropdownItem<T extends string> {
   text: string;
-  value: string;
+  value: T;
 }
 
-type Selected = Map<DropdownItem['value'], DropdownItem>;
+type Selected<T extends string> = Map<
+  DropdownItem<T>['value'],
+  DropdownItem<T>
+>;
 /**
  *
  * ### 설명
@@ -23,37 +28,41 @@ type Selected = Map<DropdownItem['value'], DropdownItem>;
  * triggerStyleX를 통해 외부 박스 스타일 주입 가능
  */
 
-interface Dropdown extends DropdownMenu.DropdownMenuProps {
+interface Dropdown<T extends string> extends DropdownMenu.DropdownMenuProps {
   multi: boolean;
-  items: DropdownItem[];
+  items: DropdownItem<T>[];
   triggerStylex?: stylex.StyleXStyles;
   selectedText?: ReactNode;
   placeholder?: ReactNode;
+  defaultValue?: DropdownItem<T>[];
   /** 비제어 방식, form을 위해 */
   name?: string;
   form?: string;
   required?: boolean;
   disabled?: boolean;
   /** 제어 방식 */
-  value?: DropdownItem[];
-  onValueChange?: (value: DropdownItem[]) => void;
+  value?: DropdownItem<T>[];
+  onValueChange?: (value: DropdownItem<T>[]) => void;
+  icon?: boolean;
 }
 
-const Dropdown = ({
+const Dropdown = <T extends string>({
   multi,
   items,
   triggerStylex,
   selectedText,
   placeholder,
+  defaultValue,
   name,
   form,
   required,
   disabled,
   value,
   onValueChange,
-}: Dropdown) => {
-  const [selected, setSelected] = useStateReducer<Selected>(
-    new Map(),
+  icon = false,
+}: Dropdown<T>) => {
+  const [selected, setSelected] = useStateReducer<Selected<T>>(
+    initializer(defaultValue),
     (_, nextState) => {
       if (onValueChange) {
         const nextStateIterable = nextState.values();
@@ -62,7 +71,7 @@ const Dropdown = ({
       return nextState;
     }
   );
-  const handleSelected = (multi: boolean, dropdownItem: DropdownItem) =>
+  const handleSelected = (multi: boolean, dropdownItem: DropdownItem<T>) =>
     // : Selected
     {
       // let newSelected = null;
@@ -77,8 +86,9 @@ const Dropdown = ({
           return newSelected;
         });
       } else {
-        setSelected(() => {
+        setSelected((prev) => {
           const newSelected = new Map();
+          if (prev.has(dropdownItem.value)) return newSelected;
           newSelected.set(dropdownItem.value, dropdownItem);
           return newSelected;
         });
@@ -88,7 +98,8 @@ const Dropdown = ({
 
   // 비제어 form의 submit이벤트에 반응하기
   const inputRef = useSubmitIntercept((inputElement) => {
-    inputElement.value = [...selected].join(',');
+    // inputElement.value = [...selected.values()].join(',');
+    inputElement.value = JSON.stringify([...selected.values()]);
   }, form);
 
   return (
@@ -96,7 +107,7 @@ const Dropdown = ({
       <DropdownMenu.Root>
         <DropdownMenu.Trigger
           className={`${cssStyles.DropdownMenuTrigger} ${
-            stylex.props(triggerStyles.base, triggerStylex).className
+            stylex.props(inputBase.base, triggerStylex).className
           } `}
         >
           {selected.size === 0
@@ -112,6 +123,9 @@ const Dropdown = ({
                   {[...selected.values()].map(({ text }) => text).join(',')}
                 </p>
               )}
+          {icon && (
+            <ChevronDownIcon style={{ position: 'absolute', right: '12px' }} />
+          )}
         </DropdownMenu.Trigger>
         {value ? undefined : (
           <input
@@ -137,23 +151,36 @@ const Dropdown = ({
                   <ScrollArea.Viewport
                     {...stylex.props(scrollViewportStyles.base)}
                     // ref={setContainerElement}
-                  >
-                    {multi ? undefined : (
-                      <DropdownMenu.RadioGroup
-                        {...stylex.props(radioGroupStyles.base)}
-                        value={
-                          value ? value?.[0]?.value : [...selected.keys()][0]
-                        }
-                      />
-                    )}
-                  </ScrollArea.Viewport>
+                  />
+                  //   {multi ? undefined : (
+                  //     <DropdownMenu.RadioGroup
+                  //       {...stylex.props(radioGroupStyles.base)}
+                  //       value={
+                  //         value ? value?.[0]?.value : [...selected.keys()][0]
+                  //       }
+                  //     />
+                  //   )}
+                  // </ScrollArea.Viewport>
                 }
                 getKey={(itemInfo) => itemInfo.value}
                 estimateSize={24}
                 itemsInfo={items}
                 renderItem={(itemInfo) => (
                   <>
-                    {multi ? (
+                    <DropdownMenu.CheckboxItem
+                      className={`${cssStyles.SelectItem} ${
+                        stylex.props(selectItemStyles.base).className
+                      }`}
+                      checked={selected.has(itemInfo.value)}
+                      onCheckedChange={(checked) => {
+                        handleSelected(multi, itemInfo);
+                        if (onValueChange)
+                          onValueChange(checked ? [itemInfo] : []); // unchecked => []
+                      }}
+                    >
+                      {itemInfo.text}
+                    </DropdownMenu.CheckboxItem>
+                    {/* {multi ? (
                       <DropdownMenu.CheckboxItem
                         className={`${cssStyles.SelectItem} ${
                           stylex.props(selectItemStyles.base).className
@@ -161,6 +188,7 @@ const Dropdown = ({
                         checked={selected.has(itemInfo.value)}
                         onCheckedChange={() => {
                           handleSelected(multi, itemInfo);
+                          if (onValueChange) onValueChange([itemInfo]);
                         }}
                       >
                         {itemInfo.text}
@@ -178,7 +206,7 @@ const Dropdown = ({
                       >
                         {itemInfo.text}
                       </DropdownMenu.RadioItem>
-                    )}
+                    )} */}
                   </>
                 )}
               />
@@ -199,37 +227,50 @@ const Dropdown = ({
 };
 export default Dropdown;
 
+const initializer = <T extends string>(
+  defaultValue?: DropdownItem<T>[]
+): Selected<T> => {
+  if (!defaultValue) return new Map();
+
+  const init: Selected<T> = new Map();
+  defaultValue.forEach(({ text, value }) => {
+    init.set(value, { text, value });
+  });
+
+  return init;
+};
+
 // 만약 Item이라고 renderProps를 대비해 외부에 변수로 저장시킨다면, Dropdown내 변수를 사용할 수 없어짐. 컨텍스트를 잃게 됨. -> useContext쓰지도 못할 것 같은데. 컴포넌트나 훅이 아니라.
 
 /** Styles */
 
-const triggerStyles = stylex.create({
-  base: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '12px',
-    // borderRadius: '24px',
-    padding: '0 15px',
-    fontSize: '16px',
-    fontWeight: '600',
-    lineHeight: 1,
-    height: '48px',
-    width: '300px',
-    gap: '5px',
-    borderStyle: 'none',
-    outline: 'none',
-    boxShadow: {
-      default: 'none',
-      ':focus-visible': `inset 0 0 0 1px ${colors.primaryVariant900}`,
-    },
-    backgroundColor: {
-      default: colors.bgNormal,
-      ':hover': colors.bgStrong,
-    },
-    color: colors.textNormal,
-  },
-});
+// const triggerStyles = stylex.create({
+//   base: {
+//     display: 'inline-flex',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     borderRadius: '12px',
+//     // borderRadius: '24px',
+//     padding: '0 15px',
+//     fontSize: '16px',
+//     fontWeight: '600',
+//     lineHeight: 1,
+//     height: '48px',
+//     width: '300px',
+//     gap: '5px',
+//     borderStyle: 'none',
+//     outline: 'none',
+//     boxShadow: {
+//       default: 'none',
+//       ':focus-visible': `inset 0 0 0 1px ${colors.primaryVariant900}`,
+//     },
+//     backgroundColor: {
+//       default: colors.bgNormal,
+//       ':hover': colors.bgStrong,
+//     },
+//     color: colors.textNormal,
+//   },
+// });
 
 const contentStyles = stylex.create({
   base: {
