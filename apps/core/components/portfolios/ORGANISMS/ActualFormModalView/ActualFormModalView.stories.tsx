@@ -14,5 +14,9 @@ export default meta;
 type Story = StoryObj<typeof ActualFormModalView>;
 
 export const Primary: Story = {
-  args: {},
+  args: {
+    formArea: <>폼영역</>,
+    memoReference: <>메모영역</>,
+    portfolioReference: <>포폴영역</>,
+  },
 };

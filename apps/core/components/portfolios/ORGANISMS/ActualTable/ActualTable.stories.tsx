@@ -4,7 +4,7 @@ import ActualTable from './ActualTable';
 const meta: Meta<typeof ActualTable> = {
   component: ActualTable,
   // 앱 내부이므로 title에 앱 이름을 고정하거나 생략해도 됩니다.
-  title: 'ProTracker/ActualTable',
+  title: 'ProTracker/Portfolios/ActualTable',
   tags: ['autodocs'],
   argTypes: {},
 };
@@ -19,7 +19,7 @@ export const Primary: Story = {
       {
         assetInfo: { name: '자산1', description: '이런 자산입니다' },
         categoryInfo: { name: '카1', color: 1 },
-        changeInfo: { ratio: -11, acc: 33 },
+        changeInfo: { changes: -11, acc: 33 },
         currency: 'krw',
         date: new Date(),
         id: '45132984651984561',
@@ -29,7 +29,7 @@ export const Primary: Story = {
       {
         assetInfo: { name: '자산1', description: '이런 자산입니다' },
         categoryInfo: { name: '카1', color: 3 },
-        changeInfo: { ratio: -11, acc: 33 },
+        changeInfo: { changes: -11, acc: 33 },
         currency: 'krw',
         date: new Date(),
         id: '45132984651984561',

@@ -1,4 +1,4 @@
-import { Dialog } from 'radix-ui';
+import { Dialog, VisuallyHidden } from 'radix-ui';
 
 import { colors } from '../../../../tokens/colors.stylex';
 import { Cross2Icon } from '@radix-ui/react-icons';
@@ -52,6 +52,9 @@ const FormModalFrame = ({
             top: 0,
           }}
         >
+          <VisuallyHidden.Root>
+            <Dialog.Title></Dialog.Title>
+          </VisuallyHidden.Root>
           <div {...stylex.props(frameStyels.base, frameStylex)}>
             {asClose ? (
               cloneElement(asClose, {
