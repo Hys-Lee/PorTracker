@@ -31,6 +31,14 @@ import {
 } from '@core/constants/domain';
 import Button from '@core/components/shared/ATOMS/Button/Button';
 
+import {
+  filterWrapperStyles,
+  AssetFilterStyles,
+  DateFilterStyles,
+  TransactionFilterStyles,
+  switchStyles,
+} from '@core/styles/filter.stylex';
+
 type TransactionInfo = DropdownItem<TransactionValue>;
 type CurrencyInfo = SwitchSelected<CurrencyValue>;
 
@@ -153,19 +161,20 @@ const Filter = ({
   return (
     <>
       <section
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '8px',
-          width: '100%',
-          minWidth: 'min-content',
-          backgroundColor: 'white',
-          borderRadius: '12px',
-          boxShadow: `0 0 0 1px rgb(from var(--gray-b-s) r g b / 1)`,
-          // padding: '4px',
-          padding: '8px',
-        }}
+        {...stylex.props(filterWrapperStyles.base)}
+        // style={{
+        //   display: 'flex',
+        //   alignItems: 'center',
+        //   justifyContent: 'center',
+        //   gap: '8px',
+        //   width: '100%',
+        //   minWidth: 'min-content',
+        //   backgroundColor: 'white',
+        //   borderRadius: '12px',
+        //   boxShadow: `0 0 0 1px rgb(from var(--gray-b-s) r g b / 1)`,
+        //   // padding: '4px',
+        //   padding: '8px',
+        // }}
       >
         <Dropdown
           multi
@@ -299,6 +308,22 @@ const Filter = ({
   );
 };
 
+// const filterWrapperStyles = stylex.create({
+//   base: {
+//     display: 'flex',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     gap: '8px',
+//     width: '100%',
+//     minWidth: 'min-content',
+//     backgroundColor: 'white',
+//     borderRadius: '12px',
+//     boxShadow: `0 0 0 1px rgb(from var(--gray-b-s) r g b / 1)`,
+//     // padding: '4px',
+//     padding: '8px',
+//   },
+// });
+
 const AssetText = ({ content }: { content?: string }) => (
   <div
     style={{ lineHeight: 1, display: 'flex', alignItems: 'center', gap: '8px' }}
@@ -310,16 +335,16 @@ const AssetText = ({ content }: { content?: string }) => (
   </div>
 );
 
-const AssetFilterStyles = stylex.create({
-  base: {
-    height: '36px',
-    fontSize: '14px',
-    fontWeight: '500',
-    display: 'flex',
-    justifyContent: 'start',
-    width: '250px',
-  },
-});
+// const AssetFilterStyles = stylex.create({
+//   base: {
+//     height: '36px',
+//     fontSize: '14px',
+//     fontWeight: '500',
+//     display: 'flex',
+//     justifyContent: 'start',
+//     width: '250px',
+//   },
+// });
 
 const DatePrefix = () => {
   return (
@@ -331,16 +356,16 @@ const DatePrefix = () => {
   );
 };
 
-const DateFilterStyles = stylex.create({
-  base: {
-    height: '36px',
-    // fontSize: '14px', // Antd 기본 14라서... 걍 얘에 맞춤
-    fontWeight: '500',
-    display: 'flex',
-    justifyContent: 'start',
-    width: '250px',
-  },
-});
+// const DateFilterStyles = stylex.create({
+//   base: {
+//     height: '36px',
+//     // fontSize: '14px', // Antd 기본 14라서... 걍 얘에 맞춤
+//     fontWeight: '500',
+//     display: 'flex',
+//     justifyContent: 'start',
+//     width: '250px',
+//   },
+// });
 
 const TransactionText = ({ content }: { content?: string }) => {
   return (
@@ -363,23 +388,23 @@ const TransactionText = ({ content }: { content?: string }) => {
   );
 };
 
-const TransactionFilterStyles = stylex.create({
-  base: {
-    height: '36px',
-    fontSize: '14px',
-    fontWeight: '500',
-    display: 'flex',
-    justifyContent: 'start',
-    width: '200px',
-    minWidth: '200px',
-  },
-});
+// const TransactionFilterStyles = stylex.create({
+//   base: {
+//     height: '36px',
+//     fontSize: '14px',
+//     fontWeight: '500',
+//     display: 'flex',
+//     justifyContent: 'start',
+//     width: '200px',
+//     minWidth: '200px',
+//   },
+// });
 
-const switchStyles = stylex.create({
-  base: {
-    backgroundColor: colors.bgStrong,
-    whiteSpace: 'nowrap',
-  },
-});
+// const switchStyles = stylex.create({
+//   base: {
+//     backgroundColor: colors.bgStrong,
+//     whiteSpace: 'nowrap',
+//   },
+// });
 
 export default Filter;
