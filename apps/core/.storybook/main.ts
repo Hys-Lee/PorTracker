@@ -59,11 +59,18 @@ const config: StorybookConfig = {
         }),
       ],
       resolve: {
-        alias: {
-          // Next.js의 @/ 경로를 apps/core 폴더로 연결
-          '@core': rootDir,
-          // '@core': path.resolve(rootDir, 'apps/core'),
-        },
+        alias: [
+          {
+            find: '@core/services',
+            replacement: path.join(rootDir, './mocks/services'),
+          },
+          {
+            // Next.js의 @/ 경로를 apps/core 폴더로 연결
+            // '@core': rootDir,
+            find: '@core',
+            replacement: rootDir,
+          },
+        ],
       },
     });
   },
