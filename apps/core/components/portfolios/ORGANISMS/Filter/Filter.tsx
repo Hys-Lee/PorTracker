@@ -264,25 +264,27 @@ const Filter = ({
           }
         />
         <label
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            backgroundColor: colors.bgNormal,
-            borderRadius: '12px',
-            padding: '0 15px',
-            height: '36px',
-          }}
+          {...stylex.props(switchStyles.wrapper)}
+          // style={{
+          //   display: 'flex',
+          //   alignItems: 'center',
+          //   gap: '8px',
+          //   backgroundColor: colors.bgNormal,
+          //   borderRadius: '12px',
+          //   padding: '0 15px',
+          //   height: '36px',
+          // }}
         >
           <p
-            style={{
-              lineHeight: 1,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              fontSize: '14px',
-              color: colors.iconFilter,
-            }}
+            {...stylex.props(switchStyles.label)}
+            // style={{
+            //   lineHeight: 1,
+            //   display: 'flex',
+            //   alignItems: 'center',
+            //   gap: '8px',
+            //   fontSize: '14px',
+            //   color: colors.iconFilter,
+            // }}
           >
             <CurrencyIcon width={14} height={14} />
             <span>{`Currency: `}</span>

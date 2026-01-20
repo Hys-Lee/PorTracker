@@ -4,7 +4,7 @@ import * as stylex from '@stylexjs/stylex';
 import cssStyles from './Dropdown.module.css';
 import { colors } from '../../../../tokens/colors.stylex';
 import { useStateReducer } from '@core/utils/hooks/useStateReducer.ts/useStateReducer';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { useSubmitIntercept } from '@core/utils/hooks/useSubmitIntercept/useSubmitIntercept';
 
 import Virtualizer from '@core/utils/components/Virtualizer/Virtualzier';
@@ -64,17 +64,16 @@ const Dropdown = <T extends string>({
   const [selected, setSelected] = useStateReducer<Selected<T>>(
     initializer(defaultValue),
     (_, nextState) => {
-      if (onValueChange) {
-        const nextStateIterable = nextState.values();
-        onValueChange([...nextStateIterable]);
-      }
+      // if (onValueChange) {
+      //   const nextStateIterable = nextState.values();
+      //   onValueChange([...nextStateIterable]);
+      // }
       return nextState;
     }
   );
   const handleSelected = (multi: boolean, dropdownItem: DropdownItem<T>) =>
     // : Selected
     {
-      // let newSelected = null;
       if (multi) {
         setSelected((prev) => {
           const newSelected = new Map(prev);
@@ -101,6 +100,12 @@ const Dropdown = <T extends string>({
     // inputElement.value = [...selected.values()].join(',');
     inputElement.value = JSON.stringify([...selected.values()]);
   }, form);
+
+  useEffect(() => {
+    if (!onValueChange) return;
+    const selectedIterable = selected.values();
+    onValueChange([...selectedIterable]);
+  }, [selected]);
 
   return (
     <>
@@ -174,8 +179,8 @@ const Dropdown = <T extends string>({
                       checked={selected.has(itemInfo.value)}
                       onCheckedChange={(checked) => {
                         handleSelected(multi, itemInfo);
-                        if (onValueChange)
-                          onValueChange(checked ? [itemInfo] : []); // unchecked => []
+                        // if (onValueChange)
+                        //   onValueChange(checked ? [itemInfo] : []); // unchecked => []
                       }}
                     >
                       {itemInfo.text}

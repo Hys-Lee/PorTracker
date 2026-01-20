@@ -50,10 +50,38 @@ export const TransactionFilterStyles = stylex.create({
     minWidth: '200px',
   },
 });
+export const MemoTypeFilterStyles = stylex.create({
+  base: {
+    height: '36px',
+    fontSize: '14px',
+    fontWeight: '500',
+    display: 'flex',
+    justifyContent: 'start',
+    width: '200px',
+    minWidth: '200px',
+  },
+});
 
 export const switchStyles = stylex.create({
   base: {
     backgroundColor: colors.bgStrong,
     whiteSpace: 'nowrap',
+  },
+  wrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    backgroundColor: colors.bgNormal,
+    borderRadius: '12px',
+    padding: '0 15px',
+    height: '36px',
+  },
+  label: {
+    lineHeight: 1,
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    fontSize: '14px',
+    color: colors.iconFilter,
   },
 });
