@@ -3,6 +3,7 @@ import {
   CurrencyValue,
   MemoImportanceValue,
   PortfolioTypeValue,
+  MemoTypeValue,
 } from '@core/types';
 
 /** Value Constants */
@@ -15,6 +16,10 @@ export const TRANSACTION_VALUES = [
 
 export const CURRENCY_VALUES = ['usd', 'krw'] as const;
 
+export const PORTFOLIO_TYPE_VALUES = ['actual', 'target'] as const;
+
+export const MEMO_TYPE_VALUES = [...PORTFOLIO_TYPE_VALUES, 'event'] as const;
+
 export const MEMO_IMPORTANCE_VALUES = ['critical', 'normal', 'useful'] as const;
 
 export const MEMO_EVALUATION_VALUES = [
@@ -24,8 +29,6 @@ export const MEMO_EVALUATION_VALUES = [
   'bad',
   'worse',
 ] as const;
-
-export const PORTFOLIO_TYPE_VALUES = ['actual', 'target'] as const;
 
 /** Maps */
 
@@ -51,3 +54,9 @@ export const PORTFOLIO_TYPE_MAP: Record<PortfolioTypeValue, string> = {
   actual: 'Actual',
   target: 'Target',
 } as const;
+
+export const MEMO_TYPE_MAP: Record<MemoTypeValue, string> = {
+  actual: 'Actual',
+  target: 'Target',
+  event: 'Event',
+};
