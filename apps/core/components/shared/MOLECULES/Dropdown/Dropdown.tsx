@@ -74,24 +74,43 @@ const Dropdown = <T extends string>({
   const handleSelected = (multi: boolean, dropdownItem: DropdownItem<T>) =>
     // : Selected
     {
+      let newSelected: Selected<T>;
       if (multi) {
-        setSelected((prev) => {
-          const newSelected = new Map(prev);
-          if (newSelected.has(dropdownItem.value)) {
-            newSelected.delete(dropdownItem.value);
-          } else {
-            newSelected.set(dropdownItem.value, dropdownItem);
-          }
-          return newSelected;
-        });
-      } else {
-        setSelected((prev) => {
-          const newSelected = new Map();
-          if (prev.has(dropdownItem.value)) return newSelected;
+        // setSelected((prev) => {
+        //   const newSelected = new Map(prev);
+        //   if (newSelected.has(dropdownItem.value)) {
+        //     newSelected.delete(dropdownItem.value);
+        //   } else {
+        //     newSelected.set(dropdownItem.value, dropdownItem);
+        //   }
+        //   return newSelected;
+        // });
+        newSelected = new Map(selected);
+        if (newSelected.has(dropdownItem.value)) {
+          newSelected.delete(dropdownItem.value);
+        } else {
           newSelected.set(dropdownItem.value, dropdownItem);
-          return newSelected;
-        });
+        }
+      } else {
+        // setSelected((prev) => {
+        //   const newSelected = new Map();
+        //   if (prev.has(dropdownItem.value)) return newSelected;
+        //   newSelected.set(dropdownItem.value, dropdownItem);
+        //   return newSelected;
+        // });
+
+        newSelected = new Map();
+        if (!selected.has(dropdownItem.value)) {
+          newSelected.set(dropdownItem.value, dropdownItem);
+        }
       }
+
+      setSelected(newSelected);
+      if (onValueChange) {
+        const newSelectedIterable = newSelected.values();
+        onValueChange([...newSelectedIterable]);
+      }
+
       // return newSelected;
     };
 
@@ -101,11 +120,11 @@ const Dropdown = <T extends string>({
     inputElement.value = JSON.stringify([...selected.values()]);
   }, form);
 
-  useEffect(() => {
-    if (!onValueChange) return;
-    const selectedIterable = selected.values();
-    onValueChange([...selectedIterable]);
-  }, [selected]);
+  // useEffect(() => {
+  //   if (!onValueChange) return;
+  //   const selectedIterable = selected.values();
+  //   onValueChange([...selectedIterable]);
+  // }, [selected]);
 
   return (
     <>
