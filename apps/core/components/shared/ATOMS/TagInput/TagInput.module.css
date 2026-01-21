@@ -1,0 +1,9 @@
+.base :global(.ant-select-content) {
+  height: 100%;
+}
+.base :global(.ant-select-content-item-suffix) {
+  height: 100%;
+}
+.base :global(.ant-select-input) {
+  height: 100%;
+}
