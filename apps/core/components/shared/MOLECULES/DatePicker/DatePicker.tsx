@@ -110,9 +110,7 @@ const DatePicker = ({
         <AntdDatePicker
           {...props}
           classNames={{
-            root: rootStyleX
-              ? stylex.props(rootStyles.base, rootStyleX).className
-              : undefined,
+            root: stylex.props(rootStyles.base, rootStyleX).className,
           }}
           format={props.format || 'YYYY.MM.DD'}
           suffixIcon={props.suffix}
