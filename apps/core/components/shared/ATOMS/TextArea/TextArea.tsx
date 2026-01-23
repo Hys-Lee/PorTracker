@@ -3,7 +3,7 @@ import { ComponentProps } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import * as stylex from '@stylexjs/stylex';
 import { inputBase } from '@core/styles/input.stylex';
-import { scrollBarStyles } from '@core/styles/scrollbar.stylex';
+import { scrollBarStyles } from '@core/styles/scroll.stylex';
 import { ScrollArea } from 'radix-ui';
 import { colors } from '../../../../tokens/colors.stylex';
 

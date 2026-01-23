@@ -12,6 +12,7 @@ import TagPill from '@core/components/shared/ATOMS/TagPill/TagPill';
 import Separator from '@core/components/shared/ATOMS/Separator/Separator';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
+import { nonScorlledOverflowStyles } from '@core/styles/scroll.stylex';
 
 interface MemoTableProps {
   memoData: (TileProps & { memoId: string })[];
@@ -87,7 +88,14 @@ const Tile = ({ content, date, importance, title, type, tags }: TileProps) => {
           <h4 {...stylex.props(memoTileStyles.title)}>{title} </h4>
         </div>
 
-        <p {...stylex.props(memoTileStyles.content)}>{content}</p>
+        <p
+          {...stylex.props(
+            memoTileStyles.content,
+            nonScorlledOverflowStyles.verticalFadeout
+          )}
+        >
+          {content}
+        </p>
         <div {...stylex.props(memoTileStyles.tagArea)}>
           {tags.slice(0, 2).map((tag) => (
             <TagPill content={tag} externalStylex={memoTileStyles.tagPill} />
