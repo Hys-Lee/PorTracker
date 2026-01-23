@@ -23,7 +23,8 @@ export const Primary: Story = {
   args: {
     memoData: [
       {
-        content: '대충 콘텐츠라고 함\n야호야호',
+        content:
+          '대충 콘텐츠라고 함\n야호야호\n만\n약\n에\n엄\n청\n길\n다\n면\n!',
         date: new Date('2026-01-20'),
         importance: 'critical',
         title: '제목제목',
