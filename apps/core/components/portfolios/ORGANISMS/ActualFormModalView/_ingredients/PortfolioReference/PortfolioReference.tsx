@@ -11,7 +11,7 @@ import * as stylex from '@stylexjs/stylex';
 import PasteIcon from '@core/assets/images/svgs/Paste.svg?react';
 import { useAtom, useSetAtom } from 'jotai';
 import {
-  copiedFormDataAtom,
+  copiedActualPortfolioFormDataAtom,
   selectedAssetAtom,
 } from '@core/stores/portfolios/actualModal';
 
@@ -44,7 +44,7 @@ const PortfolioReference = ({ recentsInfo }: PortfolioReferenceProps) => {
     (data) => data.assetId === selectedAssetInfo?.value
   )?.recents;
 
-  const setCopiedFormData = useSetAtom(copiedFormDataAtom);
+  const setCopiedFormData = useSetAtom(copiedActualPortfolioFormDataAtom);
 
   return (
     <>

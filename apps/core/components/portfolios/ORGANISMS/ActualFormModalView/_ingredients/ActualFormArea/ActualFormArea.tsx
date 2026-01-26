@@ -24,7 +24,7 @@ import { TransactionValue, CurrencyValue } from '@core/types';
 import { useHydrateAtoms } from 'jotai/utils';
 import { useAtom } from 'jotai';
 import {
-  copiedFormDataAtom,
+  copiedActualPortfolioFormDataAtom,
   selectedAssetAtom,
 } from '@core/stores/portfolios/actualModal';
 import { L } from 'node_modules/msw/lib/core/HttpResponse-Cw4ELwIN.mjs';
@@ -61,7 +61,7 @@ const FormArea = ({
   formAction,
 }: FormAreaProp) => {
   // FormData -> copied반영은 currency, asset, memo 빼고 다?
-  const [copiedFormData] = useAtom(copiedFormDataAtom);
+  const [copiedFormData] = useAtom(copiedActualPortfolioFormDataAtom);
   const finalInitData = { ...initData, ...copiedFormData };
 
   // const totalValueRef = useRef<HTMLParagraphElement>(null);
