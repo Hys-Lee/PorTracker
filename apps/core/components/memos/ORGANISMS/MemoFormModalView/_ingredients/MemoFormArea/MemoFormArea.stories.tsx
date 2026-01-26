@@ -22,6 +22,26 @@ type Story = StoryObj<typeof MemoFormArea>;
 export const Primary: Story = {
   args: {
     tagInfo: ['111'],
-    importanceInfo: ['critical', 'normal', 'useful'],
+    // importanceInfo: ['critical', 'normal', 'useful'],
+    tmpPortfoliosInfo: [
+      {
+        accumulatedRatio: 123,
+        assetName: '자산',
+        assetType: '자산타입',
+        changesRatio: 456,
+        createdAt: new Date('2026-01-24'),
+        currency: 'usd',
+        date: new Date('2026-01-24'),
+        id: '1',
+        portfolioType: 'actual',
+        transactionType: 'fee',
+        value: 456789,
+        assetDescription: '설명',
+        amount: 12,
+        exchangeRate: 456,
+        price: 456789 / 456 / 12,
+        accumulatedValue: 99999999999,
+      },
+    ],
   },
 };

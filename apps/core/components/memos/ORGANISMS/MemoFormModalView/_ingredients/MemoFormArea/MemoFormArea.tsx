@@ -1,3 +1,5 @@
+'use client';
+
 import { inputBase } from '@core/styles/input.stylex';
 import { colors } from '../../../../../../tokens/colors.stylex';
 import * as stylex from '@stylexjs/stylex';
@@ -8,33 +10,56 @@ import Dropdown, {
 
 import TextArea from '@core/components/shared/ATOMS/TextArea/TextArea';
 import TagInput from '@core/components/shared/ATOMS/TagInput/TagInput';
-import { MEMO_EVALUATION_VALUES, MEMO_IMPORTANCE_MAP } from '@core/constants';
-import { ComponentProps, Fragment, useState } from 'react';
+import {
+  MEMO_EVALUATION_VALUES,
+  MEMO_IMPORTANCE_MAP,
+  MEMO_IMPORTANCE_VALUES,
+} from '@core/constants';
+import { ComponentProps, Fragment, useEffect, useState } from 'react';
 import { memoEvaluationSelector } from '@core/utils/renderers/iconSelector';
-import { MemoEvaluationValue, MemoImportanceValue } from '@core/types';
+import {
+  MemoEvaluationValue,
+  MemoImportanceValue,
+  MemoTypeValue,
+} from '@core/types';
+import {
+  AllPortfolioDetail,
+  MemoForm,
+} from '@core/schemas/features/memos/memos.schema';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import {
+  copiedMemoFormDataAtom,
+  linkedPortfolioInfoAtom,
+} from '@core/stores/memos/memoModal';
+// import { TargetPortfolio } from '@core/types/memos/referenceData';
 
 interface MemoFormAreaProps {
-  tagInfo?: string[]; //ComponentProps<typeof TagInput>['options'];
-  importanceInfo: MemoImportanceValue[];
-  initData?: {
-    title: string;
-    date: Date;
-    importance: DropdownItem<MemoImportanceValue>;
-    // linkedInfo?: DropdownItem<>;
-    content: string;
-    tags: string[];
-    evaluation?: MemoEvaluationValue;
-  };
+  tagInfo?: string[];
+  tmpPortfoliosInfo: AllPortfolioDetail[];
+  initData?: MemoForm;
 }
 
 const MemoFormArea = ({
-  importanceInfo,
+  // importanceInfo,
+  tmpPortfoliosInfo,
   initData,
   tagInfo,
 }: MemoFormAreaProps) => {
   const [evaluation, setEvaluation] = useState<EvaluationsProps['value']>(
     initData?.evaluation
   );
+
+  const copiedMemoData = useAtomValue(copiedMemoFormDataAtom);
+  const finalData = copiedMemoData || initData;
+
+  const setSelectedLinkedPortfolio = useSetAtom(linkedPortfolioInfoAtom);
+
+  useEffect(() => {
+    // copiedMemoData 변화를 evaluatino 상태에 반영하기
+    if (!copiedMemoData) return;
+    setEvaluation(copiedMemoData.evaluation);
+  }, [copiedMemoData]);
+
   return (
     <form
       //   id={id}
@@ -56,7 +81,7 @@ const MemoFormArea = ({
       <div {...stylex.props(formElementStyles.area)}>
         <label {...stylex.props(formElementStyles.label)}>{'제목'}</label>
         <input
-          defaultValue={initData?.title}
+          defaultValue={finalData?.title}
           {...stylex.props(inputBase.base, formElementStyles.base)}
         />
       </div>
@@ -64,7 +89,7 @@ const MemoFormArea = ({
         <div {...stylex.props(formElementStyles.area)}>
           <label {...stylex.props(formElementStyles.label)}>날짜</label>
           <DatePicker
-            defaultValue={initData?.date}
+            defaultValue={finalData?.date}
             range={false}
             {...stylex.props(datePickerStyles.base)}
           />
@@ -73,17 +98,23 @@ const MemoFormArea = ({
           <label {...stylex.props(formElementStyles.label)}>중요도</label>
           <Dropdown
             multi={false}
-            items={importanceInfo.map((data) => ({
+            items={MEMO_IMPORTANCE_VALUES.map((data) => ({
               value: data,
               text: MEMO_IMPORTANCE_MAP[data],
             }))}
+            icon
             triggerStylex={{
               ...formElementStyles.base,
               ...importanceStyles.base,
             }}
             defaultValue={
-              initData?.importance
-                ? [initData?.importance]
+              finalData?.importance
+                ? [
+                    {
+                      value: finalData.importance,
+                      text: MEMO_IMPORTANCE_MAP[finalData.importance],
+                    },
+                  ]
                 : [{ value: 'normal', text: MEMO_IMPORTANCE_MAP['normal'] }]
             }
           />
@@ -93,9 +124,35 @@ const MemoFormArea = ({
         <label {...stylex.props(formElementStyles.label)}>연결</label>
         <Dropdown
           multi={false}
-          items={[]}
+          items={tmpPortfoliosInfo.map((data, idx) => {
+            if (data.portfolioType === 'actual')
+              return { text: data.assetName, value: data.id };
+            else return { text: data.name, value: data.id };
+          })}
           triggerStylex={{ ...formElementStyles.base }}
-          // defaultValue={initData?.linkedId}
+          onValueChange={(linkInfo) => {
+            if (!linkInfo[0]) {
+              setSelectedLinkedPortfolio(undefined);
+              return;
+            }
+            if (linkInfo[0].index) {
+              const { portfolioType, ...portfolioData } =
+                tmpPortfoliosInfo[linkInfo[0].index];
+              // const linkedPortfolioData =
+              //   portfolioType === 'actual'
+              //     ? {
+              //         // type: 'actual' as Extract<MemoTypeValue, 'actual'>,
+
+              //         ...(portfolioData as ActualPortfolioDetail),
+              //       }
+              //     : {
+              //         // type: 'target' as Extract<MemoTypeValue, 'target'>,
+              //         ...(portfolioData as TargetPortfolioDetail),
+              //       };
+              setSelectedLinkedPortfolio(tmpPortfoliosInfo[linkInfo[0].index]);
+            }
+          }}
+          // defaultValue={finalData?.linkedId}
         />
       </div>
       <div {...stylex.props(formElementStyles.area)}>
@@ -104,7 +161,7 @@ const MemoFormArea = ({
           <TextArea
             externalStylex={textAreaStyles.base}
             rows={6}
-            defaultValue={initData?.content}
+            defaultValue={finalData?.content}
           />
         </div>
         {/* <textarea {...stylex.props(inputBase.base)} /> */}
@@ -113,7 +170,7 @@ const MemoFormArea = ({
         <label {...stylex.props(formElementStyles.label)}>태그</label>
         <TagInput
           options={tagInfo?.map((tag) => ({ title: tag, value: tag }))}
-          defaultValue={initData?.tags}
+          defaultValue={finalData?.tags}
           externalStylex={tagStyles.base}
         />
       </div>
