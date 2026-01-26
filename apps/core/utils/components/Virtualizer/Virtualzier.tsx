@@ -20,7 +20,7 @@ import {
 interface VirtualzierProps<ItemInfoT> {
   Container: ReactElement<ComponentPropsWithoutRef<ElementType>>;
   itemsInfo: ItemInfoT[];
-  renderItem: (eachItemInfo: ItemInfoT) => ReactNode;
+  renderItem: (eachItemInfo: ItemInfoT, itemIdx?: number) => ReactNode;
   estimateSize: number;
   getKey: (itemInfo: ItemInfoT) => Key;
 }
@@ -73,7 +73,7 @@ const Virtualizer = <InfoT,>({
                     transform: `translateY(${virtualItem.start}px)`,
                   }}
                 >
-                  {renderItem(itemInfo)}
+                  {renderItem(itemInfo, virtualItem.index)}
                 </div>
               );
             })}

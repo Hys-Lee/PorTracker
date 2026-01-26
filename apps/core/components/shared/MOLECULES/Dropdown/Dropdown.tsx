@@ -13,6 +13,7 @@ import { inputBase } from '@core/styles/input.stylex';
 export interface DropdownItem<T extends string> {
   text: string;
   value: T;
+  index?: number;
 }
 
 type Selected<T extends string> = Map<
@@ -71,7 +72,11 @@ const Dropdown = <T extends string>({
       return nextState;
     }
   );
-  const handleSelected = (multi: boolean, dropdownItem: DropdownItem<T>) =>
+  const handleSelected = (
+    multi: boolean,
+    dropdownItem: DropdownItem<T>,
+    itemIndex?: number
+  ) =>
     // : Selected
     {
       let newSelected: Selected<T>;
@@ -89,7 +94,10 @@ const Dropdown = <T extends string>({
         if (newSelected.has(dropdownItem.value)) {
           newSelected.delete(dropdownItem.value);
         } else {
-          newSelected.set(dropdownItem.value, dropdownItem);
+          newSelected.set(dropdownItem.value, {
+            ...dropdownItem,
+            index: itemIndex,
+          });
         }
       } else {
         // setSelected((prev) => {
@@ -101,7 +109,10 @@ const Dropdown = <T extends string>({
 
         newSelected = new Map();
         if (!selected.has(dropdownItem.value)) {
-          newSelected.set(dropdownItem.value, dropdownItem);
+          newSelected.set(dropdownItem.value, {
+            ...dropdownItem,
+            index: itemIndex,
+          });
         }
       }
 
@@ -189,7 +200,7 @@ const Dropdown = <T extends string>({
                 getKey={(itemInfo) => itemInfo.value}
                 estimateSize={24}
                 itemsInfo={items}
-                renderItem={(itemInfo) => (
+                renderItem={(itemInfo, idx) => (
                   <>
                     <DropdownMenu.CheckboxItem
                       className={`${cssStyles.SelectItem} ${
@@ -197,7 +208,7 @@ const Dropdown = <T extends string>({
                       }`}
                       checked={selected.has(itemInfo.value)}
                       onCheckedChange={(checked) => {
-                        handleSelected(multi, itemInfo);
+                        handleSelected(multi, itemInfo, idx);
                         // if (onValueChange)
                         //   onValueChange(checked ? [itemInfo] : []); // unchecked => []
                       }}
