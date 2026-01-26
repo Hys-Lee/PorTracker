@@ -6,6 +6,7 @@ import {
   TransactionValue,
 } from '../../types';
 import { TRANSACTION_MAP } from '@core/constants';
+import { mockDB as SharedDB } from './sharedDB';
 
 // type AssetInfo = z.infer<typeof assetInfoSchema>;
 // type Portfolio = z.infer<typeof actualPortfolioSchema>;
@@ -32,10 +33,11 @@ const initialCurrency = [{ id: uuidv4(), value: 'usd' as CurrencyValue }];
 
 const currencyTable = new Map(initialCurrency.map((data) => [data.id, data]));
 
-const linkedId = {
-  memo: uuidv4(),
-  portfolio: uuidv4(),
-};
+// const linkedId = {
+//   memo: uuidv4(),
+//   portfolio: uuidv4(),
+// };
+const linkedId = SharedDB.linkList[0];
 
 const initialActualPortfolioInfo = [
   {
@@ -98,21 +100,21 @@ const actualPortfolioTable = new Map(
   initialActualPortfolioInfo.map((data) => [data.id, data])
 );
 
-const initialMemo = [
-  {
-    id: linkedId.memo,
-    importance: 'useful' as MemoImportanceValue,
-    title: '메모 제목',
-    content:
-      '메모 내용 \n대충 메모 내용\n길어져랑\n길어져랑\n길어져랑\n하나만더',
-    tags: ['#태그1', '태그2', 'tag3', '#Tag4'],
-    evaluation: 'good' as MemoEvaluationValue,
-    type: 'actual',
-    linkedPortfolio: linkedId.portfolio,
-  },
-];
+// const initialMemo = [
+//   {
+//     id: linkedId.memo,
+//     importance: 'useful' as MemoImportanceValue,
+//     title: '메모 제목',
+//     content:
+//       '메모 내용 \n대충 메모 내용\n길어져랑\n길어져랑\n길어져랑\n하나만더',
+//     tags: ['#태그1', '태그2', 'tag3', '#Tag4'],
+//     evaluation: 'good' as MemoEvaluationValue,
+//     type: 'actual',
+//     linkedPortfolio: linkedId.portfolio,
+//   },
+// ];
 
-const memoTable = new Map(initialMemo.map((data) => [data.id, data]));
+// const memoTable = new Map(initialMemo.map((data) => [data.id, data]));
 
 const transactionTypes = [
   {
@@ -140,6 +142,6 @@ const transactionTypesTable = new Map(
 export const mockDB = {
   assets: assetsTable,
   actuals: actualPortfolioTable,
-  memos: memoTable,
+  // memos: memoTable,
   transactionTypes: transactionTypesTable,
 };

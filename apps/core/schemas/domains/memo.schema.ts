@@ -1,0 +1,21 @@
+import {
+  MEMO_EVALUATION_VALUES,
+  MEMO_IMPORTANCE_VALUES,
+  MEMO_TYPE_VALUES,
+} from '@core/constants';
+import z from 'zod';
+
+export const memoOriginSchema = z.object({
+  id: z.string().uuid('유효한 uuid가 아닙니다'),
+  importance: z.enum([...MEMO_IMPORTANCE_VALUES]),
+  title: z.string().min(1, '제목은 필수입니다'),
+  content: z.string(),
+  tags: z.array(z.string().min(1, '태그 명을 작성하세요')),
+  evaluation: z.enum([...MEMO_EVALUATION_VALUES]),
+  date: z
+    .string()
+    .datetime({ message: '유효한 날짜가 아닙니다' })
+    .transform((str) => new Date(str)),
+  memoType: z.enum([...MEMO_TYPE_VALUES]),
+  // linkedInfo?: DropdownItem<>;
+});

@@ -1,10 +1,13 @@
 import * as reals from '../../services';
 
 import * as mockPortfolioQueryServices from './queries/portfoliosQueries';
+import * as mockMemoQueryServices from './queries/memosQueries';
+
 import * as mockPortfolioActionServices from './actions/portfoliosActions';
 import { branchFetchService } from './utils';
 const mockTotalServices = {
   ...mockPortfolioQueryServices,
+  ...mockMemoQueryServices,
   ...mockPortfolioActionServices,
 };
 const branchedMockServices = branchFetchService(mockTotalServices, reals);
@@ -25,5 +28,6 @@ export const {
 
   // keys
   getMemoRecents,
+  getAllPortfolios,
   memoKeys,
 } = { ...reals, ...branchedMockServices };
