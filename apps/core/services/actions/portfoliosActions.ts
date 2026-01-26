@@ -14,11 +14,10 @@ import {
   actualPortfolioSchema,
   actualUpdateResponseSchema,
   assetInfoListSchema,
-  assetInfoSchema,
   relatedMemoSchema,
   transactionTypesListSchema,
   transactionTypesSchema,
-} from '@core/schemas/portfolios.schema';
+} from '@core/schemas/features/portfolios/portfolios.schema';
 import { Response } from '@core/types/api';
 import z from 'zod';
 import { schemaParser } from '../shemaParser';

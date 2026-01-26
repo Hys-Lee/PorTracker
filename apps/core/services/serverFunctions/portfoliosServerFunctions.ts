@@ -5,7 +5,7 @@ import {
   ActualFormDeleteResponse,
   actualFormRequestSchema,
   ActualFormUpdateResponse,
-} from '@core/schemas/portfolios.schema';
+} from '@core/schemas/features/portfolios/portfolios.schema';
 import {
   createActualForm,
   deleteActualForm,

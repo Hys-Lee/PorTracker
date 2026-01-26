@@ -3,14 +3,11 @@ import { unifiedFetcher } from '@core/libs/api/unified-fetcher';
 import {
   actualFormSchema,
   actualPortfolioListSchema,
-  actualPortfolioSchema,
   assetInfoListSchema,
-  assetInfoSchema,
   relatedMemoSchema,
   transactionTypesListSchema,
-  transactionTypesSchema,
   actualRecentListsForAssetsSchema,
-} from '@core/schemas/portfolios.schema';
+} from '@core/schemas/features/portfolios/portfolios.schema';
 import { schemaParser } from '../shemaParser';
 import { Response } from '@core/types/api';
 import z from 'zod';

@@ -1,6 +1,5 @@
 import type { ActualPortfolioQueryService } from '@core/services/queries/portfoliosQueries';
-import * as real from '../../../services/queries/portfoliosQueries';
-import { mockDB } from '../../db/portfoliosDB';
+import { mockDB as portfolioDB } from '../../db/portfoliosDB';
 import { HttpResponse } from 'msw';
 import { Response } from '@core/types/api';
 import {
@@ -11,20 +10,21 @@ import {
   assetInfoListSchema,
   relatedMemoSchema,
   transactionTypesListSchema,
-} from '@core/schemas/portfolios.schema';
+} from '@core/schemas/features/portfolios/portfolios.schema';
 import { SafeParseReturnType, ZodError, z } from 'zod';
 import { branchFetchService, makeSafeMockReturn } from '../utils';
+import { mockDB as memoDB } from '@core/mocks/db/memoDB';
 
 const actualPortfolioServiceMock: ActualPortfolioQueryService = {
   getTransactionTypes: async () => {
-    const transactionTypes = Array.from(mockDB.transactionTypes.values());
+    const transactionTypes = Array.from(portfolioDB.transactionTypes.values());
 
     const validated = transactionTypesListSchema.safeParse(transactionTypes);
 
     return makeSafeMockReturn(validated);
   },
   getAssets: async () => {
-    const assets = Array.from(mockDB.assets.values()).map((data) => ({
+    const assets = Array.from(portfolioDB.assets.values()).map((data) => ({
       ...data,
     }));
 
@@ -55,7 +55,7 @@ const actualPortfolioServiceMock: ActualPortfolioQueryService = {
     //   transaction,
     //   currency
     // );
-    const actuals = Array.from(mockDB.actuals.values())
+    const actuals = Array.from(portfolioDB.actuals.values())
       .filter((data) => {
         // asset 필터
         if (!(!assetList || assetList?.includes(data.assetId))) return false;
@@ -105,7 +105,7 @@ const actualPortfolioServiceMock: ActualPortfolioQueryService = {
     return makeSafeMockReturn(validated);
   },
   getActualPortfolioById: async (actualId: string) => {
-    const found = mockDB.actuals.get(actualId);
+    const found = portfolioDB.actuals.get(actualId);
     if (!found) {
       //   return HttpResponse.json(
       //     { message: 'Actual Not Found' },
@@ -117,7 +117,7 @@ const actualPortfolioServiceMock: ActualPortfolioQueryService = {
       );
     }
 
-    // const recents = Array.from(mockDB.actuals.values()).filter(
+    // const recents = Array.from(portfolioDB.actuals.values()).filter(
     //   (data) => data.assetId === found?.assetId && true
     //   // new Date(data.date).getTime() < new Date(found.date).getTime()
     // );
@@ -145,7 +145,8 @@ const actualPortfolioServiceMock: ActualPortfolioQueryService = {
     return makeSafeMockReturn(validated);
   },
   getRelatedMemoByMemoId: async (memoId: string) => {
-    const found = mockDB.memos.get(memoId);
+    // const found = portfolioDB.memos.get(memoId);
+    const found = memoDB.memo.get(memoId);
     if (!found) {
       //   return HttpResponse.json({ message: 'Memo Not Found' }, { status: 404 });
       return makeSafeMockReturn(
@@ -166,8 +167,8 @@ const actualPortfolioServiceMock: ActualPortfolioQueryService = {
     return makeSafeMockReturn(validated);
   },
   getActualPortfolioRecents: async () => {
-    const assetInfos = [...mockDB.assets.values()];
-    const allActuals = [...mockDB.actuals.values()].sort(
+    const assetInfos = [...portfolioDB.assets.values()];
+    const allActuals = [...portfolioDB.actuals.values()].sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime() // 오름차순?
     );
 

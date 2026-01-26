@@ -7,7 +7,7 @@ import {
   actualFormRequestSchema,
   ActualFormUpdateResponse,
   actualUpdateResponseSchema,
-} from '@core/schemas/portfolios.schema';
+} from '@core/schemas/features/portfolios/portfolios.schema';
 import type { ActualPortfolioActionService } from '@core/services/actions/portfoliosActions';
 import { v4 as uuidV4 } from 'uuid';
 import { branchFetchService, makeSafeMockReturn } from '../utils';

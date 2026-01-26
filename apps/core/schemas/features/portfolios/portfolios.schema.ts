@@ -4,8 +4,10 @@ import {
   MEMO_IMPORTANCE_VALUES,
   TRANSACTION_MAP,
   TRANSACTION_VALUES,
-} from '../constants';
+} from '../../../constants';
 import { z } from 'zod';
+import { assetInfoSchema } from '../../domains/asset.schema';
+import { actualPortfolioOriginSchema } from '../../domains/actualPortfolio.schema';
 
 /** 나중에 백엔드 기준 schema를 참조하도록 변경해야 함. 이 안에서 참조하는게 아니라. */
 
@@ -17,41 +19,44 @@ export const transactionTypesSchema = z.object({
 });
 export const transactionTypesListSchema = z.array(transactionTypesSchema);
 
-export const assetInfoSchema = z.object({
-  id: z.string().uuid('유효한 데이터가 아닙니다'),
-  name: z.string().min(1, '이름은 필수입니다'),
-  type: z.string().min(1, '유효한 타입이어야 합니다.'),
-  description: z.string().optional(),
-  createdAt: z
-    .string()
-    .datetime()
-    .transform((str) => new Date(str)),
-});
+// export const assetInfoSchema = z.object({
+//   id: z.string().uuid('유효한 데이터가 아닙니다'),
+//   name: z.string().min(1, '이름은 필수입니다'),
+//   type: z.string().min(1, '유효한 타입이어야 합니다.'),
+//   description: z.string().optional(),
+//   createdAt: z
+//     .string()
+//     .datetime()
+//     .transform((str) => new Date(str)),
+// });
 
 export const assetInfoListSchema = z.array(assetInfoSchema);
 
-export const actualPortfolioSchema = z.object({
-  id: z.string().uuid('유효한 uuid가 아닙니다'),
-  assetName: assetInfoSchema.shape.name,
-  assetDescription: assetInfoSchema.shape.description,
-  assetType: assetInfoSchema.shape.type,
-  // date: z.coerce.date({ message: '유효한 날짜가 아닙니다' }),
-  date: z
-    .string()
-    .datetime({ message: '유효한 날짜가 아닙니다' })
-    .transform((str) => new Date(str)),
-  createdAt:
-    // z.coerce.date(),
-    z
-      .string()
-      .datetime({ message: '유효한 날짜가 아닙니다' })
-      .transform((str) => new Date(str)),
-  transactionType: z.enum([...TRANSACTION_VALUES]),
-  changesRatio: z.number(),
-  accumulatedRatio: z.number(),
+export const actualPortfolioSchema = actualPortfolioOriginSchema.extend({
   value: z.number(),
-  currency: z.enum([...CURRENCY_VALUES]),
 });
+// object({
+//   id: z.string().uuid('유효한 uuid가 아닙니다'),
+//   assetName: assetInfoSchema.shape.name,
+//   assetDescription: assetInfoSchema.shape.description,
+//   assetType: assetInfoSchema.shape.type,
+//   // date: z.coerce.date({ message: '유효한 날짜가 아닙니다' }),
+//   date: z
+//     .string()
+//     .datetime({ message: '유효한 날짜가 아닙니다' })
+//     .transform((str) => new Date(str)),
+//   createdAt:
+//     // z.coerce.date(),
+//     z
+//       .string()
+//       .datetime({ message: '유효한 날짜가 아닙니다' })
+//       .transform((str) => new Date(str)),
+//   transactionType: z.enum([...TRANSACTION_VALUES]),
+//   changesRatio: z.number(),
+//   accumulatedRatio: z.number(),
+//   value: z.number(),
+//   currency: z.enum([...CURRENCY_VALUES]),
+// });
 
 export const actualPortfolioListSchema = z.array(actualPortfolioSchema);
 
@@ -111,11 +116,57 @@ export const actualFormSchema = z.object({
   // recents: actualRecentListSchema,
 });
 
-export type AssetInfo = z.infer<typeof assetInfoSchema>;
+// export const actualPortfolioDetailedSchema = actualPortfolioSchema.extend({
+//   amount: actualFormSchema.shape.amount,
+//   price: actualFormSchema.shape.price,
+//   exchangeRate: actualFormSchema.shape.exchangeRate,
+//   accumulatedValue: z.number(),
+// });
+// export const actualPortfolioDetailedListSchema = z.array(
+//   actualPortfolioDetailedSchema
+// );
+
+// /** 임시 target detail schema */
+// export const targetPortfolioDetailedSchema = z.object({
+//   id: z.string(),
+//   name: z.string(),
+//   assetsList: z.array(
+//     z.object({
+//       assetName: z.string(),
+//       assetType: z.string(),
+//       currentRatioBps: z.number(),
+//       ratioDeltaBps: z.number(),
+//     })
+//   ),
+// });
+
+// export const allPortfolioDetailedSchema = z.discriminatedUnion(
+//   'portfolioType',
+//   [
+//     z.object({
+//       portfolioType: z.literal('actual'),
+//       ...actualPortfolioDetailedSchema.shape,
+//     }),
+//     z.object({
+//       portfolioType: z.literal('target'),
+//       ...targetPortfolioDetailedSchema.shape,
+//     }),
+//   ]
+// );
+// export const allPortfolioDetailedListSchema = z.array(
+//   allPortfolioDetailedSchema
+// );
+
+// export type AssetInfo = z.infer<typeof assetInfoSchema>;
 export type ActualPortfolio = z.infer<typeof actualPortfolioSchema>;
 export type ActualForm = z.infer<typeof actualFormSchema>;
 export type RelatedActualAsset = z.infer<typeof relatedActualAssetSchema>;
 export type RelatedMemo = z.infer<typeof relatedMemoSchema>;
+
+// export type TargetPortfolioDetail = z.infer<
+//   typeof targetPortfolioDetailedSchema
+// >;
+// export type AllPortfolioDetail = z.infer<typeof allPortfolioDetailedSchema>;
 
 // 데이터 스키마를 정하고 바로 타입으로도 만든다.
 // ㄴ> 한 곳에서 깔끔하게 관리되고 좋네.

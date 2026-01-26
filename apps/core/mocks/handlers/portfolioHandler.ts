@@ -1,25 +1,13 @@
 import { http, HttpResponse } from 'msw';
-import { z } from 'zod';
-import { mockDB } from '../db/portfoliosDB';
+
 import {
-  assetInfoSchema,
-  actualPortfolioSchema,
-  AssetInfo,
-  ActualPortfolio,
-  ActualForm,
-  RelatedMemo,
   getActualPorfolioParamsSchema,
   getRelatedMemoParamsSchema,
-  actualFormSchema,
-  relatedMemoSchema,
-  assetInfoListSchema,
-  actualPortfolioListSchema,
-  actualRecentListSchema,
   ActualFormCreateRequest,
   ActualFormUpdateRequest,
   deleteActualPortfolioParamsSchema,
   ActualFormDeleteRequest,
-} from '../../schemas/portfolios.schema';
+} from '../../schemas/features/portfolios/portfolios.schema';
 import {
   getActualPortfolioById,
   getAllActualPortfolios,

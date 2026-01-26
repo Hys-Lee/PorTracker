@@ -1,9 +1,9 @@
 import {
   ActualForm,
   ActualPortfolio,
-  AssetInfo,
   RelatedMemo,
-} from '@core/schemas/portfolios.schema';
+} from '@core/schemas/features/portfolios/portfolios.schema';
+import { AssetInfo } from '@core/schemas/domains/asset.schema';
 
 type Dynamic = string;
 
