@@ -23,7 +23,7 @@ import { CurrencyValue, TransactionValue } from '@core/types';
 import SegmentControl from '@core/components/shared/MOLECULES/SegmentControl/SegmentControl';
 import FormArea from './_ingredients/ActualFormArea/ActualFormArea';
 import { useAtom } from 'jotai';
-import { copiedFormDataAtom } from '@core/stores/portfolios/actualModal';
+import { copiedActualPortfolioFormDataAtom } from '@core/stores/portfolios/actualModal';
 
 interface ActualFormModalViewProps {
   asClose?: ComponentProps<typeof FormModalFrame>['asClose'];
@@ -42,7 +42,7 @@ const ActualFormModalView = ({
   const [referMode, setReferMode] = useState<
     'portfolioReference' | 'memoReference'
   >('portfolioReference');
-  const [copiedFormData] = useAtom(copiedFormDataAtom);
+  const [copiedFormData] = useAtom(copiedActualPortfolioFormDataAtom);
   return (
     <FormModalFrame
       open={true}

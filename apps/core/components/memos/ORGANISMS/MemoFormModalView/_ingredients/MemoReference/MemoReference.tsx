@@ -1,3 +1,5 @@
+'use client';
+
 import { MemoEvaluationValue, MemoImportanceValue } from '@core/types';
 import { colors } from '../../../../../../tokens/colors.stylex';
 import * as stylex from '@stylexjs/stylex';
@@ -10,94 +12,77 @@ import { useQuery } from '@tanstack/react-query';
 import { getMemoRecents, memoKeys } from '@core/services';
 import { memoEvaluationSelector } from '@core/utils/renderers/iconSelector';
 import Separator from '@core/components/shared/ATOMS/Separator/Separator';
+import PasteIcon from '@core/assets/images/svgs/Paste.svg?react';
 import {
   nonScorlledOverflowStyles,
   scrollBarStyles,
 } from '@core/styles/scroll.stylex';
 import { useState } from 'react';
+import { pasteButtonStyles } from '@core/styles/icon.stylex';
+import { useAtomValue, useSetAtom } from 'jotai';
+import {
+  copiedMemoFormDataAtom,
+  linkedPortfolioInfoAtom,
+} from '@core/stores/memos/memoModal';
+import { MemoForm } from '@core/schemas/features/memos/memos.schema';
 
-export type MemoRecents = PreviewProps & { id: string };
+export type MemoRecents = MemoForm;
+// PreviewProps & { id: string };
 
 const MemoReference = () => {
-  const linkedId = undefined; // actual에서 자산 id, target에선 target id 혹은 undefined
-  const { data: recents } = useQuery({
-    queryKey: memoKeys.recents(linkedId),
+  const linkedPortfolioData = useAtomValue(linkedPortfolioInfoAtom); // 선택 안하면 undefined
+
+  const { data: recentsRes } = useQuery({
+    queryKey: memoKeys.recents(
+      linkedPortfolioData?.id,
+      linkedPortfolioData?.portfolioType
+    ),
     queryFn: () => {
-      return getMemoRecents(linkedId);
+      return getMemoRecents(linkedPortfolioData?.id);
     },
   }); // useSuspenseQuery로 바꿀거임.
-
   //test
+  console.log('recentsRes in MemoREference: ', recentsRes);
 
   const [selectedRecent, setSelectedRecent] = useState<
     MemoRecents | undefined
   >();
 
+  const setCopiedMemoFormData = useSetAtom(copiedMemoFormDataAtom);
+
   return (
     <>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-        <section
-          style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
-        >
-          <p
-            style={{
-              margin: 0,
-              color: colors.textWeek,
-              fontWeight: '700',
-              fontSize: '16px',
-            }}
-          >
-            Recent History
-          </p>
-          {/* <div style={{ height: '200px', overflowY: 'auto' }}> */}
+      <div {...stylex.props(memoReferenceStyles.wrapper)}>
+        <section {...stylex.props(memoReferenceStyles.recentArea)}>
+          <p {...stylex.props(memoReferenceStyles.subTitle)}>Recent History</p>
 
-          <ScrollArea.Root style={{}}>
+          <ScrollArea.Root>
             <ScrollArea.Viewport
               style={{
                 height: '80px',
                 // overflow: 'hidden',
               }}
             >
-              <ul
-                style={{
-                  padding: 0,
-                  margin: 0,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '16px',
-                  // height: 'auto',
-                  // flexGrow: 1,
-                }}
-              >
-                {(recents as MemoRecents[]).map((recentData) => {
-                  return (
-                    <div
-                      key={recentData.id}
-                      onClick={() => {
-                        setSelectedRecent(recentData);
-                      }}
-                    >
-                      <MemoHistoryRow
-                        date={recentData.date}
-                        firstTag={recentData.tags?.[0]}
-                        importance={recentData.importance}
-                        title={recentData.title}
-                      />
-                    </div>
-                  );
-                })}
-                {/* <MemoHistoryRow
-                  date={new Date()}
-                  firstTag="tag1"
-                  importance="normal"
-                  title="타이틀"
-                />
-                <MemoHistoryRow
-                  date={new Date()}
-                  firstTag="tag3가 너무 길어서 넘겨버리면"
-                  importance="critical"
-                  title="타이틀두번째"
-                /> */}
+              <ul {...stylex.props(memoReferenceStyles.recentList)}>
+                {(recentsRes?.data as MemoRecents[] | undefined)?.map(
+                  (recentData) => {
+                    return (
+                      <div
+                        key={recentData.id}
+                        onClick={() => {
+                          setSelectedRecent(recentData);
+                        }}
+                      >
+                        <MemoHistoryRow
+                          date={recentData.date}
+                          firstTag={recentData.tags?.[0]}
+                          importance={recentData.importance}
+                          title={recentData.title}
+                        />
+                      </div>
+                    );
+                  }
+                )}
               </ul>
             </ScrollArea.Viewport>
             <ScrollArea.ScrollAreaScrollbar
@@ -111,42 +96,67 @@ const MemoReference = () => {
         </section>
 
         <Separator color="strong" />
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            flexGrow: 1,
-            height: '200px',
-          }}
-        >
+        <div {...stylex.props(memoReferenceStyles.previewArea)}>
           {selectedRecent ? (
-            <Preview {...selectedRecent} />
+            <>
+              <Preview {...selectedRecent} />
+              <button
+                type="button"
+                {...stylex.props(pasteButtonStyles.base)}
+                onClick={() => {
+                  setCopiedMemoFormData(selectedRecent);
+                }}
+              >
+                <PasteIcon />
+              </button>
+            </>
           ) : (
-            <div
-              style={{
-                flexGrow: 1,
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
+            <div {...stylex.props(memoReferenceStyles.noPreview)}>
               기록 선택 시 상세 화면이 보입니다.
             </div>
           )}
-          {/* <Preview
-            content={`ㅁㄴㅇㄹ\nasdfasdfasdf\n1\n1\n1\n1\n1\n1\n1\n1`}
-            date={new Date()}
-            evaluation="soso"
-            importance="useful"
-            tags={['tag1', 'tag2']}
-            title="타이타이틀"
-          /> */}
         </div>
       </div>
     </>
   );
 };
 export default MemoReference;
+
+const memoReferenceStyles = stylex.create({
+  wrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '20px',
+  },
+  recentArea: { display: 'flex', flexDirection: 'column', gap: '24px' },
+  subTitle: {
+    margin: 0,
+    color: colors.textWeek,
+    fontWeight: '700',
+    fontSize: '16px',
+  },
+  recentList: {
+    padding: 0,
+    margin: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '16px',
+    // height: 'auto',
+    // flexGrow: 1,
+  },
+  previewArea: {
+    position: 'relative',
+    width: '100%',
+    flexGrow: 1,
+    height: '200px',
+  },
+  noPreview: {
+    flexGrow: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 interface MemoHistoryRowProps {
   title: string;
@@ -234,14 +244,15 @@ const memoHistoryRowStyles = stylex.create({
   },
 });
 
-interface PreviewProps {
-  date: Date;
-  title: string;
-  importance: MemoImportanceValue;
-  content: string;
-  tags: string[];
-  evaluation: MemoEvaluationValue;
-}
+// interface PreviewProps {
+//   date: Date;
+//   title: string;
+//   importance: MemoImportanceValue;
+//   content: string;
+//   tags: string[];
+//   evaluation: MemoEvaluationValue;
+// }
+type PreviewProps = Omit<MemoForm, 'id'>;
 const Preview = ({
   content,
   date,
