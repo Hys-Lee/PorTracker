@@ -7,7 +7,8 @@ export const selectedAssetAtom = atom<DropdownItem<string> | undefined>(
   undefined
 );
 
-export const copiedFormDataAtom = atom<
+export const copiedActualPortfolioFormDataAtom = atom<
+  // currency 는 동일 자산간 같으므로.
   | Omit<NonNullable<ComponentProps<typeof FormArea>['initData']>, 'currency'>
   | undefined
 >(undefined);
