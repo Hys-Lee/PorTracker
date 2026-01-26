@@ -129,15 +129,21 @@ const MemoFormArea = ({
               return { text: data.assetName, value: data.id };
             else return { text: data.name, value: data.id };
           })}
-          triggerStylex={{ ...formElementStyles.base }}
+          icon
+          triggerStylex={{
+            ...formElementStyles.base,
+            ...portfolioLinkStyles.base,
+          }}
           onValueChange={(linkInfo) => {
             if (!linkInfo[0]) {
               setSelectedLinkedPortfolio(undefined);
               return;
             }
-            if (linkInfo[0].index) {
+            if (linkInfo[0].index !== undefined) {
+              // index가 0일 때도 있으니까..
               const { portfolioType, ...portfolioData } =
                 tmpPortfoliosInfo[linkInfo[0].index];
+
               // const linkedPortfolioData =
               //   portfolioType === 'actual'
               //     ? {
@@ -264,12 +270,22 @@ const textAreaStyles = stylex.create({
 const tagStyles = stylex.create({
   base: {
     height: '44px',
+    flexGrow: 1,
   },
 });
 
 const importanceStyles = stylex.create({
   base: {
+    position: 'relative',
     width: '100px',
+    paddingRight: '30px',
+  },
+});
+
+const portfolioLinkStyles = stylex.create({
+  base: {
+    position: 'relative',
+    flexGrow: 1,
   },
 });
 
