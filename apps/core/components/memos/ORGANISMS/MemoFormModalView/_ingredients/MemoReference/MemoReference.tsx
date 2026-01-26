@@ -38,11 +38,12 @@ const MemoReference = () => {
       linkedPortfolioData?.portfolioType
     ),
     queryFn: () => {
-      return getMemoRecents(linkedPortfolioData?.id);
+      return getMemoRecents(
+        linkedPortfolioData?.id,
+        linkedPortfolioData?.portfolioType
+      );
     },
   }); // useSuspenseQuery로 바꿀거임.
-  //test
-  console.log('recentsRes in MemoREference: ', recentsRes);
 
   const [selectedRecent, setSelectedRecent] = useState<
     MemoRecents | undefined
@@ -82,7 +83,7 @@ const MemoReference = () => {
                       </div>
                     );
                   }
-                )}
+                ) ?? []}
               </ul>
             </ScrollArea.Viewport>
             <ScrollArea.ScrollAreaScrollbar
@@ -155,6 +156,7 @@ const memoReferenceStyles = stylex.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    color: colors.textWeek,
   },
 });
 
@@ -214,6 +216,7 @@ const memoHistoryRowStyles = stylex.create({
     minWidth: '50px',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
+    margin: 'auto 0',
   },
   tag: {
     overflow: 'hidden',
@@ -366,7 +369,7 @@ const previewStyels = stylex.create({
   },
   contentArea: {
     width: '100%',
-    height: '160px',
+    height: '100px',
     boxShadow: `0 0 0 1px ${colors.bgNormal}`,
     // width: '100%',
     borderRadius: '8px ',
