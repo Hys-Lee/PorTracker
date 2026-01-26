@@ -52,7 +52,7 @@ const initialActualPortfolioInfo = [
     date: new Date('2025-12-27').toISOString(),
     transactionType: 'allocation' as TransactionValue,
     // value: 1_234_567,
-    price: 123456,
+    price: 12345678910,
     amount: 10,
     exchangeRate: 1,
     assetDescription: null,

@@ -21,8 +21,10 @@ const memoServiceMock: MemoQueryService = {
     //   return { data: [], success: true, error: null };
     const found = Array.from(mockDB.memo.values())
       .filter((memo) => {
-        memo.type === (portfolioType || 'event') &&
-          memo.linkedPortfolio === targetId;
+        return (
+          memo.type === (portfolioType || 'event') &&
+          memo.linkedPortfolio === targetId
+        );
       })
       .slice(0, 5);
 

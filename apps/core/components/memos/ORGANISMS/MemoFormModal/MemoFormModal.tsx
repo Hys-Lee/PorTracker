@@ -7,8 +7,7 @@ import StoreProvider from '@core/utils/components/StoreProvider/StoreProvider';
 
 const MemoFormModal = async () => {
   const tmpAllPortfoliosRes = await getAllPortfolios();
-  //test
-  console.log('tmpALl in memoformmodal: ', tmpAllPortfoliosRes);
+
   return (
     <>
       <StoreProvider>

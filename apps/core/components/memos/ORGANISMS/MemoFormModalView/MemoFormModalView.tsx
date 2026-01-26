@@ -133,10 +133,12 @@ const modalStyles = stylex.create({
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
     gap: '44px',
-    height: '440px',
+    // height: '440px',
+    height: '500px',
   },
   referenceArea: {
     width: '100%',
+    minWidth: '0%',
     display: 'flex',
     gap: '8px',
     flexDirection: 'column',

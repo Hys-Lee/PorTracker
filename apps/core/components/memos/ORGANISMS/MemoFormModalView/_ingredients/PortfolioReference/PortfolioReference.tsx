@@ -69,11 +69,12 @@ const noReferenceStyles = stylex.create({
   wrapper: {
     display: 'flex',
     justifyContent: 'center',
-    alignContent: 'center',
+    alignItems: 'center',
+    flexGrow: 1,
   },
   text: {
-    color: colors.textNormal,
-    fontSize: '20px',
+    color: colors.textWeek,
+    // fontSize: '20px',
   },
 });
 
@@ -188,8 +189,14 @@ const actualReferenceStyles = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     gap: '20px',
+    width: '100%',
   },
-  title: { fontSize: '28px', fontWeight: '800' },
+  title: {
+    fontSize: '16px',
+    fontWeight: '600',
+    color: colors.textWeek,
+    margin: 0,
+  },
   upperSection: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
@@ -198,7 +205,8 @@ const actualReferenceStyles = stylex.create({
   },
   elementArea: {
     display: 'grid',
-    gridTemplateColumns: '1fr 2fr',
+    gridTemplateColumns: '1fr 1.5fr',
+    gap: '4px',
   },
   label: {
     color: colors.textWeek,
@@ -206,6 +214,9 @@ const actualReferenceStyles = stylex.create({
   textStong: { color: colors.textStrong },
   value: {
     color: colors.textNormal,
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
   },
   //
   lowerSection: {
@@ -215,7 +226,9 @@ const actualReferenceStyles = stylex.create({
     // gridColumnGap:''
     display: 'flex',
     gap: '12px',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
+    alignItems: 'center',
+    // justifyContent: 'space-between',
   },
   elementBox: {
     display: 'flex',
@@ -227,7 +240,8 @@ const actualReferenceStyles = stylex.create({
     gap: '24px',
     // justifyContent: 'space-between',
     // flexGrow: 1,
-    width: '100%',
+    // width: '100%',
+    width: '90%',
     padding: '12px',
   },
   elementBoxContent: {
@@ -240,6 +254,7 @@ const actualReferenceStyles = stylex.create({
   boxMainText: {
     fontSize: '24px',
     fontWeight: '600',
+    whiteSpace: 'nowrap',
   },
   boxSubText: {},
 });
@@ -385,9 +400,9 @@ const TargetReference = ({ targetsInfo }: TargetReferenceProps) => {
 const targetReferenceStyles = stylex.create({
   wrapper: { display: 'flex', flexDirection: 'column', gap: '20px' },
   title: {
-    fontSize: '24px',
+    fontSize: '16px',
     fontWeight: '600',
-    color: colors.textStrong,
+    color: colors.textWeek,
     margin: 0,
   },
   detailArea: { overflow: 'hidden' },
