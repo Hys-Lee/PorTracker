@@ -38,6 +38,9 @@ const PortfolioReference = ({ init }: PortfolioReferenceProps) => {
 
   const finalData = lilnkedPortfolioInfo ?? init;
 
+  //test
+  // console.log('init, finalDta: ', init, finalData);
+
   return (
     <>
       {finalData?.portfolioType === 'actual' ? (
@@ -157,7 +160,8 @@ const AcutalReference = (props: ActualPortfolioDetail) => {
               }${changeValue.toLocaleString()}`}</span>
               <span
                 {...stylex.props(
-                  actualReferenceStyles[changesRatio >= 0 ? 'profit' : 'loss']
+                  actualReferenceStyles[changesRatio >= 0 ? 'profit' : 'loss'],
+                  actualReferenceStyles.boxSubText
                 )}
               >{`(${changesRatio >= 0 && '+'}${changesRatio / 100}%)`}</span>
             </div>
@@ -173,9 +177,12 @@ const AcutalReference = (props: ActualPortfolioDetail) => {
                   actualReferenceStyles.textStong
                 )}
               >{`${accumulatedValue.toLocaleString()}`}</span>
-              <span {...stylex.props(actualReferenceStyles.textStong)}>{`(${
-                accumulatedRatio / 100
-              }%)`}</span>
+              <span
+                {...stylex.props(
+                  actualReferenceStyles.textStong,
+                  actualReferenceStyles.boxSubText
+                )}
+              >{`(${accumulatedRatio / 100}%)`}</span>
             </div>
           </div>
         </section>
@@ -226,7 +233,7 @@ const actualReferenceStyles = stylex.create({
     // gridColumnGap:''
     display: 'flex',
     gap: '12px',
-    flexDirection: 'column',
+    // flexDirection: 'column',
     alignItems: 'center',
     // justifyContent: 'space-between',
   },
@@ -237,26 +244,33 @@ const actualReferenceStyles = stylex.create({
     borderRadius: '8px',
     height: '80px',
     flexDirection: 'column',
-    gap: '24px',
+    gap: '20px',
     // justifyContent: 'space-between',
-    // flexGrow: 1,
+    flexGrow: 1,
+    minWidth: 0,
     // width: '100%',
-    width: '90%',
+    // width: '90%',
     padding: '12px',
   },
   elementBoxContent: {
     display: 'flex',
-    gap: '8px',
+    flexDirection: 'column',
+    // gap: '8px',
     alignItems: 'baseline',
   },
   loss: { color: colors.loss },
   profit: { color: colors.profit },
   boxMainText: {
-    fontSize: '24px',
+    fontSize: '20px',
     fontWeight: '600',
     whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    width: '100%',
   },
-  boxSubText: {},
+  boxSubText: {
+    fontSize: '12px',
+  },
 });
 
 const actualDetailInfo: {
