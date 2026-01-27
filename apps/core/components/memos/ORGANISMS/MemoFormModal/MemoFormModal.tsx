@@ -1,12 +1,35 @@
-import { getAllActualPortfolios, getAllPortfolios } from '@core/services';
+import {
+  getAllActualPortfolios,
+  getAllPortfolios,
+  getMemoFormById,
+  postMemoForm,
+} from '@core/services';
 import MemoFormArea from '../MemoFormModalView/_ingredients/MemoFormArea/MemoFormArea';
 import MemoReference from '../MemoFormModalView/_ingredients/MemoReference/MemoReference';
 import PortfolioReference from '../MemoFormModalView/_ingredients/PortfolioReference/PortfolioReference';
 import MemoFormModalView from '../MemoFormModalView/MemoFormModalView';
 import StoreProvider from '@core/utils/components/StoreProvider/StoreProvider';
+import { ComponentProps } from 'react';
+import FormActionButton from '@core/components/shared/MOLECULES/FormActionButton/FormActionButton';
+import { PortfolioReferenceData } from '@core/types/memos/referenceData';
 
-const MemoFormModal = async () => {
-  const tmpAllPortfoliosRes = await getAllPortfolios();
+interface MemoFormModalProps {
+  asClose: ComponentProps<typeof MemoFormModalView>['asClose'];
+  mode: 'add' | 'modify';
+  memoId?: string;
+}
+const MemoFormModal = async ({ asClose, mode, memoId }: MemoFormModalProps) => {
+  const [tmpAllPortfoliosRes, initFormDataRes] = await Promise.all([
+    getAllPortfolios(),
+    getMemoFormById(memoId),
+    // getRelatedMemoByActualId(portfolioId),
+  ]);
+
+  //test
+  // console.log('initFormDataRes: ', initFormDataRes);
+
+  const formId = 'memo';
+  const buttonName = 'submitMode';
 
   return (
     <>
@@ -20,10 +43,54 @@ const MemoFormModal = async () => {
                   // portfolioType: 'actual',
                 })) ?? []
               }
+              id={formId}
+              initData={initFormDataRes.data || undefined}
+              // tagInfo={}
+              formAction={async (actionRes, formData) => {
+                'use server';
+                if (initFormDataRes && initFormDataRes.data?.id) {
+                  formData.set('id', initFormDataRes.data?.id);
+                }
+                const res = await postMemoForm(formData);
+                // console.log('formActionRes: ', JSON.stringify(res));
+                // res.error?.details;
+                return res;
+              }} //
             />
           }
-          memoReference={<MemoReference />}
-          portfolioReference={<PortfolioReference />}
+          memoReference={
+            <MemoReference
+              initInfo={
+                initFormDataRes.data?.linkedPortfolioInfo?.id &&
+                initFormDataRes.data?.memoType !== 'event'
+                  ? {
+                      portfolioId:
+                        initFormDataRes.data?.linkedPortfolioInfo?.id,
+                      portfolioType: initFormDataRes.data?.memoType,
+                    }
+                  : undefined
+              }
+            />
+          }
+          portfolioReference={
+            <PortfolioReference
+              init={
+                initFormDataRes.data
+                  ? ({
+                      ...initFormDataRes.data?.linkedPortfolioInfo,
+                      portfolioType:
+                        initFormDataRes.data?.memoType === 'event'
+                          ? 'none'
+                          : initFormDataRes.data?.memoType,
+                    } as PortfolioReferenceData)
+                  : undefined
+              }
+            />
+          }
+          asClose={asClose}
+          actionButton={
+            <FormActionButton mode={mode} formId={formId} name={buttonName} />
+          }
         />
       </StoreProvider>
     </>

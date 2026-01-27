@@ -3,6 +3,7 @@ import MemoFormModal from './MemoFormModal';
 import StoreProvider from '@core/utils/components/StoreProvider/StoreProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { memoKeys } from '@core/services';
+import { mockDB } from '@core/mocks/db/memoDB';
 
 const meta: Meta<typeof MemoFormModal> = {
   component: MemoFormModal,
@@ -30,7 +31,26 @@ export const Primary: Story = {
     queryClient.setQueryData(memoKeys.recents(), []);
     return (
       <QueryClientProvider client={queryClient}>
-        <MemoFormModal />
+        <MemoFormModal asClose={<div>임시 닫기</div>} mode="add" />
+      </QueryClientProvider>
+    );
+  },
+};
+
+export const ModifyVersion: Story = {
+  args: {},
+  render: (args) => {
+    queryClient.setQueryData(memoKeys.recents(), []);
+
+    const memoIds = Array.from(mockDB.memo.keys());
+
+    return (
+      <QueryClientProvider client={queryClient}>
+        <MemoFormModal
+          asClose={<div>임시 닫기</div>}
+          mode="modify"
+          memoId={memoIds[0]}
+        />
       </QueryClientProvider>
     );
   },
