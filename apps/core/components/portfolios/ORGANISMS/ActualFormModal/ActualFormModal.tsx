@@ -28,6 +28,7 @@ import Button from '@core/components/shared/ATOMS/Button/Button';
 import * as stylex from '@stylexjs/stylex';
 import { colors } from '../../../../tokens/colors.stylex';
 import StoreProvider from '@core/utils/components/StoreProvider/StoreProvider';
+import FormActionButton from '@core/components/shared/MOLECULES/FormActionButton/FormActionButton';
 
 interface ActualFormModalProps {
   transactionTypesInfo: ComponentProps<typeof FormArea>['transactionTypeInfo'];
@@ -188,7 +189,7 @@ const ActualFormModal = async ({
             //     </Button>
             //   </div>
             // )
-            <ActionButton mode={mode} formId={formId} name={buttonName} />
+            <FormActionButton mode={mode} formId={formId} name={buttonName} />
           }
         />
       </StoreProvider>
@@ -197,63 +198,3 @@ const ActualFormModal = async ({
 };
 
 export default ActualFormModal;
-
-const ActionButton = ({
-  mode,
-  formId,
-  name,
-}: {
-  mode: 'add' | 'modify';
-  formId: string;
-  name: string;
-}) => {
-  return (
-    <>
-      {mode === 'add' ? (
-        <Button
-          variant="solid"
-          rounded="normal"
-          type="submit"
-          form={formId}
-          name={name}
-          value={'add'}
-        >
-          추가
-        </Button>
-      ) : (
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <Button
-            variant="outlined"
-            rounded="normal"
-            buttonStylex={{ ...btnStyles.base, ...btnStyles.delete }}
-            type="submit"
-            form={formId}
-            name={name}
-            value={'delete'}
-          >
-            삭제
-          </Button>
-          <Button
-            variant="solid"
-            rounded="normal"
-            buttonStylex={btnStyles.base}
-            type="submit"
-            form={formId}
-            name={name}
-            value={'modify'}
-          >
-            저장
-          </Button>
-        </div>
-      )}
-    </>
-  );
-};
-
-const btnStyles = stylex.create({
-  base: { flexGrow: 1 },
-  delete: {
-    boxShadow: `inset 0 0 0 1px rgb(from ${colors.loss} r g b / 0.7)`,
-    color: `rgb(from ${colors.loss} r g b / 0.7)`,
-  },
-});
