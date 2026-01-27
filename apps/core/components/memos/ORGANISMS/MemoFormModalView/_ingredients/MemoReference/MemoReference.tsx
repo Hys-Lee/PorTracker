@@ -1,6 +1,10 @@
 'use client';
 
-import { MemoEvaluationValue, MemoImportanceValue } from '@core/types';
+import {
+  MemoEvaluationValue,
+  MemoImportanceValue,
+  PortfolioTypeValue,
+} from '@core/types';
 import { colors } from '../../../../../../tokens/colors.stylex';
 import * as stylex from '@stylexjs/stylex';
 import { ScrollArea } from 'radix-ui';
@@ -24,29 +28,36 @@ import {
   copiedMemoFormDataAtom,
   linkedPortfolioInfoAtom,
 } from '@core/stores/memos/memoModal';
-import { MemoForm } from '@core/schemas/features/memos/memos.schema';
+import { MemoRecent } from '@core/schemas/features/memos/memos.schema';
 
-export type MemoRecents = MemoForm;
+// export type MemoRecent = MemoRecent;
 // PreviewProps & { id: string };
 
-const MemoReference = () => {
+interface MemoReferenceProps {
+  initInfo?: {
+    portfolioId: string;
+    portfolioType: PortfolioTypeValue;
+  };
+}
+
+const MemoReference = ({ initInfo }: MemoReferenceProps) => {
   const linkedPortfolioData = useAtomValue(linkedPortfolioInfoAtom); // 선택 안하면 undefined
 
   const { data: recentsRes } = useQuery({
     queryKey: memoKeys.recents(
-      linkedPortfolioData?.id,
-      linkedPortfolioData?.portfolioType
+      linkedPortfolioData?.id || initInfo?.portfolioId,
+      linkedPortfolioData?.portfolioType || initInfo?.portfolioType
     ),
     queryFn: () => {
       return getMemoRecents(
-        linkedPortfolioData?.id,
-        linkedPortfolioData?.portfolioType
+        linkedPortfolioData?.id || initInfo?.portfolioId,
+        linkedPortfolioData?.portfolioType || initInfo?.portfolioType
       );
     },
   }); // useSuspenseQuery로 바꿀거임.
 
   const [selectedRecent, setSelectedRecent] = useState<
-    MemoRecents | undefined
+    MemoRecent | undefined
   >();
 
   const setCopiedMemoFormData = useSetAtom(copiedMemoFormDataAtom);
@@ -65,7 +76,7 @@ const MemoReference = () => {
               }}
             >
               <ul {...stylex.props(memoReferenceStyles.recentList)}>
-                {(recentsRes?.data as MemoRecents[] | undefined)?.map(
+                {(recentsRes?.data as MemoRecent[] | undefined)?.map(
                   (recentData) => {
                     return (
                       <div
@@ -103,7 +114,10 @@ const MemoReference = () => {
               <Preview {...selectedRecent} />
               <button
                 type="button"
-                {...stylex.props(pasteButtonStyles.base)}
+                {...stylex.props(
+                  pasteButtonStyles.base,
+                  memoReferenceStyles.pasteBtn
+                )}
                 onClick={() => {
                   setCopiedMemoFormData(selectedRecent);
                 }}
@@ -157,6 +171,12 @@ const memoReferenceStyles = stylex.create({
     justifyContent: 'center',
     alignItems: 'center',
     color: colors.textWeek,
+  },
+  pasteBtn: {
+    top: 0,
+    right: 0,
+    width: '36px',
+    height: '36px',
   },
 });
 
@@ -255,7 +275,7 @@ const memoHistoryRowStyles = stylex.create({
 //   tags: string[];
 //   evaluation: MemoEvaluationValue;
 // }
-type PreviewProps = Omit<MemoForm, 'id'>;
+type PreviewProps = Omit<MemoRecent, 'id'>;
 const Preview = ({
   content,
   date,
@@ -345,13 +365,15 @@ const previewStyels = stylex.create({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: '12px',
+    // gap: '12px',
+    gap: '4px',
   },
   dateBox: {
     display: 'flex',
     justifyContent: 'start',
     alignItems: 'center',
     width: '100%',
+    position: 'absolute',
   },
   date: {
     color: colors.textWeek,
@@ -360,7 +382,8 @@ const previewStyels = stylex.create({
   title: {
     color: colors.textStrong,
     fontWeight: '800',
-    fontSize: '20px',
+    // fontSize: '20px',
+    fontSize: '16px',
   },
   importance: {
     // padding: '4px',
@@ -375,6 +398,7 @@ const previewStyels = stylex.create({
     borderRadius: '8px ',
     overflow: 'hidden',
     padding: '8px',
+    boxSizing: 'border-box',
   },
   content: {
     whiteSpace: 'pre-wrap',
@@ -392,6 +416,8 @@ const previewStyels = stylex.create({
   },
   tags: {
     whiteSpace: 'nowrap',
+    borderRadius: '8px',
+    padding: '4px 6px',
   },
   evaluationBox: {
     display: 'flex',
