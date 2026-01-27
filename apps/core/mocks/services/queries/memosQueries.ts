@@ -7,16 +7,17 @@ import {
   allPortfolioDetailedListSchema,
   allPortfolioDetailedSchema,
   memoFormListSchema,
+  memoFormSchema,
+  memoRecentListSchema,
 } from '@core/schemas/features/memos/memos.schema';
 import { PortfolioTypeValue } from '@core/types';
+import { calcAccuValFromChangeInfo } from '@core/utils/helpers/calcAccValFromChangeInfo';
 
 const memoServiceMock: MemoQueryService = {
   getMemoRecents: async (
     targetId?: string,
     portfolioType?: PortfolioTypeValue
   ) => {
-    // test
-    console.log('getMemoRecents in Mock Service');
     // if (!targetId || !portfolioType)
     //   return { data: [], success: true, error: null };
     const found = Array.from(mockDB.memo.values())
@@ -31,9 +32,8 @@ const memoServiceMock: MemoQueryService = {
     if (found.length <= 0) {
       return { data: [], error: null, success: true };
     }
-    //test
-    console.log('recent found in mockservice', found);
-    const validated = memoFormListSchema.safeParse(
+
+    const validated = memoRecentListSchema.safeParse(
       found.map((data) => ({
         id: data.id,
         importance: data.importance,
@@ -49,8 +49,6 @@ const memoServiceMock: MemoQueryService = {
     return makeSafeMockReturn(validated);
   },
   getAllPortfolios: async () => {
-    // test
-    console.log('getAllPortfolios in Mock Service');
     const actuals = Array.from(portfoliosDB.actuals.values()).map((data) => ({
       ...data,
       portfolioType: 'actual' as PortfolioTypeValue,
@@ -60,10 +58,10 @@ const memoServiceMock: MemoQueryService = {
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
 
-    const getAccumulatedValue = (value: number, changeRatioBps: number) => {
-      const changeRatio = changeRatioBps / 100;
-      return (value / changeRatio) * (1 + changeRatio);
-    };
+    // const getAccumulatedValue = (value: number, changeRatioBps: number) => {
+    //   const changeRatio = changeRatioBps / 100;
+    //   return (value / changeRatio) * (1 + changeRatio);
+    // };
 
     const validated = allPortfolioDetailedListSchema.safeParse(
       alls.map((data) => {
@@ -84,7 +82,7 @@ const memoServiceMock: MemoQueryService = {
             value: data.price * data.exchangeRate * data.amount,
             changesRatio: data.changesRatio,
             accumulatedRatio: data.accumulatedRatio,
-            accumulatedValue: getAccumulatedValue(
+            accumulatedValue: calcAccuValFromChangeInfo(
               data.price * data.exchangeRate * data.amount,
               data.changesRatio
             ),
@@ -92,10 +90,52 @@ const memoServiceMock: MemoQueryService = {
         return data;
       })
     );
-    console.log('all portoflios in mock service', alls, validated);
+
+    return makeSafeMockReturn(validated);
+  },
+  getMemoFormById: async (memoId: string) => {
+    const found = mockDB.memo.get(memoId);
+    if (!found) {
+      return makeSafeMockReturn(
+        { success: false, error: {} as ZodError<any> },
+        { status: 404, details: 'Actual Not Found' }
+      );
+    }
+
+    const linkedPortfolio:
+      | ReturnType<typeof portfoliosDB.actuals.get>
+      | undefined =
+      found.type === 'actual' && found.linkedPortfolio
+        ? portfoliosDB.actuals.get(found.linkedPortfolio)
+        : undefined;
+
+    const validated = memoFormSchema.safeParse({
+      ...found,
+      memoType: found.type,
+      linkedPortfolioInfo: linkedPortfolio
+        ? {
+            ...linkedPortfolio,
+            value:
+              linkedPortfolio.price *
+              linkedPortfolio.amount *
+              linkedPortfolio.exchangeRate,
+            accumulatedValue: calcAccuValFromChangeInfo(
+              linkedPortfolio.price *
+                linkedPortfolio.amount *
+                linkedPortfolio.exchangeRate,
+              linkedPortfolio.accumulatedRatio
+            ),
+            assetDescription: linkedPortfolio.assetDescription || '',
+          }
+        : undefined,
+    });
+
+    //test
+    console.log('found,linked,validated:', found, linkedPortfolio, validated);
 
     return makeSafeMockReturn(validated);
   },
 };
 
-export const { getAllPortfolios, getMemoRecents } = memoServiceMock;
+export const { getAllPortfolios, getMemoRecents, getMemoFormById } =
+  memoServiceMock;

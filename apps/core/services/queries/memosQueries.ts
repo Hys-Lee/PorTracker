@@ -5,16 +5,21 @@ import { unifiedFetcher } from '@core/libs/api/unified-fetcher';
 import {
   allPortfolioDetailedListSchema,
   memoFormListSchema,
+  memoFormSchema,
+  memoRecentListSchema,
 } from '@core/schemas/features/memos/memos.schema';
 import { PortfolioTypeValue } from '@core/types';
 
 export interface MemoQueryService {
   getMemoRecents: (
     ...params: any
-  ) => Promise<Response<z.infer<typeof memoFormListSchema>>>;
+  ) => Promise<Response<z.infer<typeof memoRecentListSchema>>>;
   getAllPortfolios: (
     ...params: any
   ) => Promise<Response<z.infer<typeof allPortfolioDetailedListSchema>>>;
+  getMemoFormById: (
+    ...params: any
+  ) => Promise<Response<z.infer<typeof memoFormSchema>>>;
 }
 
 const memoServices: MemoQueryService = {
@@ -25,7 +30,7 @@ const memoServices: MemoQueryService = {
     const params = `?portfolioType=${portfolioType}&targetId=${targetId}`;
     const res = await schemaParser(
       unifiedFetcher(`/api/memos/recents${params}`),
-      memoFormListSchema
+      memoRecentListSchema
     );
     return res;
   },
@@ -36,6 +41,14 @@ const memoServices: MemoQueryService = {
     );
     return res;
   },
+  getMemoFormById: async (memoId: string) => {
+    const res = await schemaParser(
+      unifiedFetcher(`/api/memos/${memoId}`),
+      memoFormSchema
+    );
+    return res;
+  },
 };
 
-export const { getMemoRecents, getAllPortfolios } = memoServices;
+export const { getMemoRecents, getAllPortfolios, getMemoFormById } =
+  memoServices;
