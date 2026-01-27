@@ -10,7 +10,10 @@ export const memoOriginSchema = z.object({
   importance: z.enum([...MEMO_IMPORTANCE_VALUES]),
   title: z.string().min(1, '제목은 필수입니다'),
   content: z.string(),
-  tags: z.array(z.string().min(1, '태그 명을 작성하세요')),
+  tags: z.preprocess((val) => {
+    if (typeof val === 'string') return val.split(',').filter((str) => !!str); // 빈 문자열 지우기
+    return val;
+  }, z.array(z.string().min(1, '태그 명을 작성하세요'))),
   evaluation: z.enum([...MEMO_EVALUATION_VALUES]),
   date: z
     .string()

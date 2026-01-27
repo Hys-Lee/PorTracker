@@ -4,11 +4,14 @@ import * as mockPortfolioQueryServices from './queries/portfoliosQueries';
 import * as mockMemoQueryServices from './queries/memosQueries';
 
 import * as mockPortfolioActionServices from './actions/portfoliosActions';
+import * as mockMemoActionServices from './actions/memosActions';
+
 import { branchFetchService } from './utils';
 const mockTotalServices = {
   ...mockPortfolioQueryServices,
   ...mockMemoQueryServices,
   ...mockPortfolioActionServices,
+  ...mockMemoActionServices,
 };
 const branchedMockServices = branchFetchService(mockTotalServices, reals);
 
@@ -25,9 +28,15 @@ export const {
   postActualForm,
   updateActualForm,
   tmpAction,
+  // memo
+  getAllPortfolios,
+  getMemoFormById,
+  createMemoForm,
+  deleteMemoForm,
+  postMemoForm,
+  updateMemoForm,
 
   // keys
   getMemoRecents,
-  getAllPortfolios,
   memoKeys,
 } = { ...reals, ...branchedMockServices };
