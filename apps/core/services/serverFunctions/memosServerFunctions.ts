@@ -22,9 +22,12 @@ export const postMemoForm = async (
   const formDataObj = Object.fromEntries(formData.entries());
 
   //test
-  console.log('formDataObj: ', formDataObj);
+  // console.log('formDataObj: ', formDataObj);
 
   const validated = memoFormRequestSchema.safeParse(formDataObj);
+
+  //test
+  // console.log('validated in server function:', validated);
 
   if (!validated.success) {
     return {
@@ -33,6 +36,7 @@ export const postMemoForm = async (
         type: 'VALIDATION_ERROR',
         message: 'Invalid FormData',
         details: validated.error.flatten().fieldErrors,
+        payload: { title: formData.get('title') },
       },
       success: false,
     }; //as Response<null, z.inferFlattenedErrors<typeof actualFormRequestSchema>>;

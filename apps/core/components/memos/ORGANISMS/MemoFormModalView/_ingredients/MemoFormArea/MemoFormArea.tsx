@@ -15,7 +15,13 @@ import {
   MEMO_IMPORTANCE_MAP,
   MEMO_IMPORTANCE_VALUES,
 } from '@core/constants';
-import { ComponentProps, Fragment, useEffect, useState } from 'react';
+import {
+  ComponentProps,
+  Fragment,
+  useActionState,
+  useEffect,
+  useState,
+} from 'react';
 import { memoEvaluationSelector } from '@core/utils/renderers/iconSelector';
 import {
   MemoEvaluationValue,
@@ -31,26 +37,96 @@ import {
   copiedMemoFormDataAtom,
   linkedPortfolioInfoAtom,
 } from '@core/stores/memos/memoModal';
+import { dateFormatter } from '@core/utils/helpers/dateFormatter';
+import { PostMemoFormRes } from '@core/services';
 // import { TargetPortfolio } from '@core/types/memos/referenceData';
 
 interface MemoFormAreaProps {
+  id: string;
   tagInfo?: string[];
   tmpPortfoliosInfo: AllPortfolioDetail[];
   initData?: MemoForm;
+  formAction: (
+    actionRes: PostMemoFormRes,
+    formData: FormData
+  ) => Promise<PostMemoFormRes>;
 }
+
+const localAction = (
+  formData: FormData,
+  evaluation: EvaluationsProps['value'],
+  initData: any,
+  tmpPortfoliosInfo: any,
+  internalFormAction: any
+) => {
+  if (evaluation) formData.set('evaluation', evaluation);
+
+  const dotDate = formData.get('date');
+  if (dotDate) {
+    const dashDate = dateFormatter(dotDate as string, 'YYYY-MM-DD', '-');
+    formData.set('date', new Date(dashDate).toISOString());
+  }
+
+  if (formData.get('importance')) {
+    const importance = JSON.parse(
+      formData.get('importance') as string
+    ) as ComponentProps<typeof Dropdown>['defaultValue'];
+
+    importance?.[0]?.value &&
+      formData.set('importance', importance?.[0]?.value);
+  }
+
+  if (formData.get('linkedPortfolioId')) {
+    const linkedPortfolio = JSON.parse(
+      formData.get('linkedPortfolioId') as string
+    ) as ComponentProps<typeof Dropdown>['defaultValue'];
+
+    if (linkedPortfolio?.[0]?.value) {
+      formData.set('linkedPortfolioId', linkedPortfolio?.[0]?.value);
+    } else {
+      formData.delete('linkedPortfolioId');
+    }
+
+    // memotype처러ㅣ
+    (initData?.memoType || linkedPortfolio?.[0]?.index !== undefined) &&
+      formData.set(
+        'memoType',
+        initData?.memoType ||
+          tmpPortfoliosInfo[linkedPortfolio?.[0].index as number].portfolioType
+      );
+  } else {
+    // memoType처리
+    formData.set('memoType', 'event');
+  }
+
+  internalFormAction(formData);
+};
 
 const MemoFormArea = ({
   // importanceInfo,
+  id,
   tmpPortfoliosInfo,
   initData,
   tagInfo,
+  formAction,
 }: MemoFormAreaProps) => {
   const [evaluation, setEvaluation] = useState<EvaluationsProps['value']>(
     initData?.evaluation
   );
 
+  const [res, internalFormAction, isPending] = useActionState(formAction, {
+    data: null,
+    error: { message: '', type: 'VALIDATION_ERROR' },
+    success: false,
+  } as unknown as PostMemoFormRes);
+
   const copiedMemoData = useAtomValue(copiedMemoFormDataAtom);
-  const finalData = copiedMemoData || initData;
+  //test
+  // console.log('copiediMemoData: ', copiedMemoData);
+  const finalData = { ...copiedMemoData, ...initData };
+
+  //test
+  // console.log('finalData: ', finalData, res);
 
   const setSelectedLinkedPortfolio = useSetAtom(linkedPortfolioInfoAtom);
 
@@ -62,14 +138,18 @@ const MemoFormArea = ({
 
   return (
     <form
-      //   id={id}
+      // onSubmit={(e) => {
+      //   e.preventDefault();
+      // }}
+      id={id}
       style={{
         // display: 'flex',
         // flexDirection: 'column',
         // gap: '20px',
         display: 'grid',
         gridTemplateRows: '1fr 1fr 1fr auto 1fr 1fr ',
-        rowGap: '8px',
+        rowGap: '12px',
+        // rowGap: '16px',
         gridTemplateColumns: '1fr',
         color: colors.textNormal,
         // width: '100%',
@@ -77,117 +157,221 @@ const MemoFormArea = ({
         height: '100%',
         justifyContent: 'center',
       }}
+      action={(formData) => {
+        localAction(
+          formData,
+          evaluation,
+          initData,
+          tmpPortfoliosInfo,
+          internalFormAction
+        );
+        // if (evaluation) formData.set('evaluation', evaluation);
+        // const dotDate = formData.get('date');
+        // if (dotDate) {
+        //   const dashDate = dateFormatter(dotDate as string, 'YYYY-MM-DD', '-');
+        //   formData.set('date', new Date(dashDate).toISOString());
+        // }
+        // if (formData.get('importance')) {
+        //   const importance = JSON.parse(
+        //     formData.get('importance') as string
+        //   ) as ComponentProps<typeof Dropdown>['defaultValue'];
+        //   importance?.[0]?.value &&
+        //     formData.set('importance', importance?.[0]?.value);
+        // }
+        // if (formData.get('linkedPortfolioId')) {
+        //   const linkedPortfolio = JSON.parse(
+        //     formData.get('linkedPortfolioId') as string
+        //   ) as ComponentProps<typeof Dropdown>['defaultValue'];
+        //   if (linkedPortfolio?.[0]?.value) {
+        //     formData.set('linkedPortfolioId', linkedPortfolio?.[0]?.value);
+        //   } else {
+        //     formData.delete('linkedPortfolioId');
+        //   }
+        //   // memotype처러ㅣ
+        //   (initData?.memoType || linkedPortfolio?.[0]?.index !== undefined) &&
+        //     formData.set(
+        //       'memoType',
+        //       initData?.memoType ||
+        //         tmpPortfoliosInfo[linkedPortfolio?.[0].index as number]
+        //           .portfolioType
+        //     );
+        // } else {
+        //   // memoType처리
+        //   formData.set('memoType', 'event');
+        // }
+        // internalFormAction(formData);
+      }}
     >
       <div {...stylex.props(formElementStyles.area)}>
         <label {...stylex.props(formElementStyles.label)}>{'제목'}</label>
-        <input
-          defaultValue={finalData?.title}
-          {...stylex.props(inputBase.base, formElementStyles.base)}
-        />
+        <div {...stylex.props(formElementStyles.valueErrorBox)}>
+          <input
+            name="title"
+            key={finalData?.title}
+            defaultValue={res.error?.payload?.title || finalData?.title}
+            // defaultValue={'finalData?.title'}
+            {...stylex.props(inputBase.base, formElementStyles.base)}
+          />
+
+          <span {...stylex.props(formElementStyles.errorMsg)}>
+            {res.error?.details?.title?.[0]}
+          </span>
+        </div>
       </div>
       <div {...stylex.props(formElementStyles.doubleWrapper)}>
         <div {...stylex.props(formElementStyles.area)}>
           <label {...stylex.props(formElementStyles.label)}>날짜</label>
-          <DatePicker
-            defaultValue={finalData?.date}
-            range={false}
-            {...stylex.props(datePickerStyles.base)}
-          />
+          <div {...stylex.props(formElementStyles.valueErrorBox)}>
+            <DatePicker
+              name="date"
+              key={finalData?.date?.toISOString()}
+              defaultValue={finalData?.date}
+              range={false}
+              {...stylex.props(datePickerStyles.base)}
+            />
+            <span {...stylex.props(formElementStyles.errorMsg)}>
+              {res.error?.details?.date?.[0]}
+            </span>
+          </div>
         </div>
         <div {...stylex.props(formElementStyles.area)}>
           <label {...stylex.props(formElementStyles.label)}>중요도</label>
-          <Dropdown
-            multi={false}
-            items={MEMO_IMPORTANCE_VALUES.map((data) => ({
-              value: data,
-              text: MEMO_IMPORTANCE_MAP[data],
-            }))}
-            icon
-            triggerStylex={{
-              ...formElementStyles.base,
-              ...importanceStyles.base,
-            }}
-            defaultValue={
-              finalData?.importance
-                ? [
-                    {
-                      value: finalData.importance,
-                      text: MEMO_IMPORTANCE_MAP[finalData.importance],
-                    },
-                  ]
-                : [{ value: 'normal', text: MEMO_IMPORTANCE_MAP['normal'] }]
-            }
-          />
+          <div {...stylex.props(formElementStyles.valueErrorBox)}>
+            <Dropdown
+              name="importance"
+              multi={false}
+              items={MEMO_IMPORTANCE_VALUES.map((data) => ({
+                value: data,
+                text: MEMO_IMPORTANCE_MAP[data],
+              }))}
+              icon
+              triggerStylex={{
+                ...formElementStyles.base,
+                ...importanceStyles.base,
+              }}
+              key={finalData.importance}
+              defaultValue={
+                finalData?.importance
+                  ? [
+                      {
+                        value: finalData.importance,
+                        text: MEMO_IMPORTANCE_MAP[finalData.importance],
+                      },
+                    ]
+                  : [{ value: 'normal', text: MEMO_IMPORTANCE_MAP['normal'] }]
+              }
+            />
+            <span {...stylex.props(formElementStyles.errorMsg)}>
+              {res.error?.details?.importance?.[0]}
+            </span>
+          </div>
         </div>
       </div>
       <div {...stylex.props(formElementStyles.area)}>
         <label {...stylex.props(formElementStyles.label)}>연결</label>
-        <Dropdown
-          multi={false}
-          items={tmpPortfoliosInfo.map((data, idx) => {
-            if (data.portfolioType === 'actual')
-              return { text: data.assetName, value: data.id };
-            else return { text: data.name, value: data.id };
-          })}
-          icon
-          triggerStylex={{
-            ...formElementStyles.base,
-            ...portfolioLinkStyles.base,
-          }}
-          onValueChange={(linkInfo) => {
-            if (!linkInfo[0]) {
-              setSelectedLinkedPortfolio(undefined);
-              return;
-            }
-            if (linkInfo[0].index !== undefined) {
-              // index가 0일 때도 있으니까..
-              const { portfolioType, ...portfolioData } =
-                tmpPortfoliosInfo[linkInfo[0].index];
+        <div {...stylex.props(formElementStyles.valueErrorBox)}>
+          <Dropdown
+            name="linkedPortfolioId"
+            multi={false}
+            items={tmpPortfoliosInfo.map((data, idx) => {
+              if (data.portfolioType === 'actual')
+                return { text: data.assetName, value: data.id };
+              else return { text: data.name, value: data.id };
+            })}
+            icon
+            triggerStylex={{
+              ...formElementStyles.base,
+              ...portfolioLinkStyles.base,
+            }}
+            onValueChange={(linkInfo) => {
+              if (!linkInfo[0]) {
+                setSelectedLinkedPortfolio(undefined);
+                return;
+              }
+              if (linkInfo[0].index !== undefined) {
+                // index가 0일 때도 있으니까..
+                const { portfolioType, ...portfolioData } =
+                  tmpPortfoliosInfo[linkInfo[0].index];
 
-              // const linkedPortfolioData =
-              //   portfolioType === 'actual'
-              //     ? {
-              //         // type: 'actual' as Extract<MemoTypeValue, 'actual'>,
+                // const linkedPortfolioData =
+                //   portfolioType === 'actual'
+                //     ? {
+                //         // type: 'actual' as Extract<MemoTypeValue, 'actual'>,
 
-              //         ...(portfolioData as ActualPortfolioDetail),
-              //       }
-              //     : {
-              //         // type: 'target' as Extract<MemoTypeValue, 'target'>,
-              //         ...(portfolioData as TargetPortfolioDetail),
-              //       };
-              setSelectedLinkedPortfolio(tmpPortfoliosInfo[linkInfo[0].index]);
+                //         ...(portfolioData as ActualPortfolioDetail),
+                //       }
+                //     : {
+                //         // type: 'target' as Extract<MemoTypeValue, 'target'>,
+                //         ...(portfolioData as TargetPortfolioDetail),
+                //       };
+                setSelectedLinkedPortfolio(
+                  tmpPortfoliosInfo[linkInfo[0].index]
+                );
+              }
+            }}
+            // key={finalData.li}
+            defaultValue={
+              finalData?.linkedPortfolioInfo
+                ? [
+                    {
+                      text: finalData?.linkedPortfolioInfo?.assetName,
+                      value: finalData?.linkedPortfolioInfo?.id,
+                    },
+                  ]
+                : undefined
             }
-          }}
-          // defaultValue={finalData?.linkedId}
-        />
+          />
+          <span {...stylex.props(formElementStyles.errorMsg)}>
+            {res.error?.details?.linkedPortfolioId?.[0]}
+          </span>
+        </div>
       </div>
       <div {...stylex.props(formElementStyles.area)}>
         <label {...stylex.props(formElementStyles.label)}>메모 내용</label>
         <div {...stylex.props(textAreaStyles.wrapper)}>
-          <TextArea
-            externalStylex={textAreaStyles.base}
-            rows={6}
-            defaultValue={finalData?.content}
-          />
+          <div {...stylex.props(formElementStyles.valueErrorBox)}>
+            <TextArea
+              name="content"
+              externalStylex={textAreaStyles.base}
+              rows={6}
+              key={finalData?.content}
+              defaultValue={finalData?.content}
+            />
+            <span {...stylex.props(formElementStyles.errorMsg)}>
+              {res.error?.details?.content?.[0]}
+            </span>
+          </div>
         </div>
         {/* <textarea {...stylex.props(inputBase.base)} /> */}
       </div>
       <div {...stylex.props(formElementStyles.area)}>
         <label {...stylex.props(formElementStyles.label)}>태그</label>
-        <TagInput
-          options={tagInfo?.map((tag) => ({ title: tag, value: tag }))}
-          defaultValue={finalData?.tags}
-          externalStylex={tagStyles.base}
-        />
+        <div {...stylex.props(formElementStyles.valueErrorBox)}>
+          <TagInput
+            name="tags"
+            options={tagInfo?.map((tag) => ({ title: tag, value: tag }))}
+            defaultValue={finalData?.tags}
+            key={finalData?.tags?.join(',')}
+            externalStylex={tagStyles.base}
+          />
+          <span {...stylex.props(formElementStyles.errorMsg)}>
+            {res.error?.details?.tags?.[0]}
+          </span>
+        </div>
       </div>
       <div {...stylex.props(formElementStyles.area)}>
         <label {...stylex.props(formElementStyles.label)}>평가</label>
-        <Evaluations
-          onClick={(value) => {
-            setEvaluation(value);
-          }}
-          value={evaluation}
-        />
+        <div {...stylex.props(formElementStyles.valueErrorBox)}>
+          <Evaluations
+            onClick={(value) => {
+              setEvaluation(value);
+            }}
+            value={evaluation}
+          />
+          <span {...stylex.props(formElementStyles.errorMsg)}>
+            {res.error?.details?.evaluation?.[0]}
+          </span>
+        </div>
       </div>
     </form>
   );
@@ -245,6 +429,21 @@ const formElementStyles = stylex.create({
   },
   label: {
     width: '68px',
+  },
+  valueErrorBox: {
+    display: 'flex',
+    flexDirection: 'column',
+    position: 'relative',
+  },
+  errorMsg: {
+    position: 'absolute',
+    fontSize: '12px',
+    color: colors.loss,
+    bottom: '-14px',
+    right: 0,
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
   },
 });
 

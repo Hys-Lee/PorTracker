@@ -16,21 +16,21 @@ const memoActionsMock: MemoActionService = {
     const newId = uuidV4();
     const linkedPortfolio =
       validatedData.memoType === 'actual'
-        ? portfoliosDB.actuals.get(validatedData.linkedPortfolioId)
+        ? portfoliosDB.actuals.get(validatedData.linkedPortfolioId as string)
         : {};
 
-    if (!linkedPortfolio) {
-      // 원래는 생성하고 unkown이나 temp같은 임시 타입으로 설정시켜줘야 하는데, 일단 우선 에러 내자.
-      return {
-        data: null,
-        error: {
-          type: 'HTTP_ERROR',
-          message: 'Mock Function Error',
-          details: '해당되는 Asset이 존재하지 않습니다!',
-        },
-        success: false,
-      };
-    }
+    // if (!linkedPortfolio) {
+    //   // 원래는 생성하고 unkown이나 temp같은 임시 타입으로 설정시켜줘야 하는데, 일단 우선 에러 내자.
+    //   return {
+    //     data: null,
+    //     error: {
+    //       type: 'HTTP_ERROR',
+    //       message: 'Mock Function Error',
+    //       details: '해당되는 Asset이 존재하지 않습니다!',
+    //     },
+    //     success: false,
+    //   };
+    // }
 
     const newData: Parameters<typeof mockDB.memo.set>[1] = {
       content: validatedData.content,
@@ -65,21 +65,21 @@ const memoActionsMock: MemoActionService = {
   updateMemoForm: async (validatedData) => {
     const linkedPortfolio =
       validatedData.memoType === 'actual'
-        ? portfoliosDB.actuals.get(validatedData.linkedPortfolioId)
+        ? portfoliosDB.actuals.get(validatedData.linkedPortfolioId as string)
         : {};
 
-    if (!linkedPortfolio) {
-      // 원래는 생성하고 unkown이나 temp같은 임시 타입으로 설정시켜줘야 하는데, 일단 우선 에러 내자.
-      return {
-        data: null,
-        error: {
-          type: 'HTTP_ERROR',
-          message: 'Mock Function Error',
-          details: '해당되는 Asset이 존재하지 않습니다!',
-        },
-        success: false,
-      };
-    }
+    // if (!linkedPortfolio) {
+    //   // 원래는 생성하고 unkown이나 temp같은 임시 타입으로 설정시켜줘야 하는데, 일단 우선 에러 내자.
+    //   return {
+    //     data: null,
+    //     error: {
+    //       type: 'HTTP_ERROR',
+    //       message: 'Mock Function Error',
+    //       details: '해당되는 Asset이 존재하지 않습니다!',
+    //     },
+    //     success: false,
+    //   };
+    // }
     const newData: Parameters<typeof mockDB.memo.set>[1] = {
       content: validatedData.content,
       createdAt: new Date().toISOString(),

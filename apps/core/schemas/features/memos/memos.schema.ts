@@ -94,12 +94,12 @@ export const memoFormRequestSchema = z.discriminatedUnion('submitMode', [
   z.object({
     submitMode: z.literal('add'),
     ...memoCreateResponseSchema.omit({}).shape,
-    linkedPortfolioId: actualPortfolioDetailedSchema.shape.id,
+    linkedPortfolioId: actualPortfolioDetailedSchema.shape.id.optional(),
   }),
   z.object({
     submitMode: z.literal('modify'),
     ...memoUpdateResponseSchema.omit({}).shape,
-    linkedPortfolioId: actualPortfolioDetailedSchema.shape.id,
+    linkedPortfolioId: actualPortfolioDetailedSchema.shape.id.optional(),
   }),
   z.object({
     submitMode: z.literal('delete'),

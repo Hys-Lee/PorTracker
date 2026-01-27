@@ -3,7 +3,7 @@ import { assetInfoSchema } from './asset.schema';
 import { CURRENCY_VALUES, TRANSACTION_VALUES } from '@core/constants';
 
 export const actualPortfolioOriginSchema = z.object({
-  id: z.string().uuid('유효한 uuid가 아닙니다'),
+  id: z.string().uuid('유효한 데이터가 아닙니다'),
   assetName: assetInfoSchema.shape.name,
   assetDescription: assetInfoSchema.shape.description,
   assetType: assetInfoSchema.shape.type,
