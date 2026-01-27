@@ -11,6 +11,11 @@ import {
 import * as stylex from '@stylexjs/stylex';
 
 import SegmentControl from '@core/components/shared/MOLECULES/SegmentControl/SegmentControl';
+import { useAtom, useAtomValue } from 'jotai';
+import {
+  copiedMemoFormDataAtom,
+  linkedPortfolioInfoAtom,
+} from '@core/stores/memos/memoModal';
 
 interface ActualFormModalViewProps {
   asClose?: ComponentProps<typeof FormModalFrame>['asClose'];
@@ -29,7 +34,7 @@ const MemoFormModalView = ({
   const [referMode, setReferMode] = useState<
     'portfolioReference' | 'memoReference'
   >('memoReference');
-  //   const [copiedFormData] = useAtom(copiedFormDataAtom);
+  const linkedPortfolioData = useAtomValue(linkedPortfolioInfoAtom); // 선택 안하면 undefined
   return (
     <FormModalFrame
       open={true}
@@ -70,9 +75,9 @@ const MemoFormModalView = ({
             {
               formArea
 
-              //   cloneElement(formArea as ReactElement, {
-              //     key: copiedFormData?.assetInfo.value,
-              //   })
+              // cloneElement(formArea as ReactElement, {
+              //   key: copiedFormData?.id,
+              // })
             }
           </div>
           <div
@@ -95,7 +100,10 @@ const MemoFormModalView = ({
             />
             {referMode === 'portfolioReference'
               ? portfolioReference
-              : memoReference}
+              : // : memoReference}
+                cloneElement(memoReference as ReactElement, {
+                  key: linkedPortfolioData?.id,
+                })}
           </div>
         </section>
         {actionButton}
@@ -133,8 +141,8 @@ const modalStyles = stylex.create({
     display: 'grid',
     gridTemplateColumns: '1fr 1fr',
     gap: '44px',
-    // height: '440px',
-    height: '500px',
+    height: '440px',
+    // height: '500px',
   },
   referenceArea: {
     width: '100%',
