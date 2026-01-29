@@ -13,6 +13,7 @@ import Separator from '@core/components/shared/ATOMS/Separator/Separator';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { nonScorlledOverflowStyles } from '@core/styles/scroll.stylex';
+import { MemoTile } from '@core/schemas/features/memos/memos.schema';
 
 interface MemoTableProps {
   memoData: (TileProps & { memoId: string })[];
@@ -51,18 +52,21 @@ const memoTaleStyles = stylex.create({
     width: '100%',
     display: 'flex',
     flexWrap: 'wrap',
-    gap: '16px',
+    gap: '28px',
   },
 });
 
-interface TileProps {
-  title: string;
-  content: string;
-  importance: MemoImportanceValue;
-  date: Date;
-  type: MemoTypeValue;
-  tags: string[];
-}
+// interface TileProps {
+//   title: string;
+//   content: string;
+//   importance: MemoImportanceValue;
+//   date: Date;
+//   type: MemoTypeValue;
+//   tags: string[];
+// }
+type TileProps = Omit<MemoTile, 'id' | 'memoType'> & {
+  type: MemoTile['memoType'];
+};
 const Tile = ({ content, date, importance, title, type, tags }: TileProps) => {
   return (
     <>

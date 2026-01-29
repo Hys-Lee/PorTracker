@@ -29,20 +29,19 @@ import { CurrencyValue, MemoTypeValue } from '@core/types';
 import { ComponentProps, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { CURRENCY_MAP, MEMO_TYPE_MAP, MEMO_TYPE_VALUES } from '@core/constants';
-import { i } from 'node_modules/vite/dist/node/chunks/moduleRunnerTransport';
 
 type MemoInfo = DropdownItem<MemoTypeValue>;
 type CurrencyInfo = SwitchSelected<CurrencyValue>;
 
 type FilterState = {
-  assets: Array<{ text: string; value: string }>;
+  // assets: Array<{ text: string; value: string }>;
   dates: [Date, Date] | null; // 시작일, 종료일
   memoType: MemoInfo[];
   currency: CurrencyInfo;
 };
 
 type FilterQuery = {
-  assets?: string; // comma separated values
+  // assets?: string; // comma separated values
   startDate?: string; // ISO string
   endDate?: string; // ISO string
   memoType?: string;
@@ -50,7 +49,7 @@ type FilterQuery = {
 };
 
 interface FilterProps {
-  assetInfo: FilterState['assets'];
+  // assetInfo: FilterState['assets'];
   memoTypeInfo: FilterState['memoType'];
   currencyInfo: CurrencyInfo[];
   // init?: FilterState;
@@ -76,13 +75,13 @@ interface FilterProps {
 // };
 
 const getInitFilterState = (
-  assetInfo: FilterProps['assetInfo'],
+  // assetInfo: FilterProps['assetInfo'],
   init: FilterProps['init'],
   memoTypeInfo: FilterProps['memoTypeInfo'],
   currencyInfo: FilterProps['currencyInfo']
 ): FilterState => {
-  const assetInfoMap = new Map<string, FilterState['assets'][number]>();
-  assetInfo.forEach((data) => assetInfoMap.set(data.value, data));
+  // const assetInfoMap = new Map<string, FilterState['assets'][number]>();
+  // assetInfo.forEach((data) => assetInfoMap.set(data.value, data));
 
   //test
   console.log('memotype in getInitFilterState: ', init?.memoType, memoTypeInfo);
@@ -95,12 +94,12 @@ const getInitFilterState = (
   console.log('found memotype: ', !!memoType);
 
   return {
-    assets: init?.assets
-      ? init.assets.split(',').map((value) => ({
-          text: assetInfoMap.get(value)?.text ?? '',
-          value,
-        }))
-      : [],
+    // assets: init?.assets
+    //   ? init.assets.split(',').map((value) => ({
+    //       text: assetInfoMap.get(value)?.text ?? '',
+    //       value,
+    //     }))
+    //   : [],
     dates:
       init?.startDate && init?.endDate
         ? [new Date(init.startDate), new Date(init.endDate)]
@@ -117,7 +116,7 @@ const getInitFilterState = (
 };
 
 const Filter = ({
-  assetInfo,
+  // assetInfo,
   currencyInfo,
   memoTypeInfo,
   init,
@@ -166,7 +165,12 @@ const Filter = ({
   // };
 
   const [filterStates, setFilterStates] = useState<FilterState>(() =>
-    getInitFilterState(assetInfo, init, memoTypeInfo, currencyInfo)
+    getInitFilterState(
+      // assetInfo,
+      init,
+      memoTypeInfo,
+      currencyInfo
+    )
   );
 
   //test
@@ -200,17 +204,12 @@ const Filter = ({
   return (
     <>
       <section {...stylex.props(filterWrapperStyles.base)}>
-        <Dropdown
+        {/* <Dropdown
           multi={true}
           items={assetInfo.map((data) => ({
             value: data.value,
             text: data.text,
           }))}
-          // items={[
-          //   { text: '1', value: '1' },
-          //   { text: '2', value: '2' },
-          //   { text: '3', value: '3' },
-          // ]}
           placeholder={<AssetText />}
           selectedText={
             <AssetText
@@ -218,14 +217,6 @@ const Filter = ({
             />
           }
           triggerStylex={AssetFilterStyles.base}
-          // onValueChange={(values) => {
-          //   //test
-          //   console.log('values in assets: ', values);
-          //   setFilterStates((prev) => ({
-          //     ...prev,
-          //     assets: values,
-          //   }));
-          // }}
           onValueChange={(values) => {
             const valueString = values.map(({ value }) => value).join(',');
             handleFilter('assets', values, [
@@ -233,7 +224,7 @@ const Filter = ({
             ]);
           }}
           defaultValue={filterStates.assets}
-        />
+        /> */}
         <DatePicker
           rootStyleX={DateFilterStyles.base}
           range={true}
@@ -279,37 +270,50 @@ const Filter = ({
             handleFilter(
               'memoType',
               [...data],
-              [{ name: 'memoType', value: data[0]?.value ?? '' }]
+              [
+                { name: 'memoType', value: data[0]?.value ?? '' },
+                ...(data[0]?.value !== 'actual'
+                  ? // actual타입이 아닐 땐 currency 비우기
+                    [
+                      {
+                        name: 'currency',
+                        value: '',
+                      },
+                    ]
+                  : []),
+              ]
             );
           }}
           defaultValue={filterStates.memoType}
         />
-        <label {...stylex.props(switchStyles.wrapper)}>
-          <p {...stylex.props(switchStyles.label)}>
-            <CurrencyIcon width={14} height={14} />
-            <span>{`Currency: `}</span>
-          </p>
-          <Switch
-            // defaultSelected={filterStates.currency}
-            rootStylex={switchStyles.base}
-            // items={[
-            //   { text: '1', value: '1' },
-            //   { text: '2', value: '2' },
-            // ]}
-            items={
-              currencyInfo.map((data) => ({
-                value: data.value,
-                text: data.text,
-              })) as ComponentProps<typeof Switch<CurrencyValue>>['items']
-            }
-            onChange={(value) => {
-              setFilterStates((prev) => ({ ...prev, currency: value }));
-              handleFilter('currency', value, [
-                { name: 'currency', value: value.value },
-              ]);
-            }}
-          />
-        </label>
+        {filterStates.memoType?.[0]?.value === 'actual' && (
+          <label {...stylex.props(switchStyles.wrapper)}>
+            <p {...stylex.props(switchStyles.label)}>
+              <CurrencyIcon width={14} height={14} />
+              <span>{`Currency: `}</span>
+            </p>
+            <Switch
+              // defaultSelected={filterStates.currency}
+              rootStylex={switchStyles.base}
+              // items={[
+              //   { text: '1', value: '1' },
+              //   { text: '2', value: '2' },
+              // ]}
+              items={
+                currencyInfo.map((data) => ({
+                  value: data.value,
+                  text: data.text,
+                })) as ComponentProps<typeof Switch<CurrencyValue>>['items']
+              }
+              onChange={(value) => {
+                setFilterStates((prev) => ({ ...prev, currency: value }));
+                handleFilter('currency', value, [
+                  { name: 'currency', value: value.value },
+                ]);
+              }}
+            />
+          </label>
+        )}
       </section>
     </>
   );
