@@ -2,8 +2,8 @@ import {
   getAllActualPortfolios,
   getAllPortfolios,
   getMemoFormById,
-  postMemoForm,
-} from '@core/services';
+} from '@core/services/server';
+import { postMemoForm } from '@core/services/serverFunctions/memosServerFunctions';
 import MemoFormArea from '../MemoFormModalView/_ingredients/MemoFormArea/MemoFormArea';
 import MemoReference from '../MemoFormModalView/_ingredients/MemoReference/MemoReference';
 import PortfolioReference from '../MemoFormModalView/_ingredients/PortfolioReference/PortfolioReference';
@@ -12,6 +12,10 @@ import StoreProvider from '@core/utils/components/StoreProvider/StoreProvider';
 import { ComponentProps } from 'react';
 import FormActionButton from '@core/components/shared/MOLECULES/FormActionButton/FormActionButton';
 import { PortfolioReferenceData } from '@core/types/memos/referenceData';
+import { getQueryClient } from '@core/libs/tanstack-query/getQueryClient';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { memoKeys } from '@core/services/keys/memoKeys';
+import { getMemoRecents } from '@core/services/server';
 
 interface MemoFormModalProps {
   asClose: ComponentProps<typeof MemoFormModalView>['asClose'];
@@ -25,11 +29,27 @@ const MemoFormModal = async ({ asClose, mode, memoId }: MemoFormModalProps) => {
     // getRelatedMemoByActualId(portfolioId),
   ]);
 
-  //test
-  // console.log('initFormDataRes: ', initFormDataRes);
-
   const formId = 'memo';
   const buttonName = 'submitMode';
+
+  const queryClient = getQueryClient();
+
+  if (
+    initFormDataRes.data?.linkedPortfolioInfo?.id &&
+    initFormDataRes.data?.memoType !== 'event'
+  ) {
+    queryClient.prefetchQuery({
+      queryKey: memoKeys.recents(
+        initFormDataRes.data?.linkedPortfolioInfo.id,
+        initFormDataRes.data.memoType
+      ),
+      queryFn: () =>
+        getMemoRecents(
+          initFormDataRes.data?.linkedPortfolioInfo?.id,
+          initFormDataRes.data.memoType
+        ),
+    });
+  }
 
   return (
     <>
@@ -52,25 +72,27 @@ const MemoFormModal = async ({ asClose, mode, memoId }: MemoFormModalProps) => {
                   formData.set('id', initFormDataRes.data?.id);
                 }
                 const res = await postMemoForm(formData);
-                // console.log('formActionRes: ', JSON.stringify(res));
+                console.log('formActionRes: ', JSON.stringify(res));
                 // res.error?.details;
                 return res;
               }} //
             />
           }
           memoReference={
-            <MemoReference
-              initInfo={
-                initFormDataRes.data?.linkedPortfolioInfo?.id &&
-                initFormDataRes.data?.memoType !== 'event'
-                  ? {
-                      portfolioId:
-                        initFormDataRes.data?.linkedPortfolioInfo?.id,
-                      portfolioType: initFormDataRes.data?.memoType,
-                    }
-                  : undefined
-              }
-            />
+            <HydrationBoundary state={dehydrate(queryClient)}>
+              <MemoReference
+                initInfo={
+                  initFormDataRes.data?.linkedPortfolioInfo?.id &&
+                  initFormDataRes.data?.memoType !== 'event'
+                    ? {
+                        portfolioId:
+                          initFormDataRes.data?.linkedPortfolioInfo?.id,
+                        portfolioType: initFormDataRes.data?.memoType,
+                      }
+                    : undefined
+                }
+              />
+            </HydrationBoundary>
           }
           portfolioReference={
             <PortfolioReference
