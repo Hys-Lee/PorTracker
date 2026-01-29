@@ -1,11 +1,22 @@
 import { http, HttpResponse } from 'msw';
 import {
-  getMemoRecents,
   getAllPortfolios,
   getMemoFormById,
   getMemos,
-} from '../services/queries/memosQueries';
-import { getMemoFormParamsSchema } from '@core/schemas/features/memos/memos.schema';
+} from '../services/server/queries/memosQueries';
+import { getMemoRecents } from '../services/client/queries/memosQueries';
+import {
+  deleteMemoFormParamsSchema,
+  getMemoFormParamsSchema,
+  MemoFormCreateRequest,
+  MemoFormDeleteRequest,
+  MemoFormUpdateRequest,
+} from '@core/schemas/features/memos/memos.schema';
+import {
+  createMemoForm,
+  deleteMemoForm,
+  updateMemoForm,
+} from '../services/server/actions/memosActions';
 
 const API_BASE = process.env.INTERNAL_API_URL || '';
 
@@ -73,6 +84,49 @@ export const memoHandlers = [
 
       return new HttpResponse('server invalid with db', { status: 500 });
     }
+    return HttpResponse.json(validated.data);
+  }),
+
+  /** **POST**  */
+  http.post(`${API_BASE}/api/memos`, async ({ request }) => {
+    const body = await request.json();
+
+    const validated = await createMemoForm(
+      body as unknown as MemoFormCreateRequest
+    );
+    if (!validated.success)
+      return new HttpResponse('server invalid with db', { status: 500 });
+    return HttpResponse.json(validated.data);
+  }),
+
+  /** **PUT** */
+  http.put(`${API_BASE}/api/memos/:memoId`, async ({ params, request }) => {
+    const paramValidation = getMemoFormParamsSchema.safeParse(params);
+    if (!paramValidation.success) {
+      return new HttpResponse('memoId is invalid', { status: 400 });
+    }
+    const { memoId } = paramValidation.data;
+    // params와 body에서의 것이 맞는지 확인해야하나?
+    const body = (await request.json()) as unknown as MemoFormUpdateRequest;
+
+    const validated = await updateMemoForm(body);
+    if (!validated.success)
+      return new HttpResponse('server invalid with db', { status: 500 });
+    return HttpResponse.json(validated.data);
+  }),
+  /** **DELETE** */
+  http.delete(`${API_BASE}/api/memos/:memoId`, async ({ params }) => {
+    const paramValidation = deleteMemoFormParamsSchema.safeParse(params);
+    if (!paramValidation.success) {
+      return new HttpResponse('memoId is invalid', { status: 400 });
+    }
+    const { memoId } = paramValidation.data;
+
+    const validated = await deleteMemoForm({
+      id: memoId,
+    } as unknown as MemoFormDeleteRequest);
+    if (!validated.success)
+      return new HttpResponse('server invalid with db', { status: 500 });
     return HttpResponse.json(validated.data);
   }),
 ];
