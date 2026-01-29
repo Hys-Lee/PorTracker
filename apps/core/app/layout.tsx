@@ -9,6 +9,7 @@ import { colors } from '@core/tokens/colors.stylex';
 import Navbar from './_components/Navbar';
 import Link from 'next/link';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
+import TanstackQueryProvider from '@core/libs/tanstack-query/TanstackQueryProvider';
 
 export const metadata: Metadata = {
   title: 'My App',
@@ -43,7 +44,7 @@ export default function RootLayout({
               </div>
               <Navbar />
             </header>
-            {children}
+            <TanstackQueryProvider>{children}</TanstackQueryProvider>
             {/* <script type="module" src="/src/main.tsx"></script> */}
           </div>
         </AntdRegistry>
