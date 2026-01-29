@@ -3,9 +3,9 @@ import { unifiedFetcher } from '@core/libs/api/unified-fetcher';
 import {
   actualFormSchema,
   actualPortfolioListSchema,
-  assetInfoListSchema,
+  // assetInfoListSchema,
   relatedMemoSchema,
-  transactionTypesListSchema,
+  // transactionTypesListSchema,
   actualRecentListsForAssetsSchema,
 } from '@core/schemas/features/portfolios/portfolios.schema';
 import { schemaParser } from '../shemaParser';
@@ -13,10 +13,10 @@ import { Response } from '@core/types/api';
 import z from 'zod';
 
 export interface ActualPortfolioQueryService {
-  getTransactionTypes: (
-    ...params: any
-  ) => Promise<Response<z.infer<typeof transactionTypesListSchema>>>;
-  getAssets: () => Promise<Response<z.infer<typeof assetInfoListSchema>>>;
+  // getTransactionTypes: (
+  //   ...params: any
+  // ) => Promise<Response<z.infer<typeof transactionTypesListSchema>>>;
+  // getAssets: () => Promise<Response<z.infer<typeof assetInfoListSchema>>>;
   getAllActualPortfolios: (
     ...params: any
   ) => Promise<Response<z.infer<typeof actualPortfolioListSchema>>>;
@@ -32,21 +32,21 @@ export interface ActualPortfolioQueryService {
 }
 
 const actualPortfolioService: ActualPortfolioQueryService = {
-  getTransactionTypes: async () => {
-    const res = await schemaParser(
-      unifiedFetcher('/api/transaction-types'),
-      transactionTypesListSchema
-    );
-    return res;
-  },
+  // getTransactionTypes: async () => {
+  //   const res = await schemaParser(
+  //     unifiedFetcher('/api/transaction-types'),
+  //     transactionTypesListSchema
+  //   );
+  //   return res;
+  // },
 
-  getAssets: async () => {
-    const res = await schemaParser(
-      unifiedFetcher('/api/assets'),
-      assetInfoListSchema
-    );
-    return res;
-  },
+  // getAssets: async () => {
+  //   const res = await schemaParser(
+  //     unifiedFetcher('/api/assets'),
+  //     assetInfoListSchema
+  //   );
+  //   return res;
+  // },
 
   /** Actual */
 
@@ -85,9 +85,9 @@ const actualPortfolioService: ActualPortfolioQueryService = {
 export const {
   getActualPortfolioById,
   getAllActualPortfolios,
-  getAssets,
+  // getAssets,
   getRelatedMemoByMemoId,
-  getTransactionTypes,
+  // getTransactionTypes,
   getActualPortfolioRecents,
 } = actualPortfolioService;
 

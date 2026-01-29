@@ -16,21 +16,21 @@ import { branchFetchService, makeSafeMockReturn } from '../utils';
 import { mockDB as memoDB } from '@core/mocks/db/memoDB';
 
 const actualPortfolioServiceMock: ActualPortfolioQueryService = {
-  getTransactionTypes: async () => {
-    const transactionTypes = Array.from(portfolioDB.transactionTypes.values());
+  // getTransactionTypes: async () => {
+  //   const transactionTypes = Array.from(portfolioDB.transactionTypes.values());
 
-    const validated = transactionTypesListSchema.safeParse(transactionTypes);
+  //   const validated = transactionTypesListSchema.safeParse(transactionTypes);
 
-    return makeSafeMockReturn(validated);
-  },
-  getAssets: async () => {
-    const assets = Array.from(portfolioDB.assets.values()).map((data) => ({
-      ...data,
-    }));
+  //   return makeSafeMockReturn(validated);
+  // },
+  // getAssets: async () => {
+  //   const assets = Array.from(portfolioDB.assets.values()).map((data) => ({
+  //     ...data,
+  //   }));
 
-    const validated = assetInfoListSchema.safeParse(assets);
-    return makeSafeMockReturn(validated);
-  },
+  //   const validated = assetInfoListSchema.safeParse(assets);
+  //   return makeSafeMockReturn(validated);
+  // },
   getAllActualPortfolios: async ({
     assets,
     startDate,
@@ -100,6 +100,9 @@ const actualPortfolioServiceMock: ActualPortfolioQueryService = {
         value: data.amount * data.price * data.exchangeRate,
         assetDescription: data.assetDescription || undefined, // null -> undefined 변환.(bff역할이긴 함)
       }));
+
+    //test
+    console.log('found actulas : ', actuals);
 
     const validated = actualPortfolioListSchema.safeParse(actuals);
     return makeSafeMockReturn(validated);
@@ -200,9 +203,9 @@ const actualPortfolioServiceMock: ActualPortfolioQueryService = {
 export const {
   getActualPortfolioById,
   getAllActualPortfolios,
-  getAssets,
+  // getAssets,
   getRelatedMemoByMemoId,
-  getTransactionTypes,
+  // getTransactionTypes,
   getActualPortfolioRecents,
 } = actualPortfolioServiceMock;
 // export const {

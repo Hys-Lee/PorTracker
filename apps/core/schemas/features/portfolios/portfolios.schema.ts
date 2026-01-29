@@ -32,9 +32,22 @@ export const transactionTypesListSchema = z.array(transactionTypesSchema);
 
 export const assetInfoListSchema = z.array(assetInfoSchema);
 
-export const actualPortfolioSchema = actualPortfolioOriginSchema.extend({
-  value: z.number(),
-});
+export const actualPortfolioSchema = actualPortfolioOriginSchema
+  .pick({
+    accumulatedRatio: true,
+    assetName: true,
+    assetType: true,
+    changesRatio: true,
+    createdAt: true,
+    currency: true,
+    date: true,
+    id: true,
+    transactionType: true,
+    assetDescription: true,
+  })
+  .extend({
+    value: z.number(),
+  });
 // object({
 //   id: z.string().uuid('유효한 uuid가 아닙니다'),
 //   assetName: assetInfoSchema.shape.name,

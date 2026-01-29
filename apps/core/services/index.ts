@@ -1,6 +1,7 @@
 // queries
 export * from './queries/portfoliosQueries';
 export * from './queries/memosQueries';
+export * from './queries/commonQueries';
 
 // actions
 export * from './actions/portfoliosActions';

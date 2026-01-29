@@ -11,11 +11,15 @@ import {
 import {
   getActualPortfolioById,
   getAllActualPortfolios,
-  getAssets,
+  // getAssets,
   getRelatedMemoByMemoId,
-  getTransactionTypes,
+  // getTransactionTypes,
   getActualPortfolioRecents,
 } from '../services/queries/portfoliosQueries';
+import {
+  getAssets,
+  getTransactionTypes,
+} from '../services/queries/commonQueries';
 import {
   createActualForm,
   deleteActualForm,
@@ -46,11 +50,11 @@ export const viewHandlers = [
   http.get(`${API_BASE}/api/portfolios/actuals`, async ({ request }) => {
     const url = new URL(request.url);
 
-    const assets = url.searchParams.get('assets');
-    const startDate = url.searchParams.get('startDate');
-    const endDate = url.searchParams.get('endDate');
-    const transaction = url.searchParams.get('transaction');
-    const currency = url.searchParams.get('currency');
+    const assets = url.searchParams.get('assets') || undefined;
+    const startDate = url.searchParams.get('startDate') || undefined;
+    const endDate = url.searchParams.get('endDate') || undefined;
+    const transaction = url.searchParams.get('transaction') || undefined;
+    const currency = url.searchParams.get('currency') || undefined;
 
     //test
     console.log('transaction in msw: ', transaction);
