@@ -31,6 +31,11 @@ const config: StorybookConfig = {
   staticDirs: ['../public'],
 
   viteFinal: async (config) => {
+    config.define = {
+      ...config.define,
+      'process.env.STORYBOOK': JSON.stringify(true),
+    };
+
     if (config.optimizeDeps) {
       config.optimizeDeps.exclude = [
         ...(config.optimizeDeps.exclude || []),
