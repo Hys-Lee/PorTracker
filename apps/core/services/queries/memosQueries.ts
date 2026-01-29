@@ -7,6 +7,8 @@ import {
   memoFormListSchema,
   memoFormSchema,
   memoRecentListSchema,
+  memoTileListSchema,
+  memoTileSchema,
 } from '@core/schemas/features/memos/memos.schema';
 import { PortfolioTypeValue } from '@core/types';
 
@@ -20,6 +22,9 @@ export interface MemoQueryService {
   getMemoFormById: (
     ...params: any
   ) => Promise<Response<z.infer<typeof memoFormSchema>>>;
+  getMemos: (
+    ...params: any
+  ) => Promise<Response<z.infer<typeof memoTileListSchema>>>;
 }
 
 const memoServices: MemoQueryService = {
@@ -48,7 +53,14 @@ const memoServices: MemoQueryService = {
     );
     return res;
   },
+  getMemos: async (params?: string) => {
+    const res = await schemaParser(
+      unifiedFetcher(`/api/memos${params ? `?${params}` : ''}`),
+      memoTileListSchema
+    );
+    return res;
+  },
 };
 
-export const { getMemoRecents, getAllPortfolios, getMemoFormById } =
+export const { getMemoRecents, getAllPortfolios, getMemoFormById, getMemos } =
   memoServices;

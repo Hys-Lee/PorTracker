@@ -9,6 +9,9 @@ import {
   memoFormListSchema,
   memoFormSchema,
   memoRecentListSchema,
+  MemoTile,
+  memoTileListSchema,
+  memoTileSchema,
 } from '@core/schemas/features/memos/memos.schema';
 import { PortfolioTypeValue } from '@core/types';
 import { calcAccuValFromChangeInfo } from '@core/utils/helpers/calcAccValFromChangeInfo';
@@ -135,7 +138,76 @@ const memoServiceMock: MemoQueryService = {
 
     return makeSafeMockReturn(validated);
   },
+  getMemos: async ({
+    startDate,
+    endDate,
+    memoType,
+    currency,
+  }: {
+    startDate?: string;
+    endDate?: string;
+    memoType?: string;
+    currency?: string;
+  }) => {
+    const memos = Array.from(mockDB.memo.values()).filter((data) => {
+      if (
+        !(
+          !startDate ||
+          new Date(data.date).getTime() >= new Date(startDate).getTime()
+        )
+      )
+        return false;
+
+      if (
+        !(
+          !endDate ||
+          new Date(data.date).getTime() <= new Date(endDate).getTime()
+        )
+      )
+        return false;
+
+      if (!(!memoType || data.type === memoType)) return false;
+
+      const linkedType = memoType === 'actual' ? 'actuals' : 'actuals'; // 일단 actuals만 임시로.
+      if (
+        !(
+          !currency ||
+          (memoType === 'actual' &&
+            portfoliosDB?.[linkedType]?.get(data.linkedPortfolio || '')
+              ?.currency === currency)
+        )
+      )
+        return false;
+
+      return true;
+    });
+
+    //test
+    console.log(
+      '전부 내놔봐: ',
+      Array.from(mockDB.memo.values()),
+      Array.from(portfoliosDB.actuals.values()),
+      memos
+    );
+
+    const validated = memoTileListSchema.safeParse(
+      memos.map((data) => ({
+        content: data.content,
+        date: data.date,
+        id: data.id,
+        importance: data.importance,
+        memoType: data.type,
+        tags: data.tags,
+        title: data.title,
+      }))
+    );
+
+    //test
+    console.log('mock memo qury: ', validated);
+
+    return makeSafeMockReturn(validated);
+  },
 };
 
-export const { getAllPortfolios, getMemoRecents, getMemoFormById } =
+export const { getAllPortfolios, getMemoRecents, getMemoFormById, getMemos } =
   memoServiceMock;

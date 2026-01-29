@@ -54,6 +54,9 @@ export const memoRecentSchema = memoFormSchema.omit({
 });
 export const memoRecentListSchema = z.array(memoRecentSchema);
 
+export const memoTileSchema = memoOriginSchema.omit({ evaluation: true });
+export const memoTileListSchema = z.array(memoTileSchema);
+
 export type ActualPortfolioDetail = z.infer<
   typeof actualPortfolioDetailedSchema
 >;
@@ -65,6 +68,8 @@ export type AllPortfolioDetail = z.infer<typeof allPortfolioDetailedSchema>;
 export type MemoForm = z.infer<typeof memoFormSchema>;
 
 export type MemoRecent = z.infer<typeof memoRecentSchema>;
+
+export type MemoTile = z.infer<typeof memoTileSchema>;
 
 /** PARAMS */
 export const getMemoFormParamsSchema = z.object({

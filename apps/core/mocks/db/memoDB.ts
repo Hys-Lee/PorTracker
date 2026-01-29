@@ -19,7 +19,7 @@ const initMemo = [
       '태그 3',
     ],
     evaluation: 'better' as MemoEvaluationValue,
-    date: new Date('2025-01-25').toISOString(),
+    date: new Date('2026-01-25').toISOString(),
     type: 'actual' as MemoTypeValue,
     linkedPortfolio: linkList[0].portfolio,
   },
@@ -39,7 +39,7 @@ const initMemo = [
       '태그7',
     ],
     evaluation: 'worse' as MemoEvaluationValue,
-    date: new Date('2025-01-25').toISOString(),
+    date: new Date('2026-01-25').toISOString(),
     type: 'target' as MemoTypeValue,
   },
   {
@@ -50,7 +50,7 @@ const initMemo = [
     content: `개 짧을 때`,
     tags: ['태그1'],
     evaluation: 'worse' as MemoEvaluationValue,
-    date: new Date('2025-01-25').toISOString(),
+    date: new Date('2026-01-25').toISOString(),
     type: 'event' as MemoTypeValue,
   },
 ];

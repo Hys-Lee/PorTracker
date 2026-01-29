@@ -1,5 +1,10 @@
 import { http, HttpResponse } from 'msw';
-import { getMemoRecents, getAllPortfolios, getMemoFormById } from '../services';
+import {
+  getMemoRecents,
+  getAllPortfolios,
+  getMemoFormById,
+  getMemos,
+} from '../services/queries/memosQueries';
 import { getMemoFormParamsSchema } from '@core/schemas/features/memos/memos.schema';
 
 const API_BASE = process.env.INTERNAL_API_URL || '';
@@ -34,6 +39,32 @@ export const memoHandlers = [
 
     const validated = await getMemoFormById(memoId);
 
+    if (!validated.success) {
+      if (validated.error.status === 404)
+        return new HttpResponse(validated.error.details ?? 'Not Found', {
+          status: validated.error.status,
+        });
+
+      return new HttpResponse('server invalid with db', { status: 500 });
+    }
+    return HttpResponse.json(validated.data);
+  }),
+  http.get(`${API_BASE}/api/memos`, async ({ request }) => {
+    const url = new URL(request.url);
+
+    const startDate = url.searchParams.get('startDate') || undefined;
+    const endDate = url.searchParams.get('endDate') || undefined;
+    const memoType = url.searchParams.get('memoType') || undefined;
+    const currency = url.searchParams.get('currency') || undefined;
+
+    const validated = await getMemos({
+      startDate,
+      endDate,
+      memoType,
+      currency,
+    });
+    //test
+    console.log('validated in mock api', validated);
     if (!validated.success) {
       if (validated.error.status === 404)
         return new HttpResponse(validated.error.details ?? 'Not Found', {
