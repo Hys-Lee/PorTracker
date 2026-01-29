@@ -12,9 +12,8 @@ import {
   getAssets,
   getRelatedMemoByMemoId,
   getTransactionTypes,
-  postActualForm,
-  tmpAction,
-} from '@core/services';
+} from '@core/services/server';
+import { postActualForm } from '@core/services/serverFunctions/portfoliosServerFunctions';
 // } from '@core/services/queries/portfoliosQueries';
 // } from '@core/mocks/services/queries/portfoliosQueries';
 // import { tmpAction } from '@core/services/actions/tmpActions';

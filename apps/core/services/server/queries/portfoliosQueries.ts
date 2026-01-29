@@ -1,5 +1,5 @@
 import { serverFetch } from '@core/libs/api/server-fetcher';
-import { unifiedFetcher } from '@core/libs/api/unified-fetcher';
+
 import {
   actualFormSchema,
   actualPortfolioListSchema,
@@ -8,7 +8,7 @@ import {
   // transactionTypesListSchema,
   actualRecentListsForAssetsSchema,
 } from '@core/schemas/features/portfolios/portfolios.schema';
-import { schemaParser } from '../shemaParser';
+import { schemaParser } from '../../shemaParser';
 import { Response } from '@core/types/api';
 import z from 'zod';
 
@@ -34,7 +34,7 @@ export interface ActualPortfolioQueryService {
 const actualPortfolioService: ActualPortfolioQueryService = {
   // getTransactionTypes: async () => {
   //   const res = await schemaParser(
-  //     unifiedFetcher('/api/transaction-types'),
+  //     serverFetch('/api/transaction-types'),
   //     transactionTypesListSchema
   //   );
   //   return res;
@@ -42,7 +42,7 @@ const actualPortfolioService: ActualPortfolioQueryService = {
 
   // getAssets: async () => {
   //   const res = await schemaParser(
-  //     unifiedFetcher('/api/assets'),
+  //     serverFetch('/api/assets'),
   //     assetInfoListSchema
   //   );
   //   return res;
@@ -52,7 +52,7 @@ const actualPortfolioService: ActualPortfolioQueryService = {
 
   getAllActualPortfolios: async (params?: string) => {
     const res = await schemaParser(
-      unifiedFetcher(`/api/portfolios/actuals${params ? `?${params}` : ''}`),
+      serverFetch(`/api/portfolios/actuals${params ? `?${params}` : ''}`),
       actualPortfolioListSchema
     );
     return res;
@@ -60,7 +60,7 @@ const actualPortfolioService: ActualPortfolioQueryService = {
 
   getActualPortfolioById: async (actualId: string) => {
     const res = await schemaParser(
-      unifiedFetcher(`/api/portfolios/actuals/${actualId}`),
+      serverFetch(`/api/portfolios/actuals/${actualId}`),
       actualFormSchema
     );
     return res;
@@ -68,14 +68,14 @@ const actualPortfolioService: ActualPortfolioQueryService = {
 
   getRelatedMemoByMemoId: async (memoId: string) => {
     const res = await schemaParser(
-      unifiedFetcher(`/api/memos/related-memos/${memoId}`),
+      serverFetch(`/api/memos/related-memos/${memoId}`),
       relatedMemoSchema
     );
     return res;
   },
   getActualPortfolioRecents: async () => {
     const res = await schemaParser(
-      unifiedFetcher(`/api/portfolios/recents`),
+      serverFetch(`/api/portfolios/recents`),
       actualRecentListsForAssetsSchema
     );
     return res;
@@ -93,7 +93,7 @@ export const {
 
 // export const getTransactionTypes = async () => {
 //   const res = await schemaParser(
-//     unifiedFetcher('/api/transaction-types'),
+//     serverFetch('/api/transaction-types'),
 //     transactionTypesListSchema
 //   );
 //   return res;
@@ -101,7 +101,7 @@ export const {
 
 // export const getAssets = async () => {
 //   const res = await schemaParser(
-//     unifiedFetcher('/api/assets'),
+//     serverFetch('/api/assets'),
 //     assetInfoListSchema
 //   );
 //   return res;
@@ -109,7 +109,7 @@ export const {
 
 // export const getAllActualPortfolios = async () => {
 //   const res = await schemaParser(
-//     unifiedFetcher('/api/portfolios/actuals'),
+//     serverFetch('/api/portfolios/actuals'),
 //     actualPortfolioListSchema
 //   );
 //   return res;
@@ -117,7 +117,7 @@ export const {
 
 // export const getActualPortfolioById = async (actualId: string) => {
 //   const res = await schemaParser(
-//     unifiedFetcher(`/api/portfolios/actuals/${actualId}`),
+//     serverFetch(`/api/portfolios/actuals/${actualId}`),
 //     actualFormSchema
 //   );
 //   return res;
@@ -125,7 +125,7 @@ export const {
 
 // export const getRelatedMemoByMemoId = async (memoId: string) => {
 //   const res = await schemaParser(
-//     unifiedFetcher(`/api/memos/related-memos/${memoId}`),
+//     serverFetch(`/api/memos/related-memos/${memoId}`),
 //     relatedMemoSchema
 //   );
 //   return res;

@@ -1,6 +1,6 @@
 import MemoReference from '@core/components/portfolios/ORGANISMS/ActualFormModalView/_ingredients/MemoReference/MemoReference';
 import { RelatedMemo } from '@core/schemas/features/portfolios/portfolios.schema';
-import { getRelatedMemoByMemoId } from '@core/services/queries/portfoliosQueries';
+import { getRelatedMemoByMemoId } from '@core/services/server/queries/portfoliosQueries';
 import { colors } from '@core/tokens/colors.stylex';
 import { Suspense, use } from 'react';
 

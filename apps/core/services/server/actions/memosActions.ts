@@ -1,9 +1,10 @@
 'use server';
 
-import { unifiedFetcher } from '@core/libs/api/unified-fetcher';
+// import { serverFetch } from '@core/libs/api/unified-fetcher';
+import { serverFetch } from '@core/libs/api/server-fetcher';
 import { Response } from '@core/types/api';
 import z from 'zod';
-import { schemaParser } from '../shemaParser';
+import { schemaParser } from '../../shemaParser';
 import {
   memoCreateResponseSchema,
   memoDeleteResponseSchema,
@@ -34,7 +35,7 @@ export interface MemoActionService {
 const memoActions: MemoActionService = {
   createMemoForm: async (dataForAdd) => {
     const res = await schemaParser(
-      unifiedFetcher(`/api/memos`, {
+      serverFetch(`/api/memos`, {
         method: 'POST',
         body: JSON.stringify(dataForAdd),
       }),
@@ -45,7 +46,7 @@ const memoActions: MemoActionService = {
 
   updateMemoForm: async (dataForModify) => {
     const res = await schemaParser(
-      unifiedFetcher(`/api/memos/${dataForModify.id}`, {
+      serverFetch(`/api/memos/${dataForModify.id}`, {
         method: 'PUT',
         body: JSON.stringify(dataForModify),
       }),
@@ -56,7 +57,7 @@ const memoActions: MemoActionService = {
 
   deleteMemoForm: async (dataForDelete) => {
     const res = await schemaParser(
-      unifiedFetcher(`/api/memos/${dataForDelete.id}`, {
+      serverFetch(`/api/memos/${dataForDelete.id}`, {
         method: 'DELETE',
       }),
       memoDeleteResponseSchema

@@ -1,7 +1,7 @@
 import { mockDB } from '@core/mocks/db/memoDB';
 import { mockDB as portfoliosDB } from '@core/mocks/db/portfoliosDB';
-import { MemoQueryService } from '@core/services';
-import { makeSafeMockReturn } from '../utils';
+import { MemoServerQueryService } from '@core/services/server';
+import { makeSafeMockReturn } from '../../utils';
 import z, { ZodError } from 'zod';
 import {
   allPortfolioDetailedListSchema,
@@ -15,42 +15,9 @@ import {
 } from '@core/schemas/features/memos/memos.schema';
 import { PortfolioTypeValue } from '@core/types';
 import { calcAccuValFromChangeInfo } from '@core/utils/helpers/calcAccValFromChangeInfo';
+import { getMemoRecents as getMemoRecentsOnClient } from '../../client/queries/memosQueries';
 
-const memoServiceMock: MemoQueryService = {
-  getMemoRecents: async (
-    targetId?: string,
-    portfolioType?: PortfolioTypeValue
-  ) => {
-    // if (!targetId || !portfolioType)
-    //   return { data: [], success: true, error: null };
-    const found = Array.from(mockDB.memo.values())
-      .filter((memo) => {
-        return (
-          memo.type === (portfolioType || 'event') &&
-          memo.linkedPortfolio === targetId
-        );
-      })
-      .slice(0, 5);
-
-    if (found.length <= 0) {
-      return { data: [], error: null, success: true };
-    }
-
-    const validated = memoRecentListSchema.safeParse(
-      found.map((data) => ({
-        id: data.id,
-        importance: data.importance,
-        date: data.date,
-        title: data.title,
-        content: data.content,
-        tags: data.tags,
-        evaluation: data.evaluation,
-        memoType: data.type,
-      }))
-    );
-
-    return makeSafeMockReturn(validated);
-  },
+const memoServiceMock: MemoServerQueryService = {
   getAllPortfolios: async () => {
     const actuals = Array.from(portfoliosDB.actuals.values()).map((data) => ({
       ...data,
@@ -207,7 +174,8 @@ const memoServiceMock: MemoQueryService = {
 
     return makeSafeMockReturn(validated);
   },
+  getMemoRecents: getMemoRecentsOnClient,
 };
 
-export const { getAllPortfolios, getMemoRecents, getMemoFormById, getMemos } =
+export const { getMemoRecents, getAllPortfolios, getMemoFormById, getMemos } =
   memoServiceMock;

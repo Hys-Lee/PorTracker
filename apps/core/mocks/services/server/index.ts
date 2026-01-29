@@ -1,4 +1,4 @@
-import * as reals from '../../services';
+import * as reals from '../../../services/server';
 
 import * as mockPortfolioQueryServices from './queries/portfoliosQueries';
 import * as mockMemoQueryServices from './queries/memosQueries';
@@ -7,7 +7,7 @@ import * as mockCommonQueryServices from './queries/commonQueries';
 import * as mockPortfolioActionServices from './actions/portfoliosActions';
 import * as mockMemoActionServices from './actions/memosActions';
 
-import { branchFetchService } from './utils';
+import { branchFetchService } from '../utils';
 const mockTotalServices = {
   ...mockCommonQueryServices,
   ...mockPortfolioQueryServices,
@@ -34,19 +34,14 @@ export const {
   getActualPortfolioRecents,
   createActualForm,
   deleteActualForm,
-  postActualForm,
   updateActualForm,
-  tmpAction,
+
   // memo
   getAllPortfolios,
   getMemoFormById,
   createMemoForm,
   deleteMemoForm,
-  postMemoForm,
   updateMemoForm,
   getMemos,
-
-  // keys
   getMemoRecents,
-  memoKeys,
 } = { ...reals, ...branchedMockServices };

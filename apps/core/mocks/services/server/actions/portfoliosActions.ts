@@ -8,9 +8,9 @@ import {
   ActualFormUpdateResponse,
   actualUpdateResponseSchema,
 } from '@core/schemas/features/portfolios/portfolios.schema';
-import type { ActualPortfolioActionService } from '@core/services/actions/portfoliosActions';
+import type { ActualPortfolioActionService } from '@core/services/server/actions/portfoliosActions';
 import { v4 as uuidV4 } from 'uuid';
-import { branchFetchService, makeSafeMockReturn } from '../utils';
+import { branchFetchService, makeSafeMockReturn } from '../../utils';
 import { Response } from '@core/types/api';
 
 const actualPortfolioActionsMock: ActualPortfolioActionService = {

@@ -12,7 +12,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { transactionIconSelector } from '@core/utils/renderers/iconSelector';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { getAllActualPortfolios } from '@core/services';
+import { getAllActualPortfolios } from '@core/services/server';
 
 interface ActualTableProps {
   actualData: Omit<RowProps, 'onClick'>[];

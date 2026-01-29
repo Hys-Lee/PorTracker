@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import MemoFormModal from './MemoFormModal';
 import StoreProvider from '@core/utils/components/StoreProvider/StoreProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { memoKeys } from '@core/services';
+import { memoKeys } from '@core/services/keys/memoKeys';
 import { mockDB } from '@core/mocks/db/memoDB';
 
 const meta: Meta<typeof MemoFormModal> = {

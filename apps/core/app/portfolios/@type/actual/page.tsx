@@ -8,7 +8,7 @@ import {
   getAllActualPortfolios,
   getTransactionTypes,
   getAssets,
-} from '@core/services';
+} from '@core/services/server';
 import Link from 'next/link';
 import ActualTable from '@core/components/portfolios/ORGANISMS/ActualTable/ActualTable';
 import { Suspense } from 'react';

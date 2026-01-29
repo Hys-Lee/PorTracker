@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import MemoReference, { MemoRecents } from './MemoReference';
+import MemoReference from './MemoReference';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-// import { memoKeys } from '../../../../../../services';
-import { memoKeys } from '@core/services';
+import { MemoRecent } from '@core/schemas/features/memos/memos.schema';
+import { memoKeys } from '@core/services/keys/memoKeys';
 
 const meta: Meta<typeof MemoReference> = {
   component: MemoReference,
@@ -42,7 +42,7 @@ export const Primary: Story = {
         ],
         title: '타이틀입니다',
         id: '1',
-      } as MemoRecents,
+      } as MemoRecent,
       {
         content: `콘텐츠라고 함 만약에 길게 한줄로 쓴다면 어느정도 어떻게 나올 수 있을지는 잘 모르겠지만 대충 이정도 쓰면 한줄은 넘어가지 않을까 싶음.\n그래서\n다음\n줄에\n대해서는\n이렇게\n한\n줄\n씩\n띄워\n봄`,
         date: new Date('2026-01-22'),
@@ -55,7 +55,7 @@ export const Primary: Story = {
         ],
         title: '타이틀입니다2222',
         id: '2',
-      } as MemoRecents,
+      } as MemoRecent,
       {
         content: `콘텐츠라고 함 만약에 길게 한줄로 쓴다면 어느정도 어떻게 나올 수 있을지는 잘 모르겠지만 대충 이정도 쓰면 한줄은 넘어가지 않을까 싶음.\n그래서\n다음\n줄에\n대해서는\n이렇게\n한\n줄\n씩\n띄워\n봄`,
         date: new Date('2026-01-22'),
@@ -69,7 +69,7 @@ export const Primary: Story = {
         title:
           '타이틀입니다33333.아니 타이틀이 만약에 엄청나게 길어버린다면 도대체 ui상으로는 어떻게 뜰지',
         id: '3',
-      } as MemoRecents,
+      } as MemoRecent,
     ]);
 
     return (

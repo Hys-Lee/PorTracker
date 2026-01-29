@@ -1,7 +1,7 @@
 import { Response } from '@core/types/api';
 import z from 'zod';
-import { schemaParser } from '../shemaParser';
-import { unifiedFetcher } from '@core/libs/api/unified-fetcher';
+import { schemaParser } from '../../shemaParser';
+import { serverFetch } from '@core/libs/api/server-fetcher';
 import {
   allPortfolioDetailedListSchema,
   memoFormListSchema,
@@ -11,11 +11,13 @@ import {
   memoTileSchema,
 } from '@core/schemas/features/memos/memos.schema';
 import { PortfolioTypeValue } from '@core/types';
+import type { MemoClientQueryService } from '@core/services/client';
 
-export interface MemoQueryService {
-  getMemoRecents: (
-    ...params: any
-  ) => Promise<Response<z.infer<typeof memoRecentListSchema>>>;
+export interface MemoServerQueryService {
+  getMemoRecents: MemoClientQueryService['getMemoRecents'];
+  // (
+  //   ...params: any
+  // ) => Promise<Response<z.infer<typeof memoRecentListSchema>>>;
   getAllPortfolios: (
     ...params: any
   ) => Promise<Response<z.infer<typeof allPortfolioDetailedListSchema>>>;
@@ -27,35 +29,35 @@ export interface MemoQueryService {
   ) => Promise<Response<z.infer<typeof memoTileListSchema>>>;
 }
 
-const memoServices: MemoQueryService = {
+const memoServices: MemoServerQueryService = {
   getMemoRecents: async (
     targetId?: string,
     portfolioType?: PortfolioTypeValue
   ) => {
     const params = `?portfolioType=${portfolioType}&targetId=${targetId}`;
     const res = await schemaParser(
-      unifiedFetcher(`/api/memos/recents${params}`),
+      serverFetch(`/api/memos/recents${params}`),
       memoRecentListSchema
     );
     return res;
   },
   getAllPortfolios: async () => {
     const res = await schemaParser(
-      unifiedFetcher(`/api/portfolios`),
+      serverFetch(`/api/portfolios`),
       allPortfolioDetailedListSchema
     );
     return res;
   },
   getMemoFormById: async (memoId: string) => {
     const res = await schemaParser(
-      unifiedFetcher(`/api/memos/${memoId}`),
+      serverFetch(`/api/memos/${memoId}`),
       memoFormSchema
     );
     return res;
   },
   getMemos: async (params?: string) => {
     const res = await schemaParser(
-      unifiedFetcher(`/api/memos${params ? `?${params}` : ''}`),
+      serverFetch(`/api/memos${params ? `?${params}` : ''}`),
       memoTileListSchema
     );
     return res;

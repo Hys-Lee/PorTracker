@@ -1,7 +1,6 @@
 'use server';
 
 import { serverFetch } from '@core/libs/api/server-fetcher';
-import { unifiedFetcher } from '@core/libs/api/unified-fetcher';
 import {
   actualCreateResponseSchema,
   actualDeleteResponseSchema,
@@ -20,7 +19,7 @@ import {
 } from '@core/schemas/features/portfolios/portfolios.schema';
 import { Response } from '@core/types/api';
 import z from 'zod';
-import { schemaParser } from '../shemaParser';
+import { schemaParser } from '../../shemaParser';
 
 export interface ActualPortfolioActionService {
   createActualForm: (
@@ -56,7 +55,7 @@ export interface ActualPortfolioActionService {
 const actualPortfolioActions: ActualPortfolioActionService = {
   createActualForm: async (dataForAdd) => {
     const res = await schemaParser(
-      unifiedFetcher(`/api/portfolios/actuals`, {
+      serverFetch(`/api/portfolios/actuals`, {
         method: 'POST',
         body: JSON.stringify(dataForAdd),
       }),
@@ -67,7 +66,7 @@ const actualPortfolioActions: ActualPortfolioActionService = {
 
   updateActualForm: async (dataForModify) => {
     const res = await schemaParser(
-      unifiedFetcher(`/api/portfolios/actuals/${dataForModify.id}`, {
+      serverFetch(`/api/portfolios/actuals/${dataForModify.id}`, {
         method: 'PUT',
         body: JSON.stringify(dataForModify),
       }),
@@ -78,7 +77,7 @@ const actualPortfolioActions: ActualPortfolioActionService = {
 
   deleteActualForm: async (dataForDelete) => {
     const res = await schemaParser(
-      unifiedFetcher(`/api/portfolios/actuals/${dataForDelete.id}`, {
+      serverFetch(`/api/portfolios/actuals/${dataForDelete.id}`, {
         method: 'DELETE',
       }),
       actualDeleteResponseSchema

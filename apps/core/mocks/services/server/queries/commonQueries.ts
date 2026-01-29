@@ -3,8 +3,8 @@ import {
   assetInfoListSchema,
   transactionTypesListSchema,
 } from '@core/schemas/features/portfolios/portfolios.schema';
-import { CommonQueryService } from '@core/services';
-import { makeSafeMockReturn } from '../utils';
+import { CommonQueryService } from '@core/services/server';
+import { makeSafeMockReturn } from '../../utils';
 
 const commonServiceMock: CommonQueryService = {
   getTransactionTypes: async () => {

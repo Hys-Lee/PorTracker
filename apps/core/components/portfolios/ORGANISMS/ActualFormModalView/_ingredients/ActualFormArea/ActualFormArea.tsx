@@ -29,7 +29,7 @@ import {
 } from '@core/stores/portfolios/actualModal';
 import { L } from 'node_modules/msw/lib/core/HttpResponse-Cw4ELwIN.mjs';
 import { dateFormatter } from '@core/utils/helpers/dateFormatter';
-import { PostActualFormRes } from '@core/services';
+import { PostActualFormRes } from '@core/services/serverFunctions/portfoliosServerFunctions';
 
 interface FormAreaProp {
   id: string;

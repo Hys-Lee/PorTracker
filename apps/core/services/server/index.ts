@@ -7,10 +7,5 @@ export * from './queries/commonQueries';
 export * from './actions/portfoliosActions';
 export * from './actions/memosActions';
 
-// server functions
-export * from './serverFunctions/tmpActions';
-export * from './serverFunctions/portfoliosServerFunctions';
-export * from './serverFunctions/memosServerFunctions';
-
 // keys
-export * from './keys/memoKeys';
+// export * from '../keys/memoKeys';

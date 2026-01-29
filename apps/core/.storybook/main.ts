@@ -66,8 +66,12 @@ const config: StorybookConfig = {
       resolve: {
         alias: [
           {
-            find: '@core/services',
-            replacement: path.join(rootDir, './mocks/services'),
+            find: '@core/services/server',
+            replacement: path.join(rootDir, './mocks/services/server'),
+          },
+          {
+            find: '@core/services/client',
+            replacement: path.join(rootDir, './mocks/services/client'),
           },
           {
             // Next.js의 @/ 경로를 apps/core 폴더로 연결

@@ -8,7 +8,11 @@ import {
 } from '@core/schemas/features/memos/memos.schema';
 import { Response } from '@core/types/api';
 import z from 'zod';
-import { createMemoForm, deleteMemoForm, updateMemoForm } from '@core/services';
+import {
+  createMemoForm,
+  deleteMemoForm,
+  updateMemoForm,
+} from '@core/services/server';
 
 export type PostMemoFormRes = Response<
   MemoFormCreateResponse | MemoFormUpdateResponse | MemoFormDeleteResponse,

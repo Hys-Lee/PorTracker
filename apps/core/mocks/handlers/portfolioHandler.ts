@@ -15,16 +15,16 @@ import {
   getRelatedMemoByMemoId,
   // getTransactionTypes,
   getActualPortfolioRecents,
-} from '../services/queries/portfoliosQueries';
+} from '../services/server/queries/portfoliosQueries';
 import {
   getAssets,
   getTransactionTypes,
-} from '../services/queries/commonQueries';
+} from '../services/server/queries/commonQueries';
 import {
   createActualForm,
   deleteActualForm,
   updateActualForm,
-} from '../services/actions/portfoliosActions';
+} from '../services/server/actions/portfoliosActions';
 
 const API_BASE = process.env.INTERNAL_API_URL || '';
 
