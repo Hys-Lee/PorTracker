@@ -1,6 +1,8 @@
 import z from 'zod';
 import { actualPortfolioOriginSchema } from '../../domains/actualPortfolio.schema';
 import { memoOriginSchema } from '@core/schemas/domains/memo.schema';
+import { targetPortfolioOriginSchema } from '@core/schemas/domains/targetPortfolio.schema';
+import { PORTFOLIO_TYPE_VALUES } from '@core/constants';
 
 export const actualPortfolioDetailedSchema = actualPortfolioOriginSchema.extend(
   {
@@ -13,18 +15,19 @@ export const actualPortfolioDetailedListSchema = z.array(
 );
 
 /** 임시 target detail schema */
-export const targetPortfolioDetailedSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  assetsList: z.array(
-    z.object({
-      assetName: z.string(),
-      assetType: z.string(),
-      currentRatioBps: z.number(),
-      ratioDeltaBps: z.number(),
-    })
-  ),
-});
+export const targetPortfolioDetailedSchema = targetPortfolioOriginSchema;
+// z.object({
+//   id: z.string(),
+//   name: z.string(),
+//   assetsList: z.array(
+//     z.object({
+//       assetName: z.string(),
+//       assetType: z.string(),
+//       currentRatioBps: z.number(),
+//       ratioDeltaBps: z.number(),
+//     })
+//   ),
+// });
 
 export const allPortfolioDetailedSchema = z.discriminatedUnion(
   'portfolioType',
@@ -76,16 +79,28 @@ export const getMemoFormParamsSchema = z.object({
   memoId: z.string().uuid('유효한 uuid가 아닙니다'),
 });
 
+export const deleteMemoFormParamsSchema = z.object({
+  memoId: z.string().uuid('유효한 uuid가 아닙니다'),
+});
+
 /** RES for REQ */
 
-export const memoCreateResponseSchema = memoFormSchema.omit({
-  id: true,
-  linkedPortfolioInfo: true,
-});
+export const memoCreateResponseSchema = memoFormSchema
+  .omit({
+    id: true,
+    linkedPortfolioInfo: true,
+  })
+  .extend({
+    linkedPortfolioId: z.string().uuid().optional(),
+  });
 
-export const memoUpdateResponseSchema = memoFormSchema.omit({
-  linkedPortfolioInfo: true,
-});
+export const memoUpdateResponseSchema = memoFormSchema
+  .omit({
+    linkedPortfolioInfo: true,
+  })
+  .extend({
+    linkedPortfolioId: z.string().uuid().optional(),
+  });
 
 export const memoDeleteResponseSchema = memoFormSchema.pick({ id: true });
 
@@ -96,16 +111,22 @@ export type MemoFormDeleteResponse = z.infer<typeof memoDeleteResponseSchema>;
 /** REQ */
 
 export const memoFormRequestSchema = z.discriminatedUnion('submitMode', [
-  z.object({
-    submitMode: z.literal('add'),
-    ...memoCreateResponseSchema.omit({}).shape,
-    linkedPortfolioId: actualPortfolioDetailedSchema.shape.id.optional(),
-  }),
-  z.object({
-    submitMode: z.literal('modify'),
-    ...memoUpdateResponseSchema.omit({}).shape,
-    linkedPortfolioId: actualPortfolioDetailedSchema.shape.id.optional(),
-  }),
+  z
+    .object({
+      submitMode: z.literal('add'),
+      ...memoCreateResponseSchema.omit({}).shape,
+      linkedPortfolioId: actualPortfolioDetailedSchema.shape.id.optional(),
+      linkedPortfolioType: z.enum([...PORTFOLIO_TYPE_VALUES]).optional(),
+    })
+    .omit({ memoType: true }),
+  z
+    .object({
+      submitMode: z.literal('modify'),
+      ...memoUpdateResponseSchema.omit({}).shape,
+      linkedPortfolioId: actualPortfolioDetailedSchema.shape.id.optional(),
+      linkedPortfolioType: z.enum([...PORTFOLIO_TYPE_VALUES]).optional(),
+    })
+    .omit({ memoType: true }),
   z.object({
     submitMode: z.literal('delete'),
     ...memoDeleteResponseSchema.shape,
