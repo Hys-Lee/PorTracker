@@ -27,6 +27,7 @@ import {
   MemoEvaluationValue,
   MemoImportanceValue,
   MemoTypeValue,
+  PortfolioTypeValue,
 } from '@core/types';
 import {
   AllPortfolioDetail,
@@ -38,7 +39,7 @@ import {
   linkedPortfolioInfoAtom,
 } from '@core/stores/memos/memoModal';
 import { dateFormatter } from '@core/utils/helpers/dateFormatter';
-import { PostMemoFormRes } from '@core/services';
+import { PostMemoFormRes } from '@core/services/serverFunctions/memosServerFunctions';
 // import { TargetPortfolio } from '@core/types/memos/referenceData';
 
 interface MemoFormAreaProps {
@@ -83,6 +84,9 @@ const localAction = (
 
     if (linkedPortfolio?.[0]?.value) {
       formData.set('linkedPortfolioId', linkedPortfolio?.[0]?.value);
+
+      // 임시 링크 포폴 타입 처리
+      formData.set('linkedPortfolioType', 'actual' as PortfolioTypeValue);
     } else {
       formData.delete('linkedPortfolioId');
     }
