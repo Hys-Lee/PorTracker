@@ -8,3 +8,5 @@ const mswMocking = async () => {
     console.log('[MSW] Client-side mocking enabled.');
   }
 };
+
+mswMocking();
