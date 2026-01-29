@@ -39,7 +39,7 @@ export async function clientFetch(
     const data = await res.json();
     return { success: true, error: null, data };
   } catch (error) {
-    console.error(`[client-fetcher Error]`, error);
+    console.error(`[client-fetcher Error]`, url, error);
     return handleApiError(error);
   }
 }

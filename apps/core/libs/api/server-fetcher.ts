@@ -43,7 +43,7 @@ export async function serverFetch(
 
     return { success: true, error: null, data };
   } catch (error) {
-    console.error('next error: ', url, error);
+    console.error('[server-fetcher Error]: ', url, error);
     return handleApiError(error);
   }
 }
