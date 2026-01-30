@@ -40,13 +40,13 @@ const MemosPage = async ({
     memoModalTarget && memoModalTarget !== 'new' ? memoModalTarget : undefined;
   /** searchParams로 filter초기 데이터 처리 */
 
-  //tset
-  console.log(
-    'moempage modal info: ',
-    memoModalTarget,
-    modalCase,
-    memoModalTargetId
-  );
+  const makeHref = (keyValueArr: { key: string; value: string }[]) => {
+    keyValueArr.forEach(({ key, value }) => {
+      params.set(key, value);
+    });
+
+    return `?${params.toString()}`;
+  };
 
   const makeModalCloseHref = () => {
     params.delete(modalParam);
@@ -73,6 +73,21 @@ const MemosPage = async ({
               ]}
               //   init={}
             />
+            <Link
+              href={makeHref([{ key: modalParam, value: 'new' }])}
+              {...stylex.props(pageStyles.addLink)}
+            >
+              <Button
+                variant="solid"
+                // variant="outlined"
+                rounded="normal"
+                buttonStylex={pageStyles.addBtn}
+              >
+                {'+'}
+                {/* <PlusIcon width={16} height={16} /> */}
+                {/* {'추가하기'} */}
+              </Button>
+            </Link>
           </Suspense>
         </div>
         <Suspense>
