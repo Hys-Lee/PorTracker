@@ -11,7 +11,7 @@ import { ScrollArea } from 'radix-ui';
 import TagPill from '@core/components/shared/ATOMS/TagPill/TagPill';
 import MemoPill from '@core/components/shared/ATOMS/MemoPill/MemoPill';
 import { dateFormatter } from '@core/utils/helpers/dateFormatter';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { memoKeys } from '@core/services/keys/memoKeys';
 import { getMemoRecents } from '@core/services/client';
 import { memoEvaluationSelector } from '@core/utils/renderers/iconSelector';
@@ -35,7 +35,7 @@ import { MemoRecent } from '@core/schemas/features/memos/memos.schema';
 
 interface MemoReferenceProps {
   initInfo?: {
-    portfolioId: string;
+    targetId: string;
     portfolioType: PortfolioTypeValue;
   };
 }
@@ -45,12 +45,16 @@ const MemoReference = ({ initInfo }: MemoReferenceProps) => {
 
   const { data: recentsRes } = useQuery({
     queryKey: memoKeys.recents(
-      linkedPortfolioData?.id || initInfo?.portfolioId,
+      linkedPortfolioData?.portfolioType === 'actual'
+        ? linkedPortfolioData?.assetId
+        : linkedPortfolioData?.id || initInfo?.targetId,
       linkedPortfolioData?.portfolioType || initInfo?.portfolioType
     ),
     queryFn: () => {
       return getMemoRecents(
-        linkedPortfolioData?.id || initInfo?.portfolioId,
+        linkedPortfolioData?.portfolioType === 'actual'
+          ? linkedPortfolioData?.assetId
+          : linkedPortfolioData?.id || initInfo?.targetId,
         linkedPortfolioData?.portfolioType || initInfo?.portfolioType
       );
     },

@@ -28,6 +28,9 @@ const memoServiceMock: MemoServerQueryService = {
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
 
+    //test
+    // console.log('클라이언트에선 또 다른가? : ', actuals);
+
     // const getAccumulatedValue = (value: number, changeRatioBps: number) => {
     //   const changeRatio = changeRatioBps / 100;
     //   return (value / changeRatio) * (1 + changeRatio);
@@ -39,6 +42,7 @@ const memoServiceMock: MemoServerQueryService = {
           return {
             amount: data.amount,
             assetName: data.assetName,
+            assetId: data.assetId,
             portfolioType: 'actual',
             assetType: data.assetType,
             createdAt: data.createdAt,

@@ -7,6 +7,7 @@ export const actualPortfolioOriginSchema = z.object({
   assetName: assetInfoSchema.shape.name,
   assetDescription: assetInfoSchema.shape.description,
   assetType: assetInfoSchema.shape.type,
+  assetId: assetInfoSchema.shape.id,
   date: z
     .string()
     .datetime({ message: '유효한 날짜가 아닙니다' })

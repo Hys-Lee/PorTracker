@@ -9,20 +9,28 @@ import MemoReference from '../MemoFormModalView/_ingredients/MemoReference/MemoR
 import PortfolioReference from '../MemoFormModalView/_ingredients/PortfolioReference/PortfolioReference';
 import MemoFormModalView from '../MemoFormModalView/MemoFormModalView';
 import StoreProvider from '@core/utils/components/StoreProvider/StoreProvider';
-import { ComponentProps } from 'react';
+import { ComponentProps, Suspense } from 'react';
 import FormActionButton from '@core/components/shared/MOLECULES/FormActionButton/FormActionButton';
 import { PortfolioReferenceData } from '@core/types/memos/referenceData';
 import { getQueryClient } from '@core/libs/tanstack-query/getQueryClient';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { memoKeys } from '@core/services/keys/memoKeys';
 import { getMemoRecents } from '@core/services/server';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 interface MemoFormModalProps {
   asClose: ComponentProps<typeof MemoFormModalView>['asClose'];
   mode: 'add' | 'modify';
   memoId?: string;
+  modalCloseHref: string;
 }
-const MemoFormModal = async ({ asClose, mode, memoId }: MemoFormModalProps) => {
+const MemoFormModal = async ({
+  asClose,
+  mode,
+  memoId,
+  modalCloseHref,
+}: MemoFormModalProps) => {
   const [tmpAllPortfoliosRes, initFormDataRes] = await Promise.all([
     getAllPortfolios(),
     getMemoFormById(memoId),
@@ -40,12 +48,16 @@ const MemoFormModal = async ({ asClose, mode, memoId }: MemoFormModalProps) => {
   ) {
     queryClient.prefetchQuery({
       queryKey: memoKeys.recents(
-        initFormDataRes.data?.linkedPortfolioInfo.id,
+        initFormDataRes.data.memoType === 'actual'
+          ? initFormDataRes.data?.linkedPortfolioInfo?.assetId
+          : initFormDataRes.data.linkedPortfolioInfo?.id,
         initFormDataRes.data.memoType
       ),
       queryFn: () =>
         getMemoRecents(
-          initFormDataRes.data?.linkedPortfolioInfo?.id,
+          initFormDataRes.data.memoType === 'actual'
+            ? initFormDataRes.data?.linkedPortfolioInfo?.assetId
+            : initFormDataRes.data.linkedPortfolioInfo?.id,
           initFormDataRes.data.memoType
         ),
     });
@@ -74,6 +86,11 @@ const MemoFormModal = async ({ asClose, mode, memoId }: MemoFormModalProps) => {
                 const res = await postMemoForm(formData);
                 console.log('formActionRes: ', JSON.stringify(res));
                 // res.error?.details;
+
+                if (res.success) {
+                  redirect(modalCloseHref);
+                }
+
                 return res;
               }} //
             />
@@ -82,11 +99,15 @@ const MemoFormModal = async ({ asClose, mode, memoId }: MemoFormModalProps) => {
             <HydrationBoundary state={dehydrate(queryClient)}>
               <MemoReference
                 initInfo={
-                  initFormDataRes.data?.linkedPortfolioInfo?.id &&
+                  (initFormDataRes?.data?.linkedPortfolioInfo?.assetId ||
+                    initFormDataRes.data?.linkedPortfolioInfo?.id) &&
                   initFormDataRes.data?.memoType !== 'event'
                     ? {
-                        portfolioId:
-                          initFormDataRes.data?.linkedPortfolioInfo?.id,
+                        targetId:
+                          initFormDataRes.data.memoType === 'actual'
+                            ? initFormDataRes.data.linkedPortfolioInfo.assetId
+                            : initFormDataRes.data.linkedPortfolioInfo.id,
+
                         portfolioType: initFormDataRes.data?.memoType,
                       }
                     : undefined
@@ -109,7 +130,8 @@ const MemoFormModal = async ({ asClose, mode, memoId }: MemoFormModalProps) => {
               }
             />
           }
-          asClose={asClose}
+          // asClose={asClose}
+          asClose={<Link href={modalCloseHref} scroll={false} replace />}
           actionButton={
             <FormActionButton mode={mode} formId={formId} name={buttonName} />
           }
