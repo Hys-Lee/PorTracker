@@ -27,7 +27,7 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import {
   copiedMemoFormDataAtom,
   linkedPortfolioInfoAtom,
-} from '@core/stores/memos/memoModal';
+} from '@core/stores/memos/memoModalStore';
 import { MemoRecent } from '@core/schemas/features/memos/memos.schema';
 
 // export type MemoRecent = MemoRecent;

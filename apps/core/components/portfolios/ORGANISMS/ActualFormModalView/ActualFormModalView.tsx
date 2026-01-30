@@ -23,7 +23,7 @@ import { CurrencyValue, TransactionValue } from '@core/types';
 import SegmentControl from '@core/components/shared/MOLECULES/SegmentControl/SegmentControl';
 import FormArea from './_ingredients/ActualFormArea/ActualFormArea';
 import { useAtom } from 'jotai';
-import { copiedActualPortfolioFormDataAtom } from '@core/stores/portfolios/actualModal';
+import { copiedActualPortfolioFormDataAtom } from '@core/stores/portfolios/actualModalStore';
 
 interface ActualFormModalViewProps {
   asClose?: ComponentProps<typeof FormModalFrame>['asClose'];

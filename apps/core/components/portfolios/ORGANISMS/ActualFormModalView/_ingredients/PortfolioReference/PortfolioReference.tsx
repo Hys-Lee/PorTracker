@@ -13,7 +13,7 @@ import { useAtom, useSetAtom } from 'jotai';
 import {
   copiedActualPortfolioFormDataAtom,
   selectedAssetAtom,
-} from '@core/stores/portfolios/actualModal';
+} from '@core/stores/portfolios/actualModalStore';
 
 interface PortfolioReferenceProps {
   recentsInfo: {

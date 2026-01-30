@@ -15,7 +15,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import {
   copiedMemoFormDataAtom,
   linkedPortfolioInfoAtom,
-} from '@core/stores/memos/memoModal';
+} from '@core/stores/memos/memoModalStore';
 
 interface ActualFormModalViewProps {
   asClose?: ComponentProps<typeof FormModalFrame>['asClose'];
