@@ -1,4 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
+import { faker } from '@faker-js/faker';
 import {
   CurrencyValue,
   MemoEvaluationValue,
@@ -10,6 +11,9 @@ import { mockDB as SharedDB } from './sharedDB';
 
 // type AssetInfo = z.infer<typeof assetInfoSchema>;
 // type Portfolio = z.infer<typeof actualPortfolioSchema>;
+
+faker.seed(Array.from('portfolios').map((c) => c.charCodeAt(0))); // 서버/클라 환경의 db 모두 동일 값으로 주기 위해
+const uuidv4 = faker.string.uuid;
 
 const initialAssets = [
   {
