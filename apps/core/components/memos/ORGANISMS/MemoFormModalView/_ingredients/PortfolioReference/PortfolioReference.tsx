@@ -20,7 +20,7 @@ import type {
   // TargetReferenceProps,
 } from '@core/types/memos/referenceData';
 import { useAtom } from 'jotai';
-import { linkedPortfolioInfoAtom } from '@core/stores/memos/memoModal';
+import { linkedPortfolioInfoAtom } from '@core/stores/memos/memoModalStore';
 import { calcDiffValFromRatio } from '@core/utils/helpers/calcDiffValFromRatio';
 import { ActualPortfolioDetail } from '@core/schemas/features/memos/memos.schema';
 
@@ -34,9 +34,10 @@ interface PortfolioReferenceProps {
 }
 
 const PortfolioReference = ({ init }: PortfolioReferenceProps) => {
-  const [lilnkedPortfolioInfo] = useAtom(linkedPortfolioInfoAtom);
+  const [linkedPortfolioInfo] = useAtom(linkedPortfolioInfoAtom);
 
-  const finalData = lilnkedPortfolioInfo ?? init;
+  const finalData =
+    linkedPortfolioInfo !== undefined ? linkedPortfolioInfo : init;
 
   //test
   // console.log('init, finalDta: ', init, finalData);

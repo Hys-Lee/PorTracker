@@ -37,7 +37,7 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
   copiedMemoFormDataAtom,
   linkedPortfolioInfoAtom,
-} from '@core/stores/memos/memoModal';
+} from '@core/stores/memos/memoModalStore';
 import { dateFormatter } from '@core/utils/helpers/dateFormatter';
 import { PostMemoFormRes } from '@core/services/serverFunctions/memosServerFunctions';
 // import { TargetPortfolio } from '@core/types/memos/referenceData';
@@ -289,7 +289,7 @@ const MemoFormArea = ({
             }}
             onValueChange={(linkInfo) => {
               if (!linkInfo[0]) {
-                setSelectedLinkedPortfolio(undefined);
+                setSelectedLinkedPortfolio(null);
                 return;
               }
               if (linkInfo[0].index !== undefined) {
