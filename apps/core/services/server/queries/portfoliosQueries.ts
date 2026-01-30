@@ -7,6 +7,7 @@ import {
   relatedMemoSchema,
   // transactionTypesListSchema,
   actualRecentListsForAssetsSchema,
+  relatedMemoListSchema,
 } from '@core/schemas/features/portfolios/portfolios.schema';
 import { schemaParser } from '../../shemaParser';
 import { Response } from '@core/types/api';
@@ -26,6 +27,9 @@ export interface ActualPortfolioQueryService {
   getRelatedMemoByMemoId: (
     ...params: any
   ) => Promise<Response<z.infer<typeof relatedMemoSchema>>>;
+  getRelatedMemo: (
+    ...params: any
+  ) => Promise<Response<z.infer<typeof relatedMemoListSchema>>>;
   getActualPortfolioRecents: (
     ...params: any
   ) => Promise<Response<z.infer<typeof actualRecentListsForAssetsSchema>>>;
@@ -73,6 +77,13 @@ const actualPortfolioService: ActualPortfolioQueryService = {
     );
     return res;
   },
+  getRelatedMemo: async () => {
+    const res = await schemaParser(
+      serverFetch(`/api/memos/related-memos`),
+      relatedMemoListSchema
+    );
+    return res;
+  },
   getActualPortfolioRecents: async () => {
     const res = await schemaParser(
       serverFetch(`/api/portfolios/recents`),
@@ -87,6 +98,7 @@ export const {
   getAllActualPortfolios,
   // getAssets,
   getRelatedMemoByMemoId,
+  getRelatedMemo,
   // getTransactionTypes,
   getActualPortfolioRecents,
 } = actualPortfolioService;

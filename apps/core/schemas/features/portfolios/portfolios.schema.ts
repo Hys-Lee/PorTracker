@@ -93,6 +93,7 @@ export const relatedMemoSchema = z.object({
   tags: z.array(z.string().min(1, '태그 명을 작성하세요')),
   evaluation: z.enum([...MEMO_EVALUATION_VALUES]),
 });
+export const relatedMemoListSchema = z.array(relatedMemoSchema);
 
 export const actualRecentSchema = z.object({
   amount: z.number(),
@@ -203,13 +204,13 @@ export const actualCreateResponseSchema = actualFormSchema.omit({
   id: true,
   // recents: true,
   relatedActuals: true,
-  relatedMemoId: true,
+  // relatedMemoId: true,
 });
 
 export const actualUpdateResponseSchema = actualFormSchema.omit({
   // recents: true,
   relatedActuals: true,
-  relatedMemoId: true,
+  // relatedMemoId: true,
 });
 
 export const actualDeleteResponseSchema = actualFormSchema.pick({ id: true });
@@ -231,11 +232,13 @@ export const actualFormRequestSchema = z.discriminatedUnion('submitMode', [
     submitMode: z.literal('add'),
     ...actualCreateResponseSchema.omit({ assetInfo: true }).shape,
     assetId: assetInfoSchema.shape.id,
+    // relatedMemoId: actualFormSchema.shape.relatedMemoId,
   }),
   z.object({
     submitMode: z.literal('modify'),
     ...actualUpdateResponseSchema.omit({ assetInfo: true }).shape,
     assetId: assetInfoSchema.shape.id,
+    // relatedMemoId: actualFormSchema.shape.relatedMemoId,
   }),
   z.object({
     submitMode: z.literal('delete'),

@@ -48,12 +48,15 @@ const actualPortfolioActionsMock: ActualPortfolioActionService = {
       date: new Date(validatedData.date).toISOString(),
       exchangeRate: validatedData.exchangeRate,
       id: newId,
-      linkedMemo: null, // 이것도 폼 UI에 뚫어놔야 함.
+      linkedMemo: validatedData.relatedMemoId, // 이것도 폼 UI에 뚫어놔야 함.
       price: validatedData.price,
       transactionType: validatedData.transactionType,
     };
 
-    mockDB.actuals.set(newId, newData);
+    mockDB.actuals.set(
+      newId,
+      newData as unknown as Parameters<typeof mockDB.actuals.set>[1]
+    );
     const safeReturn = {
       data: {
         amount: newData.amount,
@@ -70,6 +73,7 @@ const actualPortfolioActionsMock: ActualPortfolioActionService = {
         id: newId,
         price: newData.price,
         transactionType: newData.transactionType,
+        relatedMemoId: newData.linkedMemo,
       },
       error: null,
       success: true,
@@ -124,11 +128,14 @@ const actualPortfolioActionsMock: ActualPortfolioActionService = {
       date: new Date(validatedData.date).toISOString(),
       exchangeRate: validatedData.exchangeRate,
       id: validatedData.id,
-      linkedMemo: null, // 이것도 폼 UI에 뚫어놔야 함.
+      linkedMemo: validatedData.relatedMemoId,
       price: validatedData.price,
       transactionType: validatedData.transactionType,
     };
-    mockDB.actuals.set(validatedData.id, newData);
+    mockDB.actuals.set(
+      validatedData.id,
+      newData as unknown as Parameters<typeof mockDB.actuals.set>[1]
+    );
 
     const safeRes = {
       data: {
@@ -141,6 +148,7 @@ const actualPortfolioActionsMock: ActualPortfolioActionService = {
           ...targetAssetInfo,
           createdAt: new Date(targetAssetInfo.createdAt),
         },
+        relatedMemoId: newData.linkedMemo,
         date: new Date(newData.date),
       },
       error: null,

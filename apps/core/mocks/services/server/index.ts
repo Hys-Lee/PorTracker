@@ -30,6 +30,7 @@ export const {
   getAllActualPortfolios,
   getAssets,
   getRelatedMemoByMemoId,
+  getRelatedMemo,
   getTransactionTypes,
   getActualPortfolioRecents,
   createActualForm,

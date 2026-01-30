@@ -8,6 +8,7 @@ import {
   actualPortfolioSchema,
   actualRecentListsForAssetsSchema,
   assetInfoListSchema,
+  relatedMemoListSchema,
   relatedMemoSchema,
   transactionTypesListSchema,
 } from '@core/schemas/features/portfolios/portfolios.schema';
@@ -169,6 +170,20 @@ const actualPortfolioServiceMock: ActualPortfolioQueryService = {
 
     return makeSafeMockReturn(validated);
   },
+  getRelatedMemo: async () => {
+    const memos = Array.from(memoDB.memo.values());
+    const validated = relatedMemoListSchema.safeParse(
+      memos.map((memo) => ({
+        content: memo.content,
+        evaluation: memo.evaluation,
+        id: memo.id,
+        importance: memo.importance,
+        tags: memo.tags,
+        title: memo.title,
+      }))
+    );
+    return makeSafeMockReturn(validated);
+  },
   getActualPortfolioRecents: async () => {
     const assetInfos = [...portfolioDB.assets.values()];
     const allActuals = [...portfolioDB.actuals.values()].sort(
@@ -207,6 +222,7 @@ export const {
   getRelatedMemoByMemoId,
   // getTransactionTypes,
   getActualPortfolioRecents,
+  getRelatedMemo,
 } = actualPortfolioServiceMock;
 // export const {
 //   getActualPortfolioById,

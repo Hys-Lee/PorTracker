@@ -15,6 +15,7 @@ import {
   getRelatedMemoByMemoId,
   // getTransactionTypes,
   getActualPortfolioRecents,
+  getRelatedMemo,
 } from '../services/server/queries/portfoliosQueries';
 import {
   getAssets,
@@ -170,7 +171,20 @@ export const viewHandlers = [
       }
       return HttpResponse.json(validated.data);
     }
-  ), // actual과 target둘다에 가능
+  ),
+  http.get(`${API_BASE}/api/memos/related-memos`, async ({}) => {
+    const validated = await getRelatedMemo();
+
+    if (!validated.success) {
+      if (validated.error.status === 404)
+        return new HttpResponse(validated.error.details ?? 'Not Found', {
+          status: validated.error.status,
+        });
+
+      return new HttpResponse('server invalid with db', { status: 500 });
+    }
+    return HttpResponse.json(validated.data);
+  }), // actual과 target둘다에 가능
   http.get(`${API_BASE}/api/portfolios/recents`, async () => {
     const validated = await getActualPortfolioRecents();
     if (!validated.success)
