@@ -167,7 +167,8 @@ const PortfolioPage = async ({
           }
           mode={modalCase}
           portfolioId={portfolioTargetId}
-          asClose={<Link href={makeModalCloseHref()} scroll={false} replace />}
+          modalCloseHref={makeModalCloseHref()}
+          // asClose={<Link href={makeModalCloseHref()} scroll={false} replace />}
         />
       )}
     </>

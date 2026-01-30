@@ -10,6 +10,7 @@ import {
   getActualPortfolioRecents,
   getAllActualPortfolios,
   getAssets,
+  getRelatedMemo,
   getRelatedMemoByMemoId,
   getTransactionTypes,
 } from '@core/services/server';
@@ -28,12 +29,15 @@ import * as stylex from '@stylexjs/stylex';
 import { colors } from '../../../../tokens/colors.stylex';
 import StoreProvider from '@core/utils/components/StoreProvider/StoreProvider';
 import FormActionButton from '@core/components/shared/MOLECULES/FormActionButton/FormActionButton';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 interface ActualFormModalProps {
   transactionTypesInfo: ComponentProps<typeof FormArea>['transactionTypeInfo'];
   assetsInfo: ComponentProps<typeof FormArea>['assetsInfo'];
   portfolioId?: string;
-  asClose: ComponentProps<typeof ActualFormModalView>['asClose'];
+  // asClose: ComponentProps<typeof ActualFormModalView>['asClose'];
+  modalCloseHref: string;
   mode: 'add' | 'modify';
 }
 
@@ -41,15 +45,18 @@ const ActualFormModal = async ({
   transactionTypesInfo,
   assetsInfo,
   portfolioId,
-  asClose,
+  // asClose,
+  modalCloseHref,
   mode,
 }: ActualFormModalProps) => {
-  const [recentsRes, initFormDataRes] = await Promise.all([
+  const [recentsRes, initFormDataRes, allRelatedMemos] = await Promise.all([
     getActualPortfolioRecents(),
     getActualPortfolioById(portfolioId),
     // getRelatedMemoByActualId(portfolioId),
+    getRelatedMemo(),
   ]);
-
+  //test
+  console.log('getActualPort: ', initFormDataRes.data);
   const formId = 'actual';
   const buttonName = 'submitMode';
   /** ********************************
@@ -71,6 +78,7 @@ const ActualFormModal = async ({
           formArea={
             <FormArea
               id={formId}
+              tmpMemosInfo={allRelatedMemos.data || []}
               transactionTypeInfo={
                 // transactionTypesRes.data?.map((data) => ({
                 //   value: data.value,
@@ -89,6 +97,7 @@ const ActualFormModal = async ({
               initData={
                 initFormDataRes?.data
                   ? {
+                      relatedMemoId: initFormDataRes.data.relatedMemoId,
                       amount: initFormDataRes.data?.amount || 0,
                       assetInfo: {
                         text: initFormDataRes.data?.assetInfo.name || '',
@@ -116,8 +125,12 @@ const ActualFormModal = async ({
                   formData.set('id', initFormDataRes.data?.id);
                 }
                 const res = await postActualForm(formData);
-                // console.log('formActionRes: ', JSON.stringify(res));
+                console.log('formActionRes: ', JSON.stringify(res));
                 // res.error?.details;
+                if (res.success) {
+                  redirect(modalCloseHref);
+                }
+
                 return res;
               }} //
               // formAction={tmpAction} //
@@ -163,16 +176,19 @@ const ActualFormModal = async ({
             />
           }
           memoReference={
+            // <MemoReferenceContainer initPromise={}/>
+
             <Suspense fallback={<>대기중</>}>
               <MemoReferenceContainer
-                memoDataPromise={getRelatedMemoByMemoId(
+                initPromise={getRelatedMemoByMemoId(
                   initFormDataRes?.data?.relatedMemoId || ''
                 )}
               />
             </Suspense>
           }
           // onClose={tmp}
-          asClose={asClose}
+          // asClose={asClose}
+          asClose={<Link href={modalCloseHref} scroll={false} replace />}
           actionButton={
             // mode === 'add' ? (
             //   <Button variant="solid" rounded="normal" type="submit" form="">
