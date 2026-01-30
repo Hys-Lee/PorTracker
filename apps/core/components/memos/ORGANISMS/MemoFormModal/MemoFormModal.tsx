@@ -20,13 +20,13 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 interface MemoFormModalProps {
-  asClose: ComponentProps<typeof MemoFormModalView>['asClose'];
+  // asClose: ComponentProps<typeof MemoFormModalView>['asClose'];
   mode: 'add' | 'modify';
   memoId?: string;
   modalCloseHref: string;
 }
 const MemoFormModal = async ({
-  asClose,
+  // asClose,
   mode,
   memoId,
   modalCloseHref,

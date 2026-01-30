@@ -96,7 +96,8 @@ const MemosPage = async ({
         <MemoFormModal
           mode={modalCase}
           memoId={memoModalTargetId}
-          asClose={<Link href={makeModalCloseHref()} scroll={false} replace />}
+          // asClose={<Link href={makeModalCloseHref()} scroll={false} replace />}
+          modalCloseHref={makeModalCloseHref()}
         />
       )}
     </>
