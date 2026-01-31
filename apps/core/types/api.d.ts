@@ -10,6 +10,7 @@ export type ApiErrorRes<TErrorDetail> = {
   code?: string; // 백엔드 고유 에러 코드
   // details?: any; // Zod 에러 상세 등
   details?: TErrorDetail; // Zod 에러 상세 등
+  payload?: any; // 추가로 전달할 값 (요청 원본 값 등)
 };
 
 type Response<T, TErrorDetail = any> =

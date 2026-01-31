@@ -1,4 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
+import { faker } from '@faker-js/faker';
 import {
   CurrencyValue,
   MemoEvaluationValue,
@@ -6,9 +7,13 @@ import {
   TransactionValue,
 } from '../../types';
 import { TRANSACTION_MAP } from '@core/constants';
+import { mockDB as SharedDB } from './sharedDB';
 
 // type AssetInfo = z.infer<typeof assetInfoSchema>;
 // type Portfolio = z.infer<typeof actualPortfolioSchema>;
+
+faker.seed(Array.from('portfolios').map((c) => c.charCodeAt(0))); // 서버/클라 환경의 db 모두 동일 값으로 주기 위해
+const uuidv4 = faker.string.uuid;
 
 const initialAssets = [
   {
@@ -32,10 +37,11 @@ const initialCurrency = [{ id: uuidv4(), value: 'usd' as CurrencyValue }];
 
 const currencyTable = new Map(initialCurrency.map((data) => [data.id, data]));
 
-const linkedId = {
-  memo: uuidv4(),
-  portfolio: uuidv4(),
-};
+// const linkedId = {
+//   memo: uuidv4(),
+//   portfolio: uuidv4(),
+// };
+const linkedId = SharedDB.linkList[0];
 
 const initialActualPortfolioInfo = [
   {
@@ -50,7 +56,7 @@ const initialActualPortfolioInfo = [
     date: new Date('2025-12-27').toISOString(),
     transactionType: 'allocation' as TransactionValue,
     // value: 1_234_567,
-    price: 123456,
+    price: 12345678910,
     amount: 10,
     exchangeRate: 1,
     assetDescription: null,
@@ -98,21 +104,21 @@ const actualPortfolioTable = new Map(
   initialActualPortfolioInfo.map((data) => [data.id, data])
 );
 
-const initialMemo = [
-  {
-    id: linkedId.memo,
-    importance: 'useful' as MemoImportanceValue,
-    title: '메모 제목',
-    content:
-      '메모 내용 \n대충 메모 내용\n길어져랑\n길어져랑\n길어져랑\n하나만더',
-    tags: ['#태그1', '태그2', 'tag3', '#Tag4'],
-    evaluation: 'good' as MemoEvaluationValue,
-    type: 'actual',
-    linkedPortfolio: linkedId.portfolio,
-  },
-];
+// const initialMemo = [
+//   {
+//     id: linkedId.memo,
+//     importance: 'useful' as MemoImportanceValue,
+//     title: '메모 제목',
+//     content:
+//       '메모 내용 \n대충 메모 내용\n길어져랑\n길어져랑\n길어져랑\n하나만더',
+//     tags: ['#태그1', '태그2', 'tag3', '#Tag4'],
+//     evaluation: 'good' as MemoEvaluationValue,
+//     type: 'actual',
+//     linkedPortfolio: linkedId.portfolio,
+//   },
+// ];
 
-const memoTable = new Map(initialMemo.map((data) => [data.id, data]));
+// const memoTable = new Map(initialMemo.map((data) => [data.id, data]));
 
 const transactionTypes = [
   {
@@ -140,6 +146,6 @@ const transactionTypesTable = new Map(
 export const mockDB = {
   assets: assetsTable,
   actuals: actualPortfolioTable,
-  memos: memoTable,
+  // memos: memoTable,
   transactionTypes: transactionTypesTable,
 };

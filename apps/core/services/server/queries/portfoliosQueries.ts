@@ -1,0 +1,144 @@
+import { serverFetch } from '@core/libs/api/server-fetcher';
+
+import {
+  actualFormSchema,
+  actualPortfolioListSchema,
+  // assetInfoListSchema,
+  relatedMemoSchema,
+  // transactionTypesListSchema,
+  actualRecentListsForAssetsSchema,
+  relatedMemoListSchema,
+} from '@core/schemas/features/portfolios/portfolios.schema';
+import { schemaParser } from '../../shemaParser';
+import { Response } from '@core/types/api';
+import z from 'zod';
+
+export interface ActualPortfolioQueryService {
+  // getTransactionTypes: (
+  //   ...params: any
+  // ) => Promise<Response<z.infer<typeof transactionTypesListSchema>>>;
+  // getAssets: () => Promise<Response<z.infer<typeof assetInfoListSchema>>>;
+  getAllActualPortfolios: (
+    ...params: any
+  ) => Promise<Response<z.infer<typeof actualPortfolioListSchema>>>;
+  getActualPortfolioById: (
+    ...params: any
+  ) => Promise<Response<z.infer<typeof actualFormSchema>>>;
+  getRelatedMemoByMemoId: (
+    ...params: any
+  ) => Promise<Response<z.infer<typeof relatedMemoSchema>>>;
+  getRelatedMemo: (
+    ...params: any
+  ) => Promise<Response<z.infer<typeof relatedMemoListSchema>>>;
+  getActualPortfolioRecents: (
+    ...params: any
+  ) => Promise<Response<z.infer<typeof actualRecentListsForAssetsSchema>>>;
+}
+
+const actualPortfolioService: ActualPortfolioQueryService = {
+  // getTransactionTypes: async () => {
+  //   const res = await schemaParser(
+  //     serverFetch('/api/transaction-types'),
+  //     transactionTypesListSchema
+  //   );
+  //   return res;
+  // },
+
+  // getAssets: async () => {
+  //   const res = await schemaParser(
+  //     serverFetch('/api/assets'),
+  //     assetInfoListSchema
+  //   );
+  //   return res;
+  // },
+
+  /** Actual */
+
+  getAllActualPortfolios: async (params?: string) => {
+    const res = await schemaParser(
+      serverFetch(`/api/portfolios/actuals${params ? `?${params}` : ''}`),
+      actualPortfolioListSchema
+    );
+    return res;
+  },
+
+  getActualPortfolioById: async (actualId: string) => {
+    const res = await schemaParser(
+      serverFetch(`/api/portfolios/actuals/${actualId}`),
+      actualFormSchema
+    );
+    return res;
+  },
+
+  getRelatedMemoByMemoId: async (memoId: string) => {
+    const res = await schemaParser(
+      serverFetch(`/api/memos/related-memos/${memoId}`),
+      relatedMemoSchema
+    );
+    return res;
+  },
+  getRelatedMemo: async () => {
+    const res = await schemaParser(
+      serverFetch(`/api/memos/related-memos`),
+      relatedMemoListSchema
+    );
+    return res;
+  },
+  getActualPortfolioRecents: async () => {
+    const res = await schemaParser(
+      serverFetch(`/api/portfolios/recents`),
+      actualRecentListsForAssetsSchema
+    );
+    return res;
+  },
+};
+
+export const {
+  getActualPortfolioById,
+  getAllActualPortfolios,
+  // getAssets,
+  getRelatedMemoByMemoId,
+  getRelatedMemo,
+  // getTransactionTypes,
+  getActualPortfolioRecents,
+} = actualPortfolioService;
+
+// export const getTransactionTypes = async () => {
+//   const res = await schemaParser(
+//     serverFetch('/api/transaction-types'),
+//     transactionTypesListSchema
+//   );
+//   return res;
+// };
+
+// export const getAssets = async () => {
+//   const res = await schemaParser(
+//     serverFetch('/api/assets'),
+//     assetInfoListSchema
+//   );
+//   return res;
+// };
+
+// export const getAllActualPortfolios = async () => {
+//   const res = await schemaParser(
+//     serverFetch('/api/portfolios/actuals'),
+//     actualPortfolioListSchema
+//   );
+//   return res;
+// };
+
+// export const getActualPortfolioById = async (actualId: string) => {
+//   const res = await schemaParser(
+//     serverFetch(`/api/portfolios/actuals/${actualId}`),
+//     actualFormSchema
+//   );
+//   return res;
+// };
+
+// export const getRelatedMemoByMemoId = async (memoId: string) => {
+//   const res = await schemaParser(
+//     serverFetch(`/api/memos/related-memos/${memoId}`),
+//     relatedMemoSchema
+//   );
+//   return res;
+// };

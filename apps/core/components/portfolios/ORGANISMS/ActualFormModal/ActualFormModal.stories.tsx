@@ -67,7 +67,8 @@ export const Primary: Story = {
       <ActualFormModal
         mode={args.mode}
         portfolioId={target}
-        asClose={CloseEle}
+        // asClose={CloseEle}
+        modalCloseHref="/"
         assetsInfo={assetInfo}
         transactionTypesInfo={transactionTypeInfo}
       />

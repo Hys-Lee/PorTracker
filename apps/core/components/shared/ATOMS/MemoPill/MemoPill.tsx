@@ -8,14 +8,17 @@ import * as stylex from '@stylexjs/stylex';
 interface MemoPillProps {
   type: MemoImportanceValue;
   wrapperStylex?: stylex.StyleXStyles;
+  icon?: boolean;
 }
 
-const MemoPill = ({ type, wrapperStylex }: MemoPillProps) => {
+const MemoPill = ({ type, wrapperStylex, icon = true }: MemoPillProps) => {
   return (
     <span {...stylex.props(pillStyles.base, pillStyles[type], wrapperStylex)}>
-      <div style={{ width: '16px', height: '16px' }}>
-        {memoImportanceIconSelector(type, 16, 16, iconStyles[type])}
-      </div>
+      {icon && (
+        <div style={{ width: '16px', height: '16px' }}>
+          {memoImportanceIconSelector(type, 16, 16, iconStyles[type])}
+        </div>
+      )}
       <span style={{ lineHeight: 1 }}>{MEMO_IMPORTANCE_MAP[type]}</span>
     </span>
   );
@@ -33,6 +36,7 @@ const pillStyles = stylex.create({
     lineHeight: 1,
     gap: '8px',
     width: 'max-content',
+    cursor: 'default',
     // opacity: 0.5,
     // justifyContent: 'center',
   },

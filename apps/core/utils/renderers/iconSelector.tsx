@@ -20,6 +20,10 @@ import GoodIcon from '@core/assets/images/svgs/Face_Smile.svg?react';
 import SosoIcon from '@core/assets/images/svgs/Face_Plain.svg?react';
 import BadIcon from '@core/assets/images/svgs/Face_Sad.svg?react';
 import WorseIcon from '@core/assets/images/svgs/Face_Crying.svg?react';
+// targetChange
+import AddIcon from '@core/assets/images/svgs/Plus_Reverse.svg?react';
+import DeleteIcon from '@core/assets/images/svgs/Minus_Reverse.svg?react';
+import NormalChangeIcon from '@core/assets/images/svgs/Exchange_Rounded.svg?react';
 
 /** Transaction */
 const transactionIconSelector = (
@@ -87,7 +91,6 @@ const memoImportanceIconSelector = (
       return null;
   }
 };
-
 const memoImportanceStyles = stylex.create({
   critical: { color: colors.iconMemoImportanceHigh },
   useful: { color: colors.iconMemoImportanceMiddle },
@@ -140,8 +143,54 @@ const memoEvaluationStyles = stylex.create({
   base: { color: colors.primary },
 });
 
+/** Target Change */
+const targetChangeIconSelector = (
+  type: 'add' | 'delete' | 'normal',
+  width: number,
+  height: number,
+  externalStylex?: stylex.StyleXStyles
+) => {
+  switch (type) {
+    case 'add': {
+      return (
+        <div {...stylex.props(targetChangeStyles.add, externalStylex)}>
+          <AddIcon width={width} height={height} />
+        </div>
+      );
+    }
+    case 'delete': {
+      return (
+        <div {...stylex.props(targetChangeStyles.delete, externalStylex)}>
+          <DeleteIcon width={width} height={height} />
+        </div>
+      );
+    }
+    case 'normal': {
+      return (
+        <div {...stylex.props(targetChangeStyles.normal, externalStylex)}>
+          <NormalChangeIcon width={width} height={height} />
+        </div>
+      );
+    }
+    default:
+      return null;
+  }
+};
+const targetChangeStyles = stylex.create({
+  add: {
+    color: colors.profit,
+  },
+  delete: {
+    color: colors.loss,
+  },
+  normal: {
+    color: colors.iconFilter,
+  },
+});
+
 export {
   transactionIconSelector,
   memoImportanceIconSelector,
   memoEvaluationSelector,
+  targetChangeIconSelector,
 };

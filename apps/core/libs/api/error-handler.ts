@@ -28,6 +28,8 @@ export function handleApiError<T>(error: unknown): Response<T> {
   } else if (customError instanceof UnknownError) {
     finalError.type = 'UNKNOWN_ERROR';
   }
+  //test
+  console.error(finalError);
   return {
     data: null,
     success: false,

@@ -22,18 +22,21 @@ import { TransactionValue, CurrencyValue } from '@core/types';
 
 // Jotai
 import { useHydrateAtoms } from 'jotai/utils';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import {
-  copiedFormDataAtom,
+  copiedActualPortfolioFormDataAtom,
+  linkedMemoInfoAtom,
   selectedAssetAtom,
-} from '@core/stores/portfolios/actualModal';
+} from '@core/stores/portfolios/actualModalStore';
 import { L } from 'node_modules/msw/lib/core/HttpResponse-Cw4ELwIN.mjs';
 import { dateFormatter } from '@core/utils/helpers/dateFormatter';
-import { PostActualFormRes } from '@core/services';
+import { PostActualFormRes } from '@core/services/serverFunctions/portfoliosServerFunctions';
+import { RelatedMemo } from '@core/schemas/features/portfolios/portfolios.schema';
 
 interface FormAreaProp {
   id: string;
   initData?: {
+    relatedMemoId?: string;
     assetInfo: ComponentProps<typeof Dropdown>['items'][number];
     date: Date;
     transactionType: TransactionValue;
@@ -42,6 +45,7 @@ interface FormAreaProp {
     exchangeRate: number;
     amount: number;
   };
+  tmpMemosInfo: RelatedMemo[];
   transactionTypeInfo: ComponentProps<typeof IconSelect>['items'];
   assetsInfo: ComponentProps<typeof Dropdown>['items'];
   currenciesInfo: ComponentProps<typeof Switch>['items'];
@@ -59,9 +63,10 @@ const FormArea = ({
   currenciesInfo,
   localCurrencyValue,
   formAction,
+  tmpMemosInfo,
 }: FormAreaProp) => {
   // FormData -> copied반영은 currency, asset, memo 빼고 다?
-  const [copiedFormData] = useAtom(copiedFormDataAtom);
+  const [copiedFormData] = useAtom(copiedActualPortfolioFormDataAtom);
   const finalInitData = { ...initData, ...copiedFormData };
 
   // const totalValueRef = useRef<HTMLParagraphElement>(null);
@@ -78,6 +83,8 @@ const FormArea = ({
   const exchangeVisible = currency.value !== localCurrencyValue;
 
   /** Jotai */
+
+  const setLInkedMemoInfo = useSetAtom(linkedMemoInfoAtom);
 
   // Asset
   const defaultAssetInfo = finalInitData?.assetInfo;
@@ -242,12 +249,33 @@ const FormArea = ({
         /> */}
           <Dropdown
             name="linkedMemo"
-            items={[]}
+            items={tmpMemosInfo.map((memoData, idx) => {
+              return { text: memoData.title, value: memoData.id, index: idx };
+            })}
+            onValueChange={(data) => {
+              setLInkedMemoInfo(
+                data[0]?.index !== undefined
+                  ? tmpMemosInfo[data[0].index]
+                  : null
+              );
+            }}
             form={id}
             multi={false}
             triggerStylex={assetTypeStyles.base}
             icon
-            defaultValue={undefined}
+            defaultValue={[
+              {
+                value: finalInitData.relatedMemoId || '',
+                // 임시
+                text:
+                  tmpMemosInfo.find(
+                    (data) => finalInitData.relatedMemoId === data.id
+                  )?.title || '',
+                index: tmpMemosInfo.findIndex(
+                  (data) => finalInitData.relatedMemoId === data.id
+                ),
+              },
+            ]}
           />
         </div>
       </div>

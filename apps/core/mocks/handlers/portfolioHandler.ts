@@ -1,38 +1,31 @@
 import { http, HttpResponse } from 'msw';
-import { z } from 'zod';
-import { mockDB } from '../db/portfoliosDB';
+
 import {
-  assetInfoSchema,
-  actualPortfolioSchema,
-  AssetInfo,
-  ActualPortfolio,
-  ActualForm,
-  RelatedMemo,
   getActualPorfolioParamsSchema,
   getRelatedMemoParamsSchema,
-  actualFormSchema,
-  relatedMemoSchema,
-  assetInfoListSchema,
-  actualPortfolioListSchema,
-  actualRecentListSchema,
   ActualFormCreateRequest,
   ActualFormUpdateRequest,
   deleteActualPortfolioParamsSchema,
   ActualFormDeleteRequest,
-} from '../../schemas/portfolios.schema';
+} from '../../schemas/features/portfolios/portfolios.schema';
 import {
   getActualPortfolioById,
   getAllActualPortfolios,
-  getAssets,
+  // getAssets,
   getRelatedMemoByMemoId,
-  getTransactionTypes,
+  // getTransactionTypes,
   getActualPortfolioRecents,
-} from '../services/queries/portfoliosQueries';
+  getRelatedMemo,
+} from '../services/server/queries/portfoliosQueries';
+import {
+  getAssets,
+  getTransactionTypes,
+} from '../services/server/queries/commonQueries';
 import {
   createActualForm,
   deleteActualForm,
   updateActualForm,
-} from '../services/actions/portfoliosActions';
+} from '../services/server/actions/portfoliosActions';
 
 const API_BASE = process.env.INTERNAL_API_URL || '';
 
@@ -58,11 +51,11 @@ export const viewHandlers = [
   http.get(`${API_BASE}/api/portfolios/actuals`, async ({ request }) => {
     const url = new URL(request.url);
 
-    const assets = url.searchParams.get('assets');
-    const startDate = url.searchParams.get('startDate');
-    const endDate = url.searchParams.get('endDate');
-    const transaction = url.searchParams.get('transaction');
-    const currency = url.searchParams.get('currency');
+    const assets = url.searchParams.get('assets') || undefined;
+    const startDate = url.searchParams.get('startDate') || undefined;
+    const endDate = url.searchParams.get('endDate') || undefined;
+    const transaction = url.searchParams.get('transaction') || undefined;
+    const currency = url.searchParams.get('currency') || undefined;
 
     //test
     console.log('transaction in msw: ', transaction);
@@ -178,7 +171,20 @@ export const viewHandlers = [
       }
       return HttpResponse.json(validated.data);
     }
-  ), // actual과 target둘다에 가능
+  ),
+  http.get(`${API_BASE}/api/memos/related-memos`, async ({}) => {
+    const validated = await getRelatedMemo();
+
+    if (!validated.success) {
+      if (validated.error.status === 404)
+        return new HttpResponse(validated.error.details ?? 'Not Found', {
+          status: validated.error.status,
+        });
+
+      return new HttpResponse('server invalid with db', { status: 500 });
+    }
+    return HttpResponse.json(validated.data);
+  }), // actual과 target둘다에 가능
   http.get(`${API_BASE}/api/portfolios/recents`, async () => {
     const validated = await getActualPortfolioRecents();
     if (!validated.success)

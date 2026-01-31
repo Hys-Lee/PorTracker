@@ -5,12 +5,12 @@ import {
   ActualFormDeleteResponse,
   actualFormRequestSchema,
   ActualFormUpdateResponse,
-} from '@core/schemas/portfolios.schema';
+} from '@core/schemas/features/portfolios/portfolios.schema';
 import {
   createActualForm,
   deleteActualForm,
   updateActualForm,
-} from '@core/services';
+} from '@core/services/server';
 import { Response } from '@core/types/api';
 import z from 'zod';
 

@@ -10,7 +10,8 @@ export const inputBase = stylex.create({
     // borderRadius: '24px',
     padding: '0 15px',
     fontSize: '16px',
-    fontWeight: '600',
+    // fontWeight: '600',
+    fontWeight: '500',
     lineHeight: 1,
     height: '48px',
     width: '300px',
@@ -19,7 +20,7 @@ export const inputBase = stylex.create({
     outline: 'none',
     boxShadow: {
       default: 'none',
-      ':focus-visible': `inset 0 0 0 1px ${colors.primaryVariant900}`,
+      ':focus-visible': `inset 0 0 0 1px ${colors.primary}`,
     },
     backgroundColor: {
       default: colors.bgNormal,

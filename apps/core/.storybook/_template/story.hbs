@@ -5,6 +5,12 @@ const meta: Meta<typeof {{pascalCase name}}> = {
   component: {{pascalCase name}},
   // 앱 내부이므로 title에 앱 이름을 고정하거나 생략해도 됩니다.
   title: 'ProTracker/{{pascalCase name}}', 
+  parameters: {
+    api: {
+      // msw vs. Mock Services 직접 사용
+      directMock: false,
+    },
+  },
   tags: ['autodocs'],
   argTypes: {},
 };

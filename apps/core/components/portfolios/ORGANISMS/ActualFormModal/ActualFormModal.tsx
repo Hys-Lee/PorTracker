@@ -10,11 +10,11 @@ import {
   getActualPortfolioRecents,
   getAllActualPortfolios,
   getAssets,
+  getRelatedMemo,
   getRelatedMemoByMemoId,
   getTransactionTypes,
-  postActualForm,
-  tmpAction,
-} from '@core/services';
+} from '@core/services/server';
+import { postActualForm } from '@core/services/serverFunctions/portfoliosServerFunctions';
 // } from '@core/services/queries/portfoliosQueries';
 // } from '@core/mocks/services/queries/portfoliosQueries';
 // import { tmpAction } from '@core/services/actions/tmpActions';
@@ -28,12 +28,16 @@ import Button from '@core/components/shared/ATOMS/Button/Button';
 import * as stylex from '@stylexjs/stylex';
 import { colors } from '../../../../tokens/colors.stylex';
 import StoreProvider from '@core/utils/components/StoreProvider/StoreProvider';
+import FormActionButton from '@core/components/shared/MOLECULES/FormActionButton/FormActionButton';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 interface ActualFormModalProps {
   transactionTypesInfo: ComponentProps<typeof FormArea>['transactionTypeInfo'];
   assetsInfo: ComponentProps<typeof FormArea>['assetsInfo'];
   portfolioId?: string;
-  asClose: ComponentProps<typeof ActualFormModalView>['asClose'];
+  // asClose: ComponentProps<typeof ActualFormModalView>['asClose'];
+  modalCloseHref: string;
   mode: 'add' | 'modify';
 }
 
@@ -41,15 +45,18 @@ const ActualFormModal = async ({
   transactionTypesInfo,
   assetsInfo,
   portfolioId,
-  asClose,
+  // asClose,
+  modalCloseHref,
   mode,
 }: ActualFormModalProps) => {
-  const [recentsRes, initFormDataRes] = await Promise.all([
+  const [recentsRes, initFormDataRes, allRelatedMemos] = await Promise.all([
     getActualPortfolioRecents(),
     getActualPortfolioById(portfolioId),
     // getRelatedMemoByActualId(portfolioId),
+    getRelatedMemo(),
   ]);
-
+  //test
+  console.log('getActualPort: ', initFormDataRes.data);
   const formId = 'actual';
   const buttonName = 'submitMode';
   /** ********************************
@@ -71,6 +78,7 @@ const ActualFormModal = async ({
           formArea={
             <FormArea
               id={formId}
+              tmpMemosInfo={allRelatedMemos.data || []}
               transactionTypeInfo={
                 // transactionTypesRes.data?.map((data) => ({
                 //   value: data.value,
@@ -89,6 +97,7 @@ const ActualFormModal = async ({
               initData={
                 initFormDataRes?.data
                   ? {
+                      relatedMemoId: initFormDataRes.data.relatedMemoId,
                       amount: initFormDataRes.data?.amount || 0,
                       assetInfo: {
                         text: initFormDataRes.data?.assetInfo.name || '',
@@ -116,8 +125,12 @@ const ActualFormModal = async ({
                   formData.set('id', initFormDataRes.data?.id);
                 }
                 const res = await postActualForm(formData);
-                // console.log('formActionRes: ', JSON.stringify(res));
+                console.log('formActionRes: ', JSON.stringify(res));
                 // res.error?.details;
+                if (res.success) {
+                  redirect(modalCloseHref);
+                }
+
                 return res;
               }} //
               // formAction={tmpAction} //
@@ -163,16 +176,19 @@ const ActualFormModal = async ({
             />
           }
           memoReference={
+            // <MemoReferenceContainer initPromise={}/>
+
             <Suspense fallback={<>대기중</>}>
               <MemoReferenceContainer
-                memoDataPromise={getRelatedMemoByMemoId(
+                initPromise={getRelatedMemoByMemoId(
                   initFormDataRes?.data?.relatedMemoId || ''
                 )}
               />
             </Suspense>
           }
           // onClose={tmp}
-          asClose={asClose}
+          // asClose={asClose}
+          asClose={<Link href={modalCloseHref} scroll={false} replace />}
           actionButton={
             // mode === 'add' ? (
             //   <Button variant="solid" rounded="normal" type="submit" form="">
@@ -188,7 +204,7 @@ const ActualFormModal = async ({
             //     </Button>
             //   </div>
             // )
-            <ActionButton mode={mode} formId={formId} name={buttonName} />
+            <FormActionButton mode={mode} formId={formId} name={buttonName} />
           }
         />
       </StoreProvider>
@@ -197,63 +213,3 @@ const ActualFormModal = async ({
 };
 
 export default ActualFormModal;
-
-const ActionButton = ({
-  mode,
-  formId,
-  name,
-}: {
-  mode: 'add' | 'modify';
-  formId: string;
-  name: string;
-}) => {
-  return (
-    <>
-      {mode === 'add' ? (
-        <Button
-          variant="solid"
-          rounded="normal"
-          type="submit"
-          form={formId}
-          name={name}
-          value={'add'}
-        >
-          추가
-        </Button>
-      ) : (
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <Button
-            variant="outlined"
-            rounded="normal"
-            buttonStylex={{ ...btnStyles.base, ...btnStyles.delete }}
-            type="submit"
-            form={formId}
-            name={name}
-            value={'delete'}
-          >
-            삭제
-          </Button>
-          <Button
-            variant="solid"
-            rounded="normal"
-            buttonStylex={btnStyles.base}
-            type="submit"
-            form={formId}
-            name={name}
-            value={'modify'}
-          >
-            저장
-          </Button>
-        </div>
-      )}
-    </>
-  );
-};
-
-const btnStyles = stylex.create({
-  base: { flexGrow: 1 },
-  delete: {
-    boxShadow: `inset 0 0 0 1px rgb(from ${colors.loss} r g b / 0.7)`,
-    color: `rgb(from ${colors.loss} r g b / 0.7)`,
-  },
-});

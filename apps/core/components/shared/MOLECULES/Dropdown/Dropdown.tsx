@@ -4,7 +4,7 @@ import * as stylex from '@stylexjs/stylex';
 import cssStyles from './Dropdown.module.css';
 import { colors } from '../../../../tokens/colors.stylex';
 import { useStateReducer } from '@core/utils/hooks/useStateReducer.ts/useStateReducer';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { useSubmitIntercept } from '@core/utils/hooks/useSubmitIntercept/useSubmitIntercept';
 
 import Virtualizer from '@core/utils/components/Virtualizer/Virtualzier';
@@ -13,6 +13,7 @@ import { inputBase } from '@core/styles/input.stylex';
 export interface DropdownItem<T extends string> {
   text: string;
   value: T;
+  index?: number;
 }
 
 type Selected<T extends string> = Map<
@@ -64,35 +65,63 @@ const Dropdown = <T extends string>({
   const [selected, setSelected] = useStateReducer<Selected<T>>(
     initializer(defaultValue),
     (_, nextState) => {
-      if (onValueChange) {
-        const nextStateIterable = nextState.values();
-        onValueChange([...nextStateIterable]);
-      }
+      // if (onValueChange) {
+      //   const nextStateIterable = nextState.values();
+      //   onValueChange([...nextStateIterable]);
+      // }
       return nextState;
     }
   );
-  const handleSelected = (multi: boolean, dropdownItem: DropdownItem<T>) =>
+  const handleSelected = (
+    multi: boolean,
+    dropdownItem: DropdownItem<T>,
+    itemIndex?: number
+  ) =>
     // : Selected
     {
-      // let newSelected = null;
+      let newSelected: Selected<T>;
       if (multi) {
-        setSelected((prev) => {
-          const newSelected = new Map(prev);
-          if (newSelected.has(dropdownItem.value)) {
-            newSelected.delete(dropdownItem.value);
-          } else {
-            newSelected.set(dropdownItem.value, dropdownItem);
-          }
-          return newSelected;
-        });
+        // setSelected((prev) => {
+        //   const newSelected = new Map(prev);
+        //   if (newSelected.has(dropdownItem.value)) {
+        //     newSelected.delete(dropdownItem.value);
+        //   } else {
+        //     newSelected.set(dropdownItem.value, dropdownItem);
+        //   }
+        //   return newSelected;
+        // });
+        newSelected = new Map(selected);
+        if (newSelected.has(dropdownItem.value)) {
+          newSelected.delete(dropdownItem.value);
+        } else {
+          newSelected.set(dropdownItem.value, {
+            ...dropdownItem,
+            index: itemIndex,
+          });
+        }
       } else {
-        setSelected((prev) => {
-          const newSelected = new Map();
-          if (prev.has(dropdownItem.value)) return newSelected;
-          newSelected.set(dropdownItem.value, dropdownItem);
-          return newSelected;
-        });
+        // setSelected((prev) => {
+        //   const newSelected = new Map();
+        //   if (prev.has(dropdownItem.value)) return newSelected;
+        //   newSelected.set(dropdownItem.value, dropdownItem);
+        //   return newSelected;
+        // });
+
+        newSelected = new Map();
+        if (!selected.has(dropdownItem.value)) {
+          newSelected.set(dropdownItem.value, {
+            ...dropdownItem,
+            index: itemIndex,
+          });
+        }
       }
+
+      setSelected(newSelected);
+      if (onValueChange) {
+        const newSelectedIterable = newSelected.values();
+        onValueChange([...newSelectedIterable]);
+      }
+
       // return newSelected;
     };
 
@@ -101,6 +130,12 @@ const Dropdown = <T extends string>({
     // inputElement.value = [...selected.values()].join(',');
     inputElement.value = JSON.stringify([...selected.values()]);
   }, form);
+
+  // useEffect(() => {
+  //   if (!onValueChange) return;
+  //   const selectedIterable = selected.values();
+  //   onValueChange([...selectedIterable]);
+  // }, [selected]);
 
   return (
     <>
@@ -165,7 +200,7 @@ const Dropdown = <T extends string>({
                 getKey={(itemInfo) => itemInfo.value}
                 estimateSize={24}
                 itemsInfo={items}
-                renderItem={(itemInfo) => (
+                renderItem={(itemInfo, idx) => (
                   <>
                     <DropdownMenu.CheckboxItem
                       className={`${cssStyles.SelectItem} ${
@@ -173,9 +208,9 @@ const Dropdown = <T extends string>({
                       }`}
                       checked={selected.has(itemInfo.value)}
                       onCheckedChange={(checked) => {
-                        handleSelected(multi, itemInfo);
-                        if (onValueChange)
-                          onValueChange(checked ? [itemInfo] : []); // unchecked => []
+                        handleSelected(multi, itemInfo, idx);
+                        // if (onValueChange)
+                        //   onValueChange(checked ? [itemInfo] : []); // unchecked => []
                       }}
                     >
                       {itemInfo.text}
