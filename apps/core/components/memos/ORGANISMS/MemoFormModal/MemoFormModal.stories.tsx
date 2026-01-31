@@ -31,7 +31,7 @@ export const Primary: Story = {
     queryClient.setQueryData(memoKeys.recents(), []);
     return (
       <QueryClientProvider client={queryClient}>
-        <MemoFormModal asClose={<div>임시 닫기</div>} mode="add" />
+        <MemoFormModal mode="add" modalCloseHref="/" />
       </QueryClientProvider>
     );
   },
@@ -46,11 +46,7 @@ export const ModifyVersion: Story = {
 
     return (
       <QueryClientProvider client={queryClient}>
-        <MemoFormModal
-          asClose={<div>임시 닫기</div>}
-          mode="modify"
-          memoId={memoIds[0]}
-        />
+        <MemoFormModal modalCloseHref="/" mode="modify" memoId={memoIds[0]} />
       </QueryClientProvider>
     );
   },

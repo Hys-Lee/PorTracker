@@ -22,8 +22,14 @@ export const Primary: Story = {
     ],
     transactionTypeInfo: [],
     localCurrencyValue: 'c1',
+
     formAction: async () => {
       console.log('폼 액션');
+      return {
+        data: null,
+        error: { type: 'UNKNOWN_ERROR', message: '테스트용' },
+        success: false,
+      };
     },
   },
 };
