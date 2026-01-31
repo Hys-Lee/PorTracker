@@ -9,6 +9,7 @@ import { Fragment } from 'react/jsx-runtime';
 import * as stylex from '@stylexjs/stylex';
 import { ScrollArea } from 'radix-ui';
 import Separator from '@core/components/shared/ATOMS/Separator/Separator';
+import { scrollBarStyles } from '@core/styles/scroll.stylex';
 
 interface MemoReferenceProps {
   importance: MemoImportanceValue;
@@ -106,11 +107,32 @@ const MemoReference = ({
         </ScrollArea.Root>
         <div {...stylex.props(subAreaStyles.base)}>
           <span {...stylex.props(subTitleStyles.base)}>{'Tags'}</span>
-          <div style={{ display: 'flex', gap: '4px', overflow: 'hidden' }}>
-            {tags.map((tagContent) => (
-              <TagPill content={tagContent} />
-            ))}
-          </div>
+          <ScrollArea.Root
+            dir="ltr"
+            style={{ width: '100%', overflow: 'hidden' }}
+          >
+            <ScrollArea.Viewport
+              style={{ width: '100%' }}
+              // {...stylex.props(
+              //   previewStyels.tagsBox
+              //   // nonScorlledOverflowStyles.horizontalFadeout
+              // )}
+            >
+              <div style={{ display: 'flex', gap: '4px', overflow: 'hidden' }}>
+                {tags.map((tagContent) => (
+                  <TagPill content={tagContent} />
+                ))}
+              </div>
+            </ScrollArea.Viewport>
+            <ScrollArea.ScrollAreaScrollbar
+              orientation="horizontal"
+              {...stylex.props(scrollBarStyles.horizontalBox)}
+            >
+              <ScrollArea.Thumb
+                {...stylex.props(scrollBarStyles.horizontalThumb)}
+              />
+            </ScrollArea.ScrollAreaScrollbar>
+          </ScrollArea.Root>
         </div>
         <div {...stylex.props(subAreaStyles.base)}>
           <span {...stylex.props(subTitleStyles.base)}>{'Evaluations'}</span>
