@@ -22,6 +22,7 @@ export const Primary: Story = {
     ],
     transactionTypeInfo: [],
     localCurrencyValue: 'c1',
+    tmpMemosInfo: [],
 
     formAction: async () => {
       console.log('폼 액션');
