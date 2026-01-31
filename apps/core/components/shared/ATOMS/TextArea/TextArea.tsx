@@ -1,6 +1,6 @@
 import { ConfigProvider, Input } from 'antd';
 import { ComponentProps } from 'react';
-import TextareaAutosize from 'react-textarea-autosize';
+// import TextareaAutosize from 'react-textarea-autosize';
 import * as stylex from '@stylexjs/stylex';
 import { inputBase } from '@core/styles/input.stylex';
 import { scrollBarStyles } from '@core/styles/scroll.stylex';
