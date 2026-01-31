@@ -146,7 +146,7 @@ const modalStyles = stylex.create({
   },
   referenceArea: {
     width: '100%',
-    minWidth: '0%',
+    minWidth: '100%',
     display: 'flex',
     gap: '8px',
     flexDirection: 'column',

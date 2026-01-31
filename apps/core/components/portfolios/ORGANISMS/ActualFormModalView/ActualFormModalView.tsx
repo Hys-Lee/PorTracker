@@ -84,6 +84,7 @@ const ActualFormModalView = ({
               gap: '8px',
               flexDirection: 'column',
               justifyContent: 'start',
+              minWidth: '100%',
             }}
           >
             <SegmentControl
