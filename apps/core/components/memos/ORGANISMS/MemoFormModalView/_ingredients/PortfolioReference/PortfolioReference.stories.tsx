@@ -4,7 +4,7 @@ import PortfolioReference from './PortfolioReference';
 const meta: Meta<typeof PortfolioReference> = {
   component: PortfolioReference,
   // 앱 내부이므로 title에 앱 이름을 고정하거나 생략해도 됩니다.
-  title: 'ProTracker/PortfolioReference',
+  title: 'ProTracker/Memos/PortfolioReference',
   parameters: {
     api: {
       // msw vs. Mock Services 직접 사용
@@ -44,6 +44,7 @@ export const ActualReference: Story = {
       createdAt: new Date('2026-01-24'),
       id: 'actual',
       assetDescription: '설명설명',
+      assetId: '123',
     },
   },
   // argTypes: {

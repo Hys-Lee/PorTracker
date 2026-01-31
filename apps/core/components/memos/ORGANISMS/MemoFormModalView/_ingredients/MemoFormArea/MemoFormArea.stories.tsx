@@ -4,7 +4,7 @@ import MemoFormArea from './MemoFormArea';
 const meta: Meta<typeof MemoFormArea> = {
   component: MemoFormArea,
   // 앱 내부이므로 title에 앱 이름을 고정하거나 생략해도 됩니다.
-  title: 'ProTracker/MemoFormArea',
+  title: 'ProTracker/Memos/MemoFormArea',
   parameters: {
     api: {
       // msw vs. Mock Services 직접 사용
@@ -41,6 +41,7 @@ export const Primary: Story = {
         exchangeRate: 456,
         price: 456789 / 456 / 12,
         accumulatedValue: 99999999999,
+        assetId: '123',
       },
     ],
   },

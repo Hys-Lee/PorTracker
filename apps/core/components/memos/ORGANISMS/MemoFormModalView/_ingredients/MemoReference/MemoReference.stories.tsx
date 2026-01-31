@@ -7,7 +7,7 @@ import { memoKeys } from '@core/services/keys/memoKeys';
 const meta: Meta<typeof MemoReference> = {
   component: MemoReference,
   // 앱 내부이므로 title에 앱 이름을 고정하거나 생략해도 됩니다.
-  title: 'ProTracker/MemoReference',
+  title: 'ProTracker/Memos/MemoReference',
   parameters: {
     api: {
       // msw vs. Mock Services 직접 사용

@@ -4,7 +4,7 @@ import Filter from './Filter';
 const meta: Meta<typeof Filter> = {
   component: Filter,
   // 앱 내부이므로 title에 앱 이름을 고정하거나 생략해도 됩니다.
-  title: 'ProTracker/Filter',
+  title: 'ProTracker/Memos/Filter',
   tags: ['autodocs'],
   argTypes: {},
 };
@@ -15,10 +15,6 @@ type Story = StoryObj<typeof Filter>;
 
 export const Primary: Story = {
   args: {
-    assetInfo: [
-      { text: 'a1', value: 'a1' },
-      { text: 'a2', value: 'a2' },
-    ],
     currencyInfo: [
       { text: 'USD', value: 'usd' },
       { text: 'KRW', value: 'krw' },
@@ -35,7 +31,7 @@ export const WithInit: Story = {
   args: {
     ...Primary.args,
     init: {
-      assets: 'a1,a2',
+      // assets: 'a1,a2',
       startDate: '2023-01-01T00:00:00.000Z',
       endDate: '2023-12-31T00:00:00.000Z',
       memoType: 'actual',

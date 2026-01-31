@@ -8,7 +8,7 @@ import { mockDB } from '@core/mocks/db/memoDB';
 const meta: Meta<typeof MemoFormModal> = {
   component: MemoFormModal,
   // 앱 내부이므로 title에 앱 이름을 고정하거나 생략해도 됩니다.
-  title: 'ProTracker/MemoFormModal',
+  title: 'ProTracker/Memos/MemoFormModal',
   parameters: {
     api: {
       // msw vs. Mock Services 직접 사용
