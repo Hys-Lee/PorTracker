@@ -26,7 +26,7 @@ const MemosPage = async ({
   ]);
 
   //test
-  console.log('memoREs: ', memosRes);
+  // console.log('memoREs: ', memosRes);
 
   const currencyInfo: ComponentProps<typeof Filter>['currencyInfo'] = [
     { value: 'usd', text: 'USD' },

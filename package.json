@@ -12,7 +12,8 @@
     "supaDeploy": "pnpm exec supabase functions deploy",
     "build-storybook": "pnpm exec nx run core:build-storybook",
     "storybook": "pnpm exec nx run core:storybook",
-    "gen:story": "pnpm exec plop --plopfile apps/core/plopfile.js"
+    "gen:story": "pnpm exec plop --plopfile apps/core/plopfile.js",
+    "gen:api-local": "openapi-typescript http://localhost:8080/v3/api-docs -o ./apps/core/server/types/generated/be-api-schema.d.ts"
   },
   "lint-staged": {
     "apps/**/*.{js,jsx,ts,tsx}": [
@@ -26,6 +27,7 @@
     "@chromatic-com/storybook": "^4.1.3",
     "@hookform/resolvers": "^3.10.0",
     "@stylexjs/stylex": "^0.17.2",
+    "@supabase/ssr": "^0.9.0",
     "@supabase/supabase-js": "^2.49.3",
     "@tanstack/react-query": "^5.90.16",
     "@tanstack/react-virtual": "^3.13.13",
@@ -37,6 +39,7 @@
     "jotai": "^2.16.1",
     "motion": "^12.0.5",
     "next": "^16.1.1",
+    "openapi-fetch": "^0.17.0",
     "pnpm": "^9.15.3",
     "radix-ui": "^1.4.3",
     "react": "19.2.3",
@@ -117,6 +120,7 @@
     "msw": "^2.12.4",
     "msw-storybook-addon": "^2.0.6",
     "nx": "22.1.3",
+    "openapi-typescript": "^7.13.0",
     "plop": "^4.0.4",
     "postcss": "^8.5.6",
     "postcss-loader": "^8.2.0",
