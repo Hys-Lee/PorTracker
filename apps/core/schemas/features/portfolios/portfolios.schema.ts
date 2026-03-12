@@ -204,12 +204,14 @@ export const actualCreateResponseSchema = actualFormSchema.omit({
   id: true,
   // recents: true,
   relatedActuals: true,
+  assetInfo: true,
   // relatedMemoId: true,
 });
 
 export const actualUpdateResponseSchema = actualFormSchema.omit({
   // recents: true,
   relatedActuals: true,
+  assetInfo: true,
   // relatedMemoId: true,
 });
 
@@ -230,13 +232,15 @@ export type ActualFormDeleteResponse = z.infer<
 export const actualFormRequestSchema = z.discriminatedUnion('submitMode', [
   z.object({
     submitMode: z.literal('add'),
-    ...actualCreateResponseSchema.omit({ assetInfo: true }).shape,
+    // ...actualCreateResponseSchema.omit({ assetInfo: true }).shape,
+    ...actualCreateResponseSchema.omit({}).shape,
     assetId: assetInfoSchema.shape.id,
     // relatedMemoId: actualFormSchema.shape.relatedMemoId,
   }),
   z.object({
     submitMode: z.literal('modify'),
-    ...actualUpdateResponseSchema.omit({ assetInfo: true }).shape,
+    // ...actualUpdateResponseSchema.omit({ assetInfo: true }).shape,
+    ...actualUpdateResponseSchema.omit({}).shape,
     assetId: assetInfoSchema.shape.id,
     // relatedMemoId: actualFormSchema.shape.relatedMemoId,
   }),
