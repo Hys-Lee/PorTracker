@@ -1,4 +1,4 @@
-import { mockDB } from '@core/mocks/db/portfoliosDB';
+import { mockDB } from '@core/mocks/_legacy_/db/portfoliosDB';
 import {
   actualCreateResponseSchema,
   actualDeleteResponseSchema,

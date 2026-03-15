@@ -1,5 +1,5 @@
-import { mockDB as portfoliosDB } from '@core/mocks/db/portfoliosDB';
-import { mockDB } from '@core/mocks/db/memoDB';
+import { mockDB as portfoliosDB } from '@core/mocks/_legacy_/db/portfoliosDB';
+import { mockDB } from '@core/mocks/_legacy_/db/memoDB';
 import { ActualFormDeleteResponse } from '@core/schemas/features/portfolios/portfolios.schema';
 import type { MemoActionService } from '@core/services/server/actions/memosActions';
 import { v4 as uuidV4 } from 'uuid';

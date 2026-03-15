@@ -35,7 +35,7 @@
     "babel.config.asdfjs",
     ".storybook/main.ts",
     ".storybook/_components/*",
-    "./mocks/handlers/**/*",
+    "mocks/_legacy_/handlers/**/*",
     "./tokens/**/*"
   ],
   "files": [

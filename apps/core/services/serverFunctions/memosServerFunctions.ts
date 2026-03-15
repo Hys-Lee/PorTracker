@@ -13,6 +13,7 @@ import {
   deleteMemoForm,
   updateMemoForm,
 } from '@core/services/server';
+import { MemoAggregates } from '@core/server/aggregates/memos/memoAggr';
 
 export type PostMemoFormRes = Response<
   MemoFormCreateResponse | MemoFormUpdateResponse | MemoFormDeleteResponse,

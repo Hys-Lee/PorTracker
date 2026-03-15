@@ -9,8 +9,8 @@ import './stylex.css';
 
 // MSW
 import { initialize as mswInitialize, mswLoader } from 'msw-storybook-addon';
-import { allHandlers } from '@core/mocks/handlers';
-import { directServiceController } from '@core/mocks/services/utils';
+import { allHandlers } from '@core/mocks/_legacy_/handlers';
+import { directServiceController } from '@core/mocks/_legacy_/services/utils';
 
 // MSW INIT
 mswInitialize();

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import ActualFormModal from './ActualFormModal';
-import { mockDB } from '@core/mocks/db/portfoliosDB';
+import { mockDB } from '@core/mocks/_legacy_/db/portfoliosDB';
 import { Suspense } from 'react';
 import { transactionIconSelector } from '@core/utils/renderers/iconSelector';
 

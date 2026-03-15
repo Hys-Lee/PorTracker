@@ -1,5 +1,5 @@
-import { mockDB } from '@core/mocks/db/memoDB';
-import { mockDB as portfoliosDB } from '@core/mocks/db/portfoliosDB';
+import { mockDB } from '@core/mocks/_legacy_/db/memoDB';
+import { mockDB as portfoliosDB } from '@core/mocks/_legacy_/db/portfoliosDB';
 import { MemoServerQueryService } from '@core/services/server';
 import { makeSafeMockReturn } from '../../utils';
 import z, { ZodError } from 'zod';

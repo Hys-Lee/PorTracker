@@ -1,4 +1,4 @@
-import * as reals from '../../../services/client';
+import * as reals from '../../../../services/client';
 
 import * as mockMemoQueryServices from './queries/memosQueries';
 

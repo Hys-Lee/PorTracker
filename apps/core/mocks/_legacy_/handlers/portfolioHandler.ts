@@ -7,7 +7,7 @@ import {
   ActualFormUpdateRequest,
   deleteActualPortfolioParamsSchema,
   ActualFormDeleteRequest,
-} from '../../schemas/features/portfolios/portfolios.schema';
+} from '../../../schemas/features/portfolios/portfolios.schema';
 import {
   getActualPortfolioById,
   getAllActualPortfolios,
@@ -16,16 +16,16 @@ import {
   // getTransactionTypes,
   getActualPortfolioRecents,
   getRelatedMemo,
-} from '../services/server/queries/portfoliosQueries';
+} from '../../../services/server/queries/portfoliosQueries';
 import {
   getAssets,
   getTransactionTypes,
-} from '../services/server/queries/commonQueries';
+} from '../../../services/server/queries/commonQueries';
 import {
   createActualForm,
   deleteActualForm,
   updateActualForm,
-} from '../services/server/actions/portfoliosActions';
+} from '../../../services/server/actions/portfoliosActions';
 
 const API_BASE = process.env.INTERNAL_API_URL || '';
 

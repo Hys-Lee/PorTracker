@@ -3,8 +3,8 @@ import {
   getAllPortfolios,
   getMemoFormById,
   getMemos,
-} from '../services/server/queries/memosQueries';
-import { getMemoRecents } from '../services/client/queries/memosQueries';
+} from '../../../services/server/queries/memosQueries';
+import { getMemoRecents } from '../../../services/client/queries/memosQueries';
 import {
   deleteMemoFormParamsSchema,
   getMemoFormParamsSchema,
@@ -16,7 +16,7 @@ import {
   createMemoForm,
   deleteMemoForm,
   updateMemoForm,
-} from '../services/server/actions/memosActions';
+} from '../../../services/server/actions/memosActions';
 
 const API_BASE = process.env.INTERNAL_API_URL || '';
 

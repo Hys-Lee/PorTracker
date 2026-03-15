@@ -1,5 +1,5 @@
-import { mockDB } from '@core/mocks/db/memoDB';
-import { mockDB as portfolioDB } from '@core/mocks/db/portfoliosDB';
+import { mockDB } from '@core/mocks/_legacy_/db/memoDB';
+import { mockDB as portfolioDB } from '@core/mocks/_legacy_/db/portfoliosDB';
 import { memoRecentListSchema } from '@core/schemas/features/memos/memos.schema';
 import { MemoClientQueryService } from '@core/services/client';
 import { PortfolioTypeValue } from '@core/types';

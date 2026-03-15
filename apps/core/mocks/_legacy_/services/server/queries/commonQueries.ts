@@ -1,4 +1,4 @@
-import { mockDB as portfolioDB } from '@core/mocks/db/portfoliosDB';
+import { mockDB as portfolioDB } from '@core/mocks/_legacy_/db/portfoliosDB';
 import {
   assetInfoListSchema,
   transactionTypesListSchema,

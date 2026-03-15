@@ -5,7 +5,7 @@ import {
   MemoEvaluationValue,
   MemoImportanceValue,
   TransactionValue,
-} from '../../types';
+} from '../../../types';
 import { TRANSACTION_MAP } from '@core/constants';
 import { mockDB as SharedDB } from './sharedDB';
 

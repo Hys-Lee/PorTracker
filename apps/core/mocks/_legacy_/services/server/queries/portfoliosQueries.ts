@@ -1,5 +1,5 @@
 import type { ActualPortfolioQueryService } from '@core/services/server/queries/portfoliosQueries';
-import { mockDB as portfolioDB } from '../../../db/portfoliosDB';
+import { mockDB as portfolioDB } from '../../../../_legacy_/db/portfoliosDB';
 import { HttpResponse } from 'msw';
 import { Response } from '@core/types/api';
 import {
@@ -14,7 +14,7 @@ import {
 } from '@core/schemas/features/portfolios/portfolios.schema';
 import { SafeParseReturnType, ZodError, z } from 'zod';
 import { branchFetchService, makeSafeMockReturn } from '../../utils';
-import { mockDB as memoDB } from '@core/mocks/db/memoDB';
+import { mockDB as memoDB } from '@core/mocks/_legacy_/db/memoDB';
 
 const actualPortfolioServiceMock: ActualPortfolioQueryService = {
   // getTransactionTypes: async () => {
