@@ -1,21 +1,18 @@
+import { getMemoFormById } from '@core/services/server';
 import {
-  getAllActualPortfolios,
-  getAllPortfolios,
-  getMemoFormById,
-} from '@core/services/server';
-import { postMemoForm } from '@core/services/serverFunctions/memosServerFunctions';
+  getMemoRecentsOnType,
+  postMemoForm,
+} from '@core/services/serverFunctions/memosServerFunctions';
 import MemoFormArea from '../MemoFormModalView/_ingredients/MemoFormArea/MemoFormArea';
 import MemoReference from '../MemoFormModalView/_ingredients/MemoReference/MemoReference';
 import PortfolioReference from '../MemoFormModalView/_ingredients/PortfolioReference/PortfolioReference';
 import MemoFormModalView from '../MemoFormModalView/MemoFormModalView';
 import StoreProvider from '@core/utils/components/StoreProvider/StoreProvider';
-import { ComponentProps, Suspense } from 'react';
 import FormActionButton from '@core/components/shared/MOLECULES/FormActionButton/FormActionButton';
 import { PortfolioReferenceData } from '@core/types/memos/referenceData';
 import { getQueryClient } from '@core/libs/tanstack-query/getQueryClient';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { memoKeys } from '@core/services/keys/memoKeys';
-import { getMemoRecents } from '@core/services/server';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
@@ -31,8 +28,13 @@ const MemoFormModal = async ({
   memoId,
   modalCloseHref,
 }: MemoFormModalProps) => {
-  const [tmpAllPortfoliosRes, initFormDataRes] = await Promise.all([
-    getAllPortfolios(),
+  const [
+    // tmpAllPortfoliosRes,
+
+    initFormDataRes,
+  ] = await Promise.all([
+    // getAllPortfolios(),
+
     getMemoFormById(memoId),
     // getRelatedMemoByActualId(portfolioId),
   ]);
@@ -54,12 +56,23 @@ const MemoFormModal = async ({
         initFormDataRes.data.memoType
       ),
       queryFn: () =>
-        getMemoRecents(
-          initFormDataRes.data.memoType === 'actual'
-            ? initFormDataRes.data?.linkedPortfolioInfo?.assetId
-            : initFormDataRes.data.linkedPortfolioInfo?.id,
-          initFormDataRes.data.memoType
-        ),
+        // getMemoRecents(
+        //   initFormDataRes.data.memoType === 'actual'
+        //     ? initFormDataRes.data?.linkedPortfolioInfo?.assetId
+        //     : initFormDataRes.data.linkedPortfolioInfo?.id,
+        //   initFormDataRes.data.memoType
+        // ),
+        getMemoRecentsOnType({
+          portfolioType:
+            initFormDataRes.data.memoType === 'event'
+              ? undefined
+              : initFormDataRes.data.memoType,
+          assetId: initFormDataRes.data.linkedPortfolioInfo?.assetId,
+          targetPortfolioId:
+            initFormDataRes.data.memoType === 'target'
+              ? initFormDataRes.data.id
+              : undefined,
+        }),
     });
   }
 
@@ -70,10 +83,16 @@ const MemoFormModal = async ({
           formArea={
             <MemoFormArea
               tmpPortfoliosInfo={
-                tmpAllPortfoliosRes.data?.map((data) => ({
-                  ...data,
-                  // portfolioType: 'actual',
-                })) ?? []
+                // tmpAllPortfoliosRes.data?.map((data) => ({
+                //   ...data,
+                //   // portfolioType: 'actual',
+                // })) ??
+
+                /** TODO
+                 *
+                 * 여기는 클라이언트쪽에서 라이브러리 등 통해 필터처리해서 데이터 가져와야 할 것으로 보임.
+                 */
+                []
               }
               id={formId}
               initData={initFormDataRes.data || undefined}

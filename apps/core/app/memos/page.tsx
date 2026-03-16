@@ -1,11 +1,7 @@
 import Filter from '@core/components/memos/ORGANISMS/Filter/Filter';
 import MemoTable from '@core/components/memos/ORGANISMS/MemoTable/MemoTable';
 import Button from '@core/components/shared/ATOMS/Button/Button';
-import {
-  getAssets,
-  getMemos,
-  getTransactionTypes,
-} from '@core/services/server';
+import { getAssets, getMemos } from '@core/services/server';
 import Link from 'next/link';
 import { ComponentProps, Suspense } from 'react';
 import * as stylex from '@stylexjs/stylex';
