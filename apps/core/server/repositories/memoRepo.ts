@@ -76,4 +76,15 @@ export const memoRepository = {
     handleInternalError(error);
     return data;
   },
+  getRecentMemosByAssetId: async (
+    assetId: string,
+    params: ParameterTypeOf<'/api/v1/memos/recent/asset/{assetPublicId}', 'get'>
+  ) => {
+    const { data, error } = await internalServerFetch.GET(
+      '/api/v1/memos/recent/asset/{assetPublicId}',
+      { params: { query: { ...params }, path: { assetPublicId: assetId } } }
+    );
+    handleInternalError(error);
+    return data;
+  },
 };

@@ -83,4 +83,11 @@ export const actualPortfolioRepository = {
     handleInternalError(error);
     return data;
   },
+  getUnlinkedActualPortfolios: async () => {
+    const { data, error } = await internalServerFetch.GET(
+      '/api/v1/actual-portfolios/unlinked'
+    );
+    handleInternalError(error);
+    return data;
+  },
 };

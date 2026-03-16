@@ -5,6 +5,8 @@ import {
   MemoFormDeleteResponse,
   MemoFormUpdateRequest,
   MemoFormUpdateResponse,
+  MemoRecent,
+  MemoSearchParams,
   MemoTile,
 } from '@core/schemas/features/memos/memos.schema';
 import { actualPortfolioRepository } from '@core/server/repositories/actualPortfolioRepo';
@@ -14,8 +16,10 @@ import { currencyRepository } from '@core/server/repositories/currencyRepo';
 import { memoRepository } from '@core/server/repositories/memoRepo';
 import { Response } from '@core/types/api';
 import { aggregateErrorHandler } from '../utils/aggregateErrorHandler';
+import { MemoTypeValue } from '@core/types';
+import { UnknownError } from '@core/libs/errors/errors';
 
-export const MemoAggregates = {
+export const memoAggregates = {
   getMemoFormById: async (memoId: string): Promise<Response<MemoForm>> => {
     try {
       const memo = await memoRepository.getMemo(memoId);
@@ -176,9 +180,10 @@ export const MemoAggregates = {
     }
   },
 
-  getMemos: async (): Promise<Response<MemoTile[]>> => {
+  getMemos: async (params: MemoSearchParams): Promise<Response<MemoTile[]>> => {
     try {
-      const memos = await memoRepository.getAllMemos();
+      // const memos = await memoRepository.getAllMemos();
+      const memos = await memoRepository.searchMemo({ ...params });
 
       return {
         data:
@@ -194,6 +199,85 @@ export const MemoAggregates = {
         error: null,
         success: true,
       };
+    } catch (e) {
+      return aggregateErrorHandler(e);
+    }
+  },
+  getRecentMemosByParams: async (params: {
+    memoType: MemoTypeValue;
+    assetId?: string;
+    targetPortfolioId?: string;
+  }): Promise<Response<MemoRecent[]>> => {
+    try {
+      switch (params.memoType) {
+        case 'actual':
+          const recentActualMemos =
+            await memoRepository.getRecentMemosByAssetId(params.assetId || '', {
+              limit: 5,
+            });
+          return {
+            data:
+              recentActualMemos?.map((data) => ({
+                content: data.content || '',
+                date: new Date(data.date || ''),
+                evaluation: data.evaluation || 'soso',
+                id: data.id || '',
+                importance: data.importance || 'normal',
+                memoType: data.memoType || 'event',
+                tags: data.tags || [],
+                title: data.title || '',
+              })) || [],
+            error: null,
+            success: true,
+          };
+        case 'target': {
+          const recentTargetMemos = await memoRepository.searchMemo({
+            targetIds: [params.targetPortfolioId || ''],
+            memoTypes: ['target'],
+          });
+
+          return {
+            data:
+              recentTargetMemos?.map((data) => ({
+                content: data.content || '',
+                date: new Date(data.date || ''),
+                evaluation: data.evaluation || 'soso',
+                id: data.id || '',
+                importance: data.importance || 'normal',
+                memoType: data.memoType || 'event',
+                tags: data.tags || [],
+                title: data.title || '',
+              })) || [],
+            error: null,
+            success: true,
+          };
+        }
+        case 'event': {
+          const recentEventMemos = await memoRepository.searchMemo({
+            memoTypes: ['event'],
+            limit: 5,
+          });
+          return {
+            data:
+              recentEventMemos?.map((data) => ({
+                content: data.content || '',
+                date: new Date(data.date || ''),
+                evaluation: data.evaluation || 'soso',
+                id: data.id || '',
+                importance: data.importance || 'normal',
+                memoType: data.memoType || 'event',
+                tags: data.tags || [],
+                title: data.title || '',
+              })) || [],
+            error: null,
+            success: true,
+          };
+        }
+        default: {
+          throw new UnknownError('unknown memoType in aggr');
+        }
+      }
+      // await memoRepository.getRecentMemosByAssetId(params.assetId, { limit: 5 });
     } catch (e) {
       return aggregateErrorHandler(e);
     }

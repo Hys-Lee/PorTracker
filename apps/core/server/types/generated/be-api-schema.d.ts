@@ -377,6 +377,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/memos/recent/asset/{assetPublicId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 에셋 관련 최근 메모 조회
+         * @description 특정 asset_id와 연결된 actual_portfolio의 메모 중 최근 n개를 조회합니다.
+         */
+        get: operations["getRecentMemosByAssetId"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/memos/bulk": {
         parameters: {
             query?: never;
@@ -409,6 +429,26 @@ export interface paths {
          * @description 여러 publicId 받아 리스트로 반환 - 순서는 랜덤
          */
         get: operations["getAssetsBulk"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/actual-portfolios/unlinked": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Unlinked actual portfolios
+         * @description Get actual portfolios that are not linked to any memo
+         */
+        get: operations["getUnlinkedActualPortfolios"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2499,7 +2539,7 @@ export interface operations {
     searchTargetPortfolios: {
         parameters: {
             query?: {
-                name?: string;
+                names?: string[];
                 startDate?: string;
                 endDate?: string;
                 limit?: number;
@@ -2702,12 +2742,12 @@ export interface operations {
     searchMemos: {
         parameters: {
             query?: {
-                importance?: components["schemas"]["Importance"];
-                title?: string;
-                evaluation?: components["schemas"]["Evaluation"];
-                memoType?: components["schemas"]["MemoType"];
-                actualId?: string;
-                targetId?: string;
+                importances?: components["schemas"]["Importance"][];
+                titles?: string[];
+                evaluations?: components["schemas"]["Evaluation"][];
+                memoTypes?: components["schemas"]["MemoType"][];
+                actualIds?: string[];
+                targetIds?: string[];
                 startDate?: string;
                 endDate?: string;
                 limit?: number;
@@ -2715,6 +2755,57 @@ export interface operations {
             };
             header?: never;
             path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["MemoResponse"][];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    getRecentMemosByAssetId: {
+        parameters: {
+            query?: {
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                assetPublicId: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -2857,12 +2948,59 @@ export interface operations {
             };
         };
     };
+    getUnlinkedActualPortfolios: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ActualPortfolioResponse"][];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     searchActualPortfolios: {
         parameters: {
             query?: {
-                assetId?: string;
-                currencyId?: string;
-                transactionType?: components["schemas"]["TransactionType"];
+                assetIds?: string[];
+                currencyIds?: string[];
+                transactionTypes?: components["schemas"]["TransactionType"][];
                 startDate?: string;
                 endDate?: string;
                 limit?: number;

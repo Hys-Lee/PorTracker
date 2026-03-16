@@ -8,6 +8,7 @@ import {
   ActualFormUpdateRequest,
   ActualFormUpdateResponse,
   ActualPortfolio,
+  ActualPortfolioSearchParams,
 } from '@core/schemas/features/portfolios/portfolios.schema';
 import { actualPortfolioRepository } from '@core/server/repositories/actualPortfolioRepo';
 // import { getActualPortfolio } from '@core/server/repositories';
@@ -20,7 +21,7 @@ import { aggregateErrorHandler } from '../utils/aggregateErrorHandler';
 import { CurrencyValue } from '@core/types';
 import { memoRepository } from '@core/server/repositories/memoRepo';
 
-export const ActualPortfolioAggregates = {
+export const actualPortfolioAggregates = {
   getActualPortfolioFormById: async (
     portfolioId: string
   ): Promise<Response<ActualForm>> => {
@@ -44,11 +45,14 @@ export const ActualPortfolioAggregates = {
       // recents 찾기 + 연결된 메모 찾기 => 워터폴
       const [recents, relatedMemo] = await Promise.all([
         actualPortfolioRepository.searchActualPortfolio({
-          assetId: targetAsset?.id,
+          assetIds: targetAsset?.id ? [targetAsset?.id] : undefined,
           endDate: actual?.date,
           limit: 5,
         }),
-        memoRepository.searchMemo({ actualId: actual?.id, limit: 1 }),
+        memoRepository.searchMemo({
+          actualIds: actual?.id ? [actual.id] : undefined,
+          limit: 1,
+        }),
       ]);
 
       return {
@@ -169,18 +173,127 @@ export const ActualPortfolioAggregates = {
       return aggregateErrorHandler(e);
     }
   },
-  getActualPortfolios: async (): Promise<Response<ActualPortfolio[]>> => {
+  getActualPortfolios: async (
+    params: ActualPortfolioSearchParams
+  ): Promise<Response<ActualPortfolio[]>> => {
     try {
       const [currencies, assets, assetTypes, actuals] = await Promise.all([
         currencyRepository.getCurrencies(),
         assetRepository.getAssets(),
         assetTypeRepository.getAssetTypes(),
-        actualPortfolioRepository.getActualPortfolios(),
+        // actualPortfolioRepository.getActualPortfolios(),
+        actualPortfolioRepository.searchActualPortfolio(params),
       ]);
 
       return {
         data:
           actuals?.map((actual) => {
+            const targetAsset = assets?.find(
+              (asset) => asset.id === actual?.assetId
+            );
+            const targetAssetType = assetTypes?.find(
+              (assetType) => assetType.id === targetAsset?.typeId
+            );
+            const targetCurrencies = currencies?.find(
+              (currency) => currency.id === actual?.currencyId
+            );
+            return {
+              assetName: targetAsset?.name || '',
+              accumulatedRatio: 0, // 임시
+              assetType: targetAssetType?.name || '',
+              changesRatio: 0, // 임시,
+              createdAt: new Date(actual?.createdAt || ''),
+              currency: (targetCurrencies?.code as 'usd' | 'krw') || 'usd', // 이 부분 고민좀 해야겠네.
+              date: new Date(actual?.date || ''),
+              id: actual?.id || '',
+              transactionType: actual?.transactionType || 'allocation',
+              value:
+                ((actual?.priceBp || 0) *
+                  (actual?.amountBp || 0) *
+                  (actual?.exchangeRateBp || 1)) /
+                10000 /
+                10000 /
+                10000,
+              assetDescription: targetAsset?.description,
+            };
+          }) || [],
+
+        error: null,
+        success: true,
+      };
+    } catch (e) {
+      return aggregateErrorHandler(e);
+    }
+  },
+  getAllRecentActualPortfolios: async (
+    params?: Omit<NonNullable<ActualPortfolioSearchParams>, 'assetIds'>
+  ): Promise<Response<ActualPortfolio[]>> => {
+    try {
+      const [currencies, assets, assetTypes] = await Promise.all([
+        currencyRepository.getCurrencies(),
+        assetRepository.getAssets(),
+        assetTypeRepository.getAssetTypes(),
+      ]);
+
+      const recetns = await actualPortfolioRepository.searchActualPortfolio({
+        ...params,
+        assetIds: assets ? assets.map((asset) => asset.id || '') : undefined,
+      });
+
+      return {
+        data:
+          recetns?.map((actual) => {
+            const targetAsset = assets?.find(
+              (asset) => asset.id === actual?.assetId
+            );
+            const targetAssetType = assetTypes?.find(
+              (assetType) => assetType.id === targetAsset?.typeId
+            );
+            const targetCurrencies = currencies?.find(
+              (currency) => currency.id === actual?.currencyId
+            );
+            return {
+              assetName: targetAsset?.name || '',
+              accumulatedRatio: 0, // 임시
+              assetType: targetAssetType?.name || '',
+              changesRatio: 0, // 임시,
+              createdAt: new Date(actual?.createdAt || ''),
+              currency: (targetCurrencies?.code as 'usd' | 'krw') || 'usd', // 이 부분 고민좀 해야겠네.
+              date: new Date(actual?.date || ''),
+              id: actual?.id || '',
+              transactionType: actual?.transactionType || 'allocation',
+              value:
+                ((actual?.priceBp || 0) *
+                  (actual?.amountBp || 0) *
+                  (actual?.exchangeRateBp || 1)) /
+                10000 /
+                10000 /
+                10000,
+              assetDescription: targetAsset?.description,
+            };
+          }) || [],
+        error: null,
+        success: true,
+      };
+    } catch (e) {
+      return aggregateErrorHandler(e);
+    }
+  },
+
+  getUnlinkedActualPortfolios: async (): Promise<
+    Response<ActualPortfolio[]>
+  > => {
+    try {
+      const [currencies, assets, assetTypes, unlinkedActuals] =
+        await Promise.all([
+          currencyRepository.getCurrencies(),
+          assetRepository.getAssets(),
+          assetTypeRepository.getAssetTypes(),
+          actualPortfolioRepository.getUnlinkedActualPortfolios(),
+        ]);
+      return {
+        data:
+          unlinkedActuals?.map((actual) => {
             const targetAsset = assets?.find(
               (asset) => asset.id === actual?.assetId
             );
