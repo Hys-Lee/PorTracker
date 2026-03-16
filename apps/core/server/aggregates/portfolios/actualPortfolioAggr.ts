@@ -10,16 +10,28 @@ import {
   ActualPortfolio,
   ActualPortfolioSearchParams,
 } from '@core/schemas/features/portfolios/portfolios.schema';
-import { actualPortfolioRepository } from '@core/server/repositories/actualPortfolioRepo';
+// import { } from '@core/server/repositories/actualPortfolioRepo';
 // import { getActualPortfolio } from '@core/server/repositories';
-import { assetRepository } from '@core/server/repositories/assetRepo';
-import { assetTypeRepository } from '@core/server/repositories/assetTypeRepo';
-import { currencyRepository } from '@core/server/repositories/currencyRepo';
+// import { } from '@core/server/repositories/assetRepo';
+// import { } from '@core/server/repositories/assetTypeRepo';
+// import { } from '@core/server/repositories/currencyRepo';
 import { fetchTagKeyFactory } from '@core/server/repositories/utils/fetchTagKeyFactory';
 import { Response } from '@core/types/api';
 import { aggregateErrorHandler } from '../utils/aggregateErrorHandler';
 import { CurrencyValue } from '@core/types';
-import { memoRepository } from '@core/server/repositories/memoRepo';
+// import { } from '@core/server/repositories/memoRepo';
+import {
+  getActualPortfolio,
+  getCurrencies,
+  getAssets,
+  getAssetTypes,
+  searchActualPortfolio,
+  getUnlinkedActualPortfolios,
+  deleteActualPortfolio,
+  updateActualPortfolio,
+  addActualPortfolio,
+  searchMemo,
+} from '@core/server/repositories';
 
 export const actualPortfolioAggregates = {
   getActualPortfolioFormById: async (
@@ -28,10 +40,10 @@ export const actualPortfolioAggregates = {
     try {
       // const actual = await ;
       const [currencies, assets, assetTypes, actual] = await Promise.all([
-        currencyRepository.getCurrencies(),
-        assetRepository.getAssets(),
-        assetTypeRepository.getAssetTypes(),
-        actualPortfolioRepository.getActualPortfolio(portfolioId),
+        getCurrencies(),
+        getAssets(),
+        getAssetTypes(),
+        getActualPortfolio(portfolioId),
       ]);
 
       const targetAsset = assets?.find((asset) => asset.id === actual?.assetId);
@@ -44,12 +56,12 @@ export const actualPortfolioAggregates = {
 
       // recents 찾기 + 연결된 메모 찾기 => 워터폴
       const [recents, relatedMemo] = await Promise.all([
-        actualPortfolioRepository.searchActualPortfolio({
+        searchActualPortfolio({
           assetIds: targetAsset?.id ? [targetAsset?.id] : undefined,
           endDate: actual?.date,
           limit: 5,
         }),
-        memoRepository.searchMemo({
+        searchMemo({
           actualIds: actual?.id ? [actual.id] : undefined,
           limit: 1,
         }),
@@ -102,11 +114,11 @@ export const actualPortfolioAggregates = {
   ): Promise<Response<ActualFormCreateResponse>> => {
     try {
       // 임시. be에서 currency id내려주고, fe에서도 이를 사용하도록(기존 enum 뜯어내고) 해야 함.
-      const currencies = await currencyRepository.getCurrencies();
+      const currencies = await getCurrencies();
       const currencyId =
         currencies?.find((data) => data.code === body.currency)?.id || '';
 
-      const res = await actualPortfolioRepository.addActualPortfolio({
+      const res = await addActualPortfolio({
         amountBp: body.amount * 10000,
         assetId: body.assetId,
         currencyId: currencyId,
@@ -133,11 +145,11 @@ export const actualPortfolioAggregates = {
   ): Promise<Response<ActualFormUpdateResponse>> => {
     try {
       // 임시. be에서 currency id내려주고, fe에서도 이를 사용하도록(기존 enum 뜯어내고) 해야 함.
-      const currencies = await currencyRepository.getCurrencies();
+      const currencies = await getCurrencies();
       const currencyId =
         currencies?.find((data) => data.code === body.currency)?.id || '';
 
-      const res = await actualPortfolioRepository.updateActualPortfolio(id, {
+      const res = await updateActualPortfolio(id, {
         amountBp: body.amount * 10000,
         assetId: body.assetId,
         currencyId: currencyId,
@@ -161,7 +173,7 @@ export const actualPortfolioAggregates = {
     id: string
   ): Promise<Response<ActualFormDeleteResponse>> => {
     try {
-      const res = await actualPortfolioRepository.deleteActualPortfolio(id);
+      const res = await deleteActualPortfolio(id);
       return {
         data: {
           id: res?.id || '',
@@ -178,11 +190,11 @@ export const actualPortfolioAggregates = {
   ): Promise<Response<ActualPortfolio[]>> => {
     try {
       const [currencies, assets, assetTypes, actuals] = await Promise.all([
-        currencyRepository.getCurrencies(),
-        assetRepository.getAssets(),
-        assetTypeRepository.getAssetTypes(),
-        // actualPortfolioRepository.getActualPortfolios(),
-        actualPortfolioRepository.searchActualPortfolio(params),
+        getCurrencies(),
+        getAssets(),
+        getAssetTypes(),
+        // getActualPortfolios(),
+        searchActualPortfolio(params),
       ]);
 
       return {
@@ -230,12 +242,12 @@ export const actualPortfolioAggregates = {
   ): Promise<Response<ActualPortfolio[]>> => {
     try {
       const [currencies, assets, assetTypes] = await Promise.all([
-        currencyRepository.getCurrencies(),
-        assetRepository.getAssets(),
-        assetTypeRepository.getAssetTypes(),
+        getCurrencies(),
+        getAssets(),
+        getAssetTypes(),
       ]);
 
-      const recetns = await actualPortfolioRepository.searchActualPortfolio({
+      const recetns = await searchActualPortfolio({
         ...params,
         assetIds: assets ? assets.map((asset) => asset.id || '') : undefined,
       });
@@ -286,10 +298,10 @@ export const actualPortfolioAggregates = {
     try {
       const [currencies, assets, assetTypes, unlinkedActuals] =
         await Promise.all([
-          currencyRepository.getCurrencies(),
-          assetRepository.getAssets(),
-          assetTypeRepository.getAssetTypes(),
-          actualPortfolioRepository.getUnlinkedActualPortfolios(),
+          getCurrencies(),
+          getAssets(),
+          getAssetTypes(),
+          getUnlinkedActualPortfolios(),
         ]);
       return {
         data:

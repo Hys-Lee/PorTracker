@@ -9,11 +9,23 @@ import {
   MemoSearchParams,
   MemoTile,
 } from '@core/schemas/features/memos/memos.schema';
-import { actualPortfolioRepository } from '@core/server/repositories/actualPortfolioRepo';
-import { assetRepository } from '@core/server/repositories/assetRepo';
-import { assetTypeRepository } from '@core/server/repositories/assetTypeRepo';
-import { currencyRepository } from '@core/server/repositories/currencyRepo';
-import { memoRepository } from '@core/server/repositories/memoRepo';
+// import { } from '@core/server/repositories/actualPortfolioRepo';
+// import { } from '@core/server/repositories/assetRepo';
+// import { } from '@core/server/repositories/assetTypeRepo';
+// import { } from '@core/server/repositories/currencyRepo';
+// import { } from '@core/server/repositories/memoRepo';
+import {
+  getMemo,
+  getCurrencies,
+  getAssets,
+  getAssetTypes,
+  getActualPortfolio,
+  addMemo,
+  updateMemo,
+  deleteMemo,
+  searchMemo,
+  getRecentMemosByAssetId,
+} from '@core/server/repositories';
 import { Response } from '@core/types/api';
 import { aggregateErrorHandler } from '../utils/aggregateErrorHandler';
 import { MemoTypeValue } from '@core/types';
@@ -22,16 +34,16 @@ import { UnknownError } from '@core/libs/errors/errors';
 export const memoAggregates = {
   getMemoFormById: async (memoId: string): Promise<Response<MemoForm>> => {
     try {
-      const memo = await memoRepository.getMemo(memoId);
+      const memo = await getMemo(memoId);
 
       let linkedPortfolioInfo = undefined;
 
       if (memo?.actualId) {
         const [currencies, assets, assetTypes, actual] = await Promise.all([
-          currencyRepository.getCurrencies(),
-          assetRepository.getAssets(),
-          assetTypeRepository.getAssetTypes(),
-          actualPortfolioRepository.getActualPortfolio(memo.actualId),
+          getCurrencies(),
+          getAssets(),
+          getAssetTypes(),
+          getActualPortfolio(memo.actualId),
         ]);
 
         const targetAsset = actual
@@ -98,7 +110,7 @@ export const memoAggregates = {
     body: MemoFormCreateRequest
   ): Promise<Response<MemoFormCreateResponse>> => {
     try {
-      const res = await memoRepository.addMemo({
+      const res = await addMemo({
         content: body.content,
         date: body.date.toISOString(),
         evaluation: body.evaluation,
@@ -133,7 +145,7 @@ export const memoAggregates = {
     body: MemoFormUpdateRequest
   ): Promise<Response<MemoFormUpdateResponse>> => {
     try {
-      const res = await memoRepository.updateMemo(id, {
+      const res = await updateMemo(id, {
         content: body.content,
         date: body.date.toISOString(),
         evaluation: body.evaluation,
@@ -167,7 +179,7 @@ export const memoAggregates = {
     id: string
   ): Promise<Response<MemoFormDeleteResponse>> => {
     try {
-      const res = await memoRepository.deleteMemo(id);
+      const res = await deleteMemo(id);
       return {
         data: {
           id: res?.id || '',
@@ -182,8 +194,8 @@ export const memoAggregates = {
 
   getMemos: async (params: MemoSearchParams): Promise<Response<MemoTile[]>> => {
     try {
-      // const memos = await memoRepository.getAllMemos();
-      const memos = await memoRepository.searchMemo({ ...params });
+      // const memos = await getAllMemos();
+      const memos = await searchMemo({ ...params });
 
       return {
         data:
@@ -211,10 +223,12 @@ export const memoAggregates = {
     try {
       switch (params.memoType) {
         case 'actual':
-          const recentActualMemos =
-            await memoRepository.getRecentMemosByAssetId(params.assetId || '', {
+          const recentActualMemos = await getRecentMemosByAssetId(
+            params.assetId || '',
+            {
               limit: 5,
-            });
+            }
+          );
           return {
             data:
               recentActualMemos?.map((data) => ({
@@ -231,7 +245,7 @@ export const memoAggregates = {
             success: true,
           };
         case 'target': {
-          const recentTargetMemos = await memoRepository.searchMemo({
+          const recentTargetMemos = await searchMemo({
             targetIds: [params.targetPortfolioId || ''],
             memoTypes: ['target'],
           });
@@ -253,7 +267,7 @@ export const memoAggregates = {
           };
         }
         case 'event': {
-          const recentEventMemos = await memoRepository.searchMemo({
+          const recentEventMemos = await searchMemo({
             memoTypes: ['event'],
             limit: 5,
           });
@@ -277,7 +291,7 @@ export const memoAggregates = {
           throw new UnknownError('unknown memoType in aggr');
         }
       }
-      // await memoRepository.getRecentMemosByAssetId(params.assetId, { limit: 5 });
+      // await getRecentMemosByAssetId(params.assetId, { limit: 5 });
     } catch (e) {
       return aggregateErrorHandler(e);
     }

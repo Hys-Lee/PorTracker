@@ -18,6 +18,7 @@ import {
   addMemo,
   updateMemo,
   deleteMemo,
+  getRecentMemosByAssetId,
 } from '../services';
 
 const API_BASE = process.env.INTERNAL_API_URL || 'http://localhost:4200';
@@ -33,30 +34,32 @@ export const memoRepoHandlers = [
   http.get(`${API_BASE}/api/v1/memos/search`, async ({ request }) => {
     const url = new URL(request.url);
 
-    const importance = url.searchParams.get('importance') || undefined;
-    const title = url.searchParams.get('title') || undefined;
-    const evaluation = url.searchParams.get('evaluation') || undefined;
-    const memoType = url.searchParams.get('memoType') || undefined;
-    const actualId = url.searchParams.get('actualId') || undefined;
-    const targetId = url.searchParams.get('targetId') || undefined;
+    const importances =
+      url.searchParams.get('importance')?.split(',') || undefined;
+    const titles = url.searchParams.get('title')?.split(',') || undefined;
+    const evaluations =
+      url.searchParams.get('evaluation')?.split(',') || undefined;
+    const memoTypes = url.searchParams.get('memoType')?.split(',') || undefined;
+    const actualIds = url.searchParams.get('actualId')?.split(',') || undefined;
+    const targetIds = url.searchParams.get('targetId')?.split(',') || undefined;
     const startDate = url.searchParams.get('startDate') || undefined;
     const endDate = url.searchParams.get('endDate') || undefined;
     const limit = url.searchParams.get('limit') || undefined;
     const offset = url.searchParams.get('offset') || undefined;
 
     const memos = await searchMemo({
-      importance: importance as NonNullable<
+      importances: importances as NonNullable<
         Parameters<typeof searchMemo>['0']
-      >['importance'],
-      title,
-      evaluation: evaluation as NonNullable<
+      >['importances'],
+      titles,
+      evaluations: evaluations as NonNullable<
         Parameters<typeof searchMemo>['0']
-      >['evaluation'],
-      memoType: memoType as NonNullable<
+      >['evaluations'],
+      memoTypes: memoTypes as NonNullable<
         Parameters<typeof searchMemo>['0']
-      >['memoType'],
-      actualId,
-      targetId,
+      >['memoTypes'],
+      actualIds,
+      targetIds,
       startDate,
       endDate,
       limit: limit ? parseInt(limit) : undefined,
@@ -94,6 +97,28 @@ export const memoRepoHandlers = [
 
     return HttpResponse.json(memo);
   }),
+  http.get(
+    `${API_BASE}/api/v1/memos/recent/asset/:assetPublicId`,
+    async ({ params }) => {
+      const { assetPublicId } = params as { assetPublicId: string };
+      const recentMemos = await getRecentMemosByAssetId(assetPublicId, {
+        limit: 5,
+      });
+
+      if (!recentMemos) {
+        return HttpResponse.json(
+          {
+            status: 404,
+            code: 'NOT_FOUND',
+            message: '메모를 찾을 수 없습니다.',
+          } satisfies ErrorResponse,
+          { status: 404 }
+        );
+      }
+
+      return HttpResponse.json(recentMemos);
+    }
+  ),
 
   /** POST /api/v1/memos - addMemo */
   http.post(`${API_BASE}/api/v1/memos`, async ({ request }) => {
@@ -105,24 +130,27 @@ export const memoRepoHandlers = [
   }),
 
   /** PUT /api/v1/memos/:publicId - updateMemo */
-  http.put(`${API_BASE}/api/v1/memos/:publicId`, async ({ params, request }) => {
-    const { publicId } = params as { publicId: string };
-    const body = (await request.json()) as MemoCreateRequest;
+  http.put(
+    `${API_BASE}/api/v1/memos/:publicId`,
+    async ({ params, request }) => {
+      const { publicId } = params as { publicId: string };
+      const body = (await request.json()) as MemoCreateRequest;
 
-    try {
-      await updateMemo(publicId, body);
-      return HttpResponse.json({ id: publicId } satisfies IdResponse);
-    } catch (e) {
-      return HttpResponse.json(
-        {
-          status: 404,
-          code: 'NOT_FOUND',
-          message: '메모를 찾을 수 없습니다.',
-        } satisfies ErrorResponse,
-        { status: 404 }
-      );
+      try {
+        await updateMemo(publicId, body);
+        return HttpResponse.json({ id: publicId } satisfies IdResponse);
+      } catch (e) {
+        return HttpResponse.json(
+          {
+            status: 404,
+            code: 'NOT_FOUND',
+            message: '메모를 찾을 수 없습니다.',
+          } satisfies ErrorResponse,
+          { status: 404 }
+        );
+      }
     }
-  }),
+  ),
 
   /** DELETE /api/v1/memos/:publicId - deleteMemo */
   http.delete(`${API_BASE}/api/v1/memos/:publicId`, async ({ params }) => {

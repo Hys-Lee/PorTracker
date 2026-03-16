@@ -1,15 +1,15 @@
 import { AssetInfos } from '@core/schemas/features/commons/assets.schema';
-import { assetRepository } from '@core/server/repositories/assetRepo';
 import { Response } from '@core/types/api';
 import { aggregateErrorHandler } from '../utils/aggregateErrorHandler';
-import { assetTypeRepository } from '@core/server/repositories/assetTypeRepo';
+// import { assetTypeRepository } from '@core/server/repositories/assetTypeRepo';
+import { getAssetTypes, getAssets } from '@core/server/repositories';
 
 export const assetAggregates = {
   getAssets: async (): Promise<Response<AssetInfos>> => {
     try {
       const [assets, assetTypes] = await Promise.all([
-        assetRepository.getAssets(),
-        assetTypeRepository.getAssetTypes(),
+        getAssets(),
+        getAssetTypes(),
       ]);
 
       return {

@@ -108,4 +108,14 @@ export const actualPortfolioMockService: {
 
     return { id: portfolioId };
   },
+  getUnlinkedActualPortfolios: async () => {
+    const memos = mockRepositoryDB.memos.values();
+    const linkedActualIdsOfMemos = memos.map((data) => data.actualId).toArray();
+    const actuals = mockRepositoryDB.actualPortfolios.values();
+
+    const unlinkedActuals = actuals
+      .filter((actual) => !linkedActualIdsOfMemos.includes(actual.id))
+      .toArray();
+    return unlinkedActuals;
+  },
 };

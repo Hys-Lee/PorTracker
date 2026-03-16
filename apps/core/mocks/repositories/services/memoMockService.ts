@@ -130,4 +130,23 @@ export const memoMockService: {
 
     return { id: publicId };
   },
+  getRecentMemosByAssetId: async (assetId: string) => {
+    // actual연결 중 해당 assetId가진 메모 가져오면 되겠군
+
+    const actualIdsWithTargetAssetId = mockRepositoryDB.actualPortfolios
+      .values()
+      .filter((actual) => actual.assetId === assetId)
+      .map((data) => data.id)
+      .toArray();
+    const memosLinkedActual = mockRepositoryDB.memos
+      .values()
+      .filter(
+        (data) =>
+          data.memoType === 'actual' &&
+          actualIdsWithTargetAssetId.includes(data.actualId)
+      )
+      .toArray();
+
+    return memosLinkedActual;
+  },
 };

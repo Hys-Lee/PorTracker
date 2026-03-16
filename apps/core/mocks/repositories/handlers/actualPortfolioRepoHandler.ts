@@ -15,9 +15,11 @@ import {
   getActualPortfolio,
   getActualPortfolios,
   getActualPortfoliosBulk,
+  getUnlinkedActualPortfolios,
   searchActualPortfolio,
   updateActualPortfolio,
 } from '../services';
+import { paths } from '@core/server/types/generated/be-api-schema';
 
 const API_BASE = process.env.INTERNAL_API_URL || 'http://localhost:4200';
 
@@ -89,6 +91,24 @@ export const actualPortfolioRepoHandlers = [
       }
 
       return HttpResponse.json(portfolio);
+    }
+  ),
+  http.get(
+    `${API_BASE}/api/v1/actual-portfolios/unlinked`,
+    async ({ request }) => {
+      const portfolios = await getUnlinkedActualPortfolios();
+      if (!portfolios) {
+        return HttpResponse.json(
+          {
+            status: 404,
+            code: 'NOT_FOUND',
+            message: '실제 포트폴리오를 찾을 수 없습니다.',
+          } satisfies ErrorResponse,
+          { status: 404 }
+        );
+      }
+
+      return HttpResponse.json(portfolios);
     }
   ),
 

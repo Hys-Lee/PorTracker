@@ -1,4 +1,10 @@
 import { actualPortfolioRepository } from './actualPortfolioRepo';
+import { assetRepository } from './assetRepo';
+import { assetTypeRepository } from './assetTypeRepo';
+import { credentialRepository } from './credentialRepo';
+import { currencyRepository } from './currencyRepo';
+import { memoRepository } from './memoRepo';
+import { targetPortfolioRepository } from './targetPortfolioRepo';
 
 export const {
   addActualPortfolio,
@@ -8,4 +14,33 @@ export const {
   getActualPortfoliosBulk,
   searchActualPortfolio,
   updateActualPortfolio,
+  getUnlinkedActualPortfolios,
 } = actualPortfolioRepository;
+
+export const { addAsset, deleteAsset, getAssets, getAssetsBulk, updateAsset } =
+  assetRepository;
+export const { addAssetType, deleteAssetType, getAssetTypes, updateAssetType } =
+  assetTypeRepository;
+export const { updateToken } = credentialRepository;
+export const { addCurrency, deleteCurrency, getCurrencies, updateCurrency } =
+  currencyRepository;
+export const {
+  addMemo,
+  deleteMemo,
+  getAllMemos,
+  getMemo,
+  getMemosBulk,
+  getRecentMemosByAssetId,
+  searchMemo,
+  updateMemo,
+} = memoRepository;
+export const {
+  addSnapshot,
+  addTargetPortfolio,
+  deleteTargetPortfolio,
+  getTargetPortfolio,
+  getTargetPortfolios,
+  getTargetPortfoliosBulk,
+  searchTargetPortfolio,
+  updateTargetPortfolio,
+} = targetPortfolioRepository;

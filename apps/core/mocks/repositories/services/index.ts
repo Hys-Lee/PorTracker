@@ -16,6 +16,7 @@ export const {
   getActualPortfoliosBulk,
   searchActualPortfolio,
   updateActualPortfolio,
+  getUnlinkedActualPortfolios,
 } = actualPortfolioMockService;
 
 // ─── Memo ──────────────────────────────────────────────────
@@ -27,6 +28,7 @@ export const {
   addMemo,
   updateMemo,
   deleteMemo,
+  getRecentMemosByAssetId,
 } = memoMockService;
 
 // ─── TargetPortfolio ───────────────────────────────────────
@@ -42,39 +44,20 @@ export const {
 } = targetPortfolioMockService;
 
 // ─── Asset ─────────────────────────────────────────────────
-export const {
-  getAssets,
-  getAssetsBulk,
-  addAsset,
-  updateAsset,
-  deleteAsset,
-} = assetMockService;
+export const { getAssets, getAssetsBulk, addAsset, updateAsset, deleteAsset } =
+  assetMockService;
 
 // ─── AssetType ─────────────────────────────────────────────
-export const {
-  getAssetTypes,
-  addAssetType,
-  updateAssetType,
-  deleteAssetType,
-} = assetTypeMockService;
+export const { getAssetTypes, addAssetType, updateAssetType, deleteAssetType } =
+  assetTypeMockService;
 
 // ─── Currency ──────────────────────────────────────────────
-export const {
-  getCurrencies,
-  addCurrency,
-  updateCurrency,
-  deleteCurrency,
-} = currencyMockService;
+export const { getCurrencies, addCurrency, updateCurrency, deleteCurrency } =
+  currencyMockService;
 
 // ─── Credential ────────────────────────────────────────────
 export const { updateToken } = credentialMockService;
 
 // ─── Tag ───────────────────────────────────────────────────
-export const {
-  getAllTags,
-  getTag,
-  getTagsBulk,
-  addTag,
-  updateTag,
-  deleteTag,
-} = tagMockService;
+export const { getAllTags, getTag, getTagsBulk, addTag, updateTag, deleteTag } =
+  tagMockService;
