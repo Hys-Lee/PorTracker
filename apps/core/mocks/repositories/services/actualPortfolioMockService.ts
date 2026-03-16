@@ -51,21 +51,24 @@ export const actualPortfolioMockService: {
   },
   searchActualPortfolio: async (params) => {
     const {
-      assetId,
-      currencyId,
+      assetIds,
+      currencyIds,
       endDate,
       limit,
       offset,
       startDate,
-      transactionType,
+      transactionTypes,
     } = params || {};
     let portfolios = Array.from(mockRepositoryDB.actualPortfolios.values());
-    if (assetId) portfolios = portfolios.filter((p) => p.assetId === assetId);
-    if (currencyId)
-      portfolios = portfolios.filter((p) => p.currencyId === currencyId);
-    if (transactionType)
-      portfolios = portfolios.filter(
-        (p) => p.transactionType === transactionType
+    if (assetIds)
+      portfolios = portfolios.filter((p) => assetIds.includes(p.assetId || ''));
+    if (currencyIds)
+      portfolios = portfolios.filter((p) =>
+        currencyIds.includes(p.currencyId || '')
+      );
+    if (transactionTypes)
+      portfolios = portfolios.filter((p) =>
+        transactionTypes.includes(p.transactionType || 'allocation')
       );
     if (startDate)
       portfolios = portfolios.filter(

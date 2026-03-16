@@ -2,7 +2,12 @@ import z from 'zod';
 import { actualPortfolioOriginSchema } from '../../domains/actualPortfolio.schema';
 import { memoOriginSchema } from '@core/schemas/domains/memo.schema';
 import { targetPortfolioOriginSchema } from '@core/schemas/domains/targetPortfolio.schema';
-import { PORTFOLIO_TYPE_VALUES } from '@core/constants';
+import {
+  MEMO_EVALUATION_VALUES,
+  MEMO_IMPORTANCE_VALUES,
+  MEMO_TYPE_VALUES,
+  PORTFOLIO_TYPE_VALUES,
+} from '@core/constants';
 
 export const actualPortfolioDetailedSchema = actualPortfolioOriginSchema.extend(
   {
@@ -75,6 +80,21 @@ export type MemoRecent = z.infer<typeof memoRecentSchema>;
 export type MemoTile = z.infer<typeof memoTileSchema>;
 
 /** PARAMS */
+export const searchMemoParamsSchema = z
+  .object({
+    importances: z.array(z.enum(MEMO_IMPORTANCE_VALUES)).optional(),
+    titles: z.array(z.string()).optional(),
+    evaluations: z.array(z.enum(MEMO_EVALUATION_VALUES)).optional(),
+    memoTypes: z.array(z.enum(MEMO_TYPE_VALUES)).optional(),
+    actualIds: z.array(z.string()).optional(),
+    targetIds: z.array(z.string()).optional(),
+    startDate: z.string().optional(),
+    endDate: z.string().optional(),
+    limit: z.number().optional(),
+    offset: z.number().optional(),
+  })
+  .optional();
+
 export const getMemoFormParamsSchema = z.object({
   memoId: z.string().uuid('유효한 uuid가 아닙니다'),
 });
@@ -82,6 +102,8 @@ export const getMemoFormParamsSchema = z.object({
 export const deleteMemoFormParamsSchema = z.object({
   memoId: z.string().uuid('유효한 uuid가 아닙니다'),
 });
+
+export type MemoSearchParams = z.infer<typeof searchMemoParamsSchema>;
 
 /** RES for REQ */
 

@@ -30,7 +30,7 @@ export const transactionTypesListSchema = z.array(transactionTypesSchema);
 //     .transform((str) => new Date(str)),
 // });
 
-export const assetInfoListSchema = z.array(assetInfoSchema);
+// export const assetInfoListSchema = z.array(assetInfoSchema);
 
 export const actualPortfolioSchema = actualPortfolioOriginSchema
   .pick({
@@ -186,6 +186,18 @@ export type RelatedMemo = z.infer<typeof relatedMemoSchema>;
 // ㄴ> 한 곳에서 깔끔하게 관리되고 좋네.
 
 /** PARAMS */
+export const searchActualPortfoliosParamsScehma = z
+  .object({
+    assetIds: z.array(z.string()).optional(),
+    currencyIds: z.array(z.string()).optional(),
+    transactionTypes: z.array(z.enum([...TRANSACTION_VALUES])).optional(),
+    startDate: z.string().optional(),
+    endDate: z.string().optional(),
+    limit: z.number().optional(),
+    offset: z.number().optional(),
+  })
+  .optional();
+
 export const getActualPorfolioParamsSchema = z.object({
   actualId: z.string().uuid('유효한 uuid가 아닙니다'),
 });
@@ -197,6 +209,10 @@ export const getRelatedMemoParamsSchema = z.object({
 export const deleteActualPortfolioParamsSchema = z.object({
   portfolioId: z.string().uuid('유효한 uuid가 아닙니다'),
 });
+
+export type ActualPortfolioSearchParams = z.infer<
+  typeof searchActualPortfoliosParamsScehma
+>;
 
 /** RES for REQ */
 

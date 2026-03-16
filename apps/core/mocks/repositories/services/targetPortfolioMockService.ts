@@ -8,9 +8,7 @@ export const targetPortfolioMockService: {
   [key in keyof typeof targetPortfolioRepository]: (typeof targetPortfolioRepository)[key];
 } = {
   getTargetPortfolios: async () => {
-    const portfolios = Array.from(
-      mockRepositoryDB.targetPortfolios.values()
-    );
+    const portfolios = Array.from(mockRepositoryDB.targetPortfolios.values());
     return portfolios;
   },
 
@@ -27,14 +25,12 @@ export const targetPortfolioMockService: {
   },
 
   searchTargetPortfolio: async (params) => {
-    const { name, startDate, endDate, limit, offset } = params || {};
+    const { names, startDate, endDate, limit, offset } = params || {};
 
     let portfolios = Array.from(mockRepositoryDB.targetPortfolios.values());
 
-    if (name)
-      portfolios = portfolios.filter((p) =>
-        p.name?.toLowerCase().includes(name.toLowerCase())
-      );
+    if (names)
+      portfolios = portfolios.filter((p) => names.includes(p.name || ''));
     if (startDate)
       portfolios = portfolios.filter(
         (p) => p.date && new Date(p.date) >= new Date(startDate)

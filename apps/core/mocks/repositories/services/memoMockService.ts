@@ -26,12 +26,12 @@ export const memoMockService: {
 
   searchMemo: async (params) => {
     const {
-      importance,
-      title,
-      evaluation,
-      memoType,
-      actualId,
-      targetId,
+      importances,
+      titles,
+      evaluations,
+      memoTypes,
+      actualIds,
+      targetIds,
       startDate,
       endDate,
       limit,
@@ -40,15 +40,19 @@ export const memoMockService: {
 
     let memos = Array.from(mockRepositoryDB.memos.values());
 
-    if (importance) memos = memos.filter((m) => m.importance === importance);
-    if (title)
+    if (importances)
       memos = memos.filter((m) =>
-        m.title?.toLowerCase().includes(title.toLowerCase())
+        importances.includes(m.importance || 'normal')
       );
-    if (evaluation) memos = memos.filter((m) => m.evaluation === evaluation);
-    if (memoType) memos = memos.filter((m) => m.memoType === memoType);
-    if (actualId) memos = memos.filter((m) => m.actualId === actualId);
-    if (targetId) memos = memos.filter((m) => m.targetId === targetId);
+    if (titles) memos = memos.filter((m) => titles.includes(m.title || ''));
+    if (evaluations)
+      memos = memos.filter((m) => evaluations.includes(m.evaluation || 'soso'));
+    if (memoTypes)
+      memos = memos.filter((m) => memoTypes.includes(m.memoType || 'event'));
+    if (actualIds)
+      memos = memos.filter((m) => actualIds.includes(m.actualId || ''));
+    if (targetIds)
+      memos = memos.filter((m) => targetIds.includes(m.targetId || ''));
     if (startDate)
       memos = memos.filter(
         (m) => m.date && new Date(m.date) >= new Date(startDate)

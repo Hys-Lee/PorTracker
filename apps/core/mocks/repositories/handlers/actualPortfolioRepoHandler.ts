@@ -34,25 +34,27 @@ export const actualPortfolioRepoHandlers = [
     async ({ request }) => {
       const url = new URL(request.url);
 
-      const assetId = url.searchParams.get('assetId') || undefined;
-      const currencyId = url.searchParams.get('currencyId') || undefined;
-      const transactionType =
-        url.searchParams.get('transactionType') || undefined;
+      const assetIds =
+        url.searchParams.get('assetIds')?.split(',') || undefined;
+      const currencyIds =
+        url.searchParams.get('currencyIds')?.split(',') || undefined;
+      const transactionTypes =
+        url.searchParams.get('transactionType')?.split(',') || undefined;
       const startDate = url.searchParams.get('startDate') || undefined;
       const endDate = url.searchParams.get('endDate') || undefined;
       const limit = url.searchParams.get('limit') || undefined;
       const offset = url.searchParams.get('offset') || undefined;
 
       const portfolios = await searchActualPortfolio({
-        assetId,
-        currencyId,
+        assetIds,
+        currencyIds,
         endDate,
         limit: limit ? parseInt(limit) : undefined,
         offset: offset ? parseInt(offset) : undefined,
         startDate,
-        transactionType: transactionType as NonNullable<
+        transactionTypes: transactionTypes as NonNullable<
           Parameters<typeof searchActualPortfolio>['0']
-        >['transactionType'],
+        >['transactionTypes'],
       });
 
       return HttpResponse.json(portfolios as ActualPortfolioResponse[]);
