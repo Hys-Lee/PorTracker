@@ -4,16 +4,17 @@ import { colors } from '../../../../tokens/colors.stylex';
 import { PlusIcon } from '@radix-ui/react-icons';
 
 import * as stylex from '@stylexjs/stylex';
-import {
-  getAllActualPortfolios,
-  getTransactionTypes,
-  getAssets,
-} from '@core/services/server';
+import { getAllActualPortfolios, getAssets } from '@core/services/server';
 import Link from 'next/link';
 import ActualTable from '@core/components/portfolios/ORGANISMS/ActualTable/ActualTable';
 import { Suspense } from 'react';
 import Filter from '@core/components/portfolios/ORGANISMS/Filter/Filter';
-import { CURRENCY_MAP, CURRENCY_VALUES } from '@core/constants';
+import {
+  CURRENCY_MAP,
+  CURRENCY_VALUES,
+  TRANSACTION_MAP,
+  TRANSACTION_VALUES,
+} from '@core/constants';
 import { transactionIconSelector } from '@core/utils/renderers/iconSelector';
 import SegmentControl from '@core/components/shared/MOLECULES/SegmentControl/SegmentControl';
 import Button from '@core/components/shared/ATOMS/Button/Button';
@@ -42,10 +43,9 @@ const PortfolioPage = async ({
   //   return { assets, startDate, endDate, transaction, currency };
   // };
 
-  const [transactionTypesRes, assetsRes, actualsRes] = await Promise.all([
-    getTransactionTypes(),
+  const [assetsRes, actualsRes] = await Promise.all([
     getAssets(),
-    getAllActualPortfolios(params.toString()),
+    getAllActualPortfolios(Object.fromEntries(params.entries())),
   ]);
 
   /** URL SearchParams Handling */
@@ -101,12 +101,10 @@ const PortfolioPage = async ({
                   value: data.id,
                 })) || []
               }
-              transactionInfo={
-                transactionTypesRes.data?.map((data) => ({
-                  name: data.text,
-                  value: data.value,
-                })) || []
-              }
+              transactionInfo={TRANSACTION_VALUES.map((data) => ({
+                name: TRANSACTION_MAP[data],
+                value: data,
+              }))}
             />
             <Link
               href={makeHref([{ key: modalParam, value: 'new' }])}
@@ -159,10 +157,10 @@ const PortfolioPage = async ({
             })) || []
           }
           transactionTypesInfo={
-            transactionTypesRes.data?.map((data) => ({
-              icon: transactionIconSelector(data.value, 24, 24),
-              text: data.text,
-              value: data.value,
+            TRANSACTION_VALUES.map((data) => ({
+              icon: transactionIconSelector(data, 24, 24),
+              text: TRANSACTION_MAP[data],
+              value: data,
             })) || []
           }
           mode={modalCase}

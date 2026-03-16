@@ -7,12 +7,11 @@ import ActualFormModalView, {
 } from '../ActualFormModalView/ActualFormModalView';
 import {
   getActualPortfolioById,
-  getActualPortfolioRecents,
   getAllActualPortfolios,
   getAssets,
-  getRelatedMemo,
+  getRelatedMemos,
   getRelatedMemoByMemoId,
-  getTransactionTypes,
+  getActualPortfolioRecentsOfAll,
 } from '@core/services/server';
 import { postActualForm } from '@core/services/serverFunctions/portfoliosServerFunctions';
 // } from '@core/services/queries/portfoliosQueries';
@@ -50,10 +49,10 @@ const ActualFormModal = async ({
   mode,
 }: ActualFormModalProps) => {
   const [recentsRes, initFormDataRes, allRelatedMemos] = await Promise.all([
-    getActualPortfolioRecents(),
+    getActualPortfolioRecentsOfAll(),
     getActualPortfolioById(portfolioId),
     // getRelatedMemoByActualId(portfolioId),
-    getRelatedMemo(),
+    getRelatedMemos(),
   ]);
   //test
   console.log('getActualPort: ', initFormDataRes.data);
