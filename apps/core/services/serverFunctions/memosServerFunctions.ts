@@ -11,9 +11,9 @@ import z from 'zod';
 import {
   createMemoForm,
   deleteMemoForm,
+  getMemoRecents,
   updateMemoForm,
 } from '@core/services/server';
-import { MemoAggregates } from '@core/server/aggregates/memos/memoAggr';
 
 export type PostMemoFormRes = Response<
   MemoFormCreateResponse | MemoFormUpdateResponse | MemoFormDeleteResponse,
@@ -71,4 +71,10 @@ export const postMemoForm = async (
         success: false,
       };
   }
+};
+
+export const getMemoRecentsOnType = async (
+  params: Parameters<typeof getMemoRecents>[0]
+) => {
+  return await getMemoRecents(params);
 };

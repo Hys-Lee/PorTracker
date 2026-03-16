@@ -6,20 +6,13 @@ import {
   actualDeleteResponseSchema,
   ActualFormCreateRequest,
   ActualFormDeleteRequest,
-  actualFormRequestSchema,
-  actualFormSchema,
   ActualFormUpdateRequest,
-  actualPortfolioListSchema,
-  actualPortfolioSchema,
   actualUpdateResponseSchema,
-  assetInfoListSchema,
-  relatedMemoSchema,
-  transactionTypesListSchema,
-  transactionTypesSchema,
 } from '@core/schemas/features/portfolios/portfolios.schema';
 import { Response } from '@core/types/api';
 import z from 'zod';
 import { schemaParser } from '../../shemaParser';
+import { actualPortfolioAggregates } from '@core/server/aggregates/portfolios/actualPortfolioAggr';
 
 export interface ActualPortfolioActionService {
   createActualForm: (
@@ -37,28 +30,16 @@ export interface ActualPortfolioActionService {
     // ...params: any
     validatedData: ActualFormDeleteRequest
   ) => Promise<Response<z.infer<typeof actualDeleteResponseSchema>>>;
-  //   getTransactionTypes: (
-  //     ...params: any
-  //   ) => Promise<Response<z.infer<typeof transactionTypesListSchema>>>;
-  //   getAssets: () => Promise<Response<z.infer<typeof assetInfoListSchema>>>;
-  //   getAllActualPortfolios: (
-  //     ...params: any
-  //   ) => Promise<Response<z.infer<typeof actualPortfolioListSchema>>>;
-  //   getActualPortfolioById: (
-  //     ...params: any
-  //   ) => Promise<Response<z.infer<typeof actualFormSchema>>>;
-  //   getRelatedMemoByMemoId: (
-  //     ...params: any
-  //   ) => Promise<Response<z.infer<typeof relatedMemoSchema>>>;
 }
 
 const actualPortfolioActions: ActualPortfolioActionService = {
   createActualForm: async (dataForAdd) => {
     const res = await schemaParser(
-      serverFetch(`/api/portfolios/actuals`, {
-        method: 'POST',
-        body: JSON.stringify(dataForAdd),
-      }),
+      // serverFetch(`/api/portfolios/actuals`, {
+      //   method: 'POST',
+      //   body: JSON.stringify(dataForAdd),
+      // }),
+      actualPortfolioAggregates.addActualPortfolioForm(dataForAdd),
       actualCreateResponseSchema
     );
     return res;
@@ -66,10 +47,14 @@ const actualPortfolioActions: ActualPortfolioActionService = {
 
   updateActualForm: async (dataForModify) => {
     const res = await schemaParser(
-      serverFetch(`/api/portfolios/actuals/${dataForModify.id}`, {
-        method: 'PUT',
-        body: JSON.stringify(dataForModify),
-      }),
+      // serverFetch(`/api/portfolios/actuals/${dataForModify.id}`, {
+      //   method: 'PUT',
+      //   body: JSON.stringify(dataForModify),
+      // }),
+      actualPortfolioAggregates.updateActualPortfolioForm(
+        dataForModify.id,
+        dataForModify
+      ),
       actualUpdateResponseSchema
     );
     return res;
@@ -77,9 +62,10 @@ const actualPortfolioActions: ActualPortfolioActionService = {
 
   deleteActualForm: async (dataForDelete) => {
     const res = await schemaParser(
-      serverFetch(`/api/portfolios/actuals/${dataForDelete.id}`, {
-        method: 'DELETE',
-      }),
+      // serverFetch(`/api/portfolios/actuals/${dataForDelete.id}`, {
+      //   method: 'DELETE',
+      // }),
+      actualPortfolioAggregates.deleteActualPortfolioForm(dataForDelete.id),
       actualDeleteResponseSchema
     );
     return res;
