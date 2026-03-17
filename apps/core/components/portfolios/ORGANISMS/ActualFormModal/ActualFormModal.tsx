@@ -50,12 +50,12 @@ const ActualFormModal = async ({
 }: ActualFormModalProps) => {
   const [recentsRes, initFormDataRes, allRelatedMemos] = await Promise.all([
     getActualPortfolioRecentsOfAll(),
-    getActualPortfolioById(portfolioId),
+    portfolioId ? getActualPortfolioById(portfolioId) : undefined,
     // getRelatedMemoByActualId(portfolioId),
-    getRelatedMemos(),
+    getRelatedMemos({ memoTypes: ['event'] }),
   ]);
   //test
-  console.log('getActualPort: ', initFormDataRes.data);
+  console.log('getActualPort: ', initFormDataRes?.data);
   const formId = 'actual';
   const buttonName = 'submitMode';
   /** ********************************
@@ -104,7 +104,7 @@ const ActualFormModal = async ({
                       },
                       currency: {
                         text: initFormDataRes.data?.currency,
-                        value: initFormDataRes.data?.currency || 'usd',
+                        value: initFormDataRes.data?.currency || 'USD',
                       },
                       date: initFormDataRes.data?.date,
                       exchangeRate: initFormDataRes.data.exchangeRate,
@@ -114,8 +114,8 @@ const ActualFormModal = async ({
                   : undefined
               }
               currenciesInfo={[
-                { value: 'usd', text: 'usd' },
-                { value: 'krw', text: 'krw' },
+                { value: 'USD', text: 'usd' },
+                { value: 'KRW', text: 'krw' },
               ]}
               localCurrencyValue="krw"
               formAction={async (actionRes, formData) => {

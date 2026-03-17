@@ -12,9 +12,9 @@ const schemaParser = async <T extends ZodSchema>(
 
   if (!parseRes.success) {
     if (typeof window === 'undefined') {
-      console.error('[ZOD-SERVER] parse error');
+      console.error('[ZOD-SERVER] parse error', parseRes.error);
     } else {
-      console.error('[ZOD-CLIENT] parse error');
+      console.error('[ZOD-CLIENT] parse error', parseRes.error);
     }
     return {
       data: null,

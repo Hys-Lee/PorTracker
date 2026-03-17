@@ -25,8 +25,8 @@ const MemosPage = async ({
   // console.log('memoREs: ', memosRes);
 
   const currencyInfo: ComponentProps<typeof Filter>['currencyInfo'] = [
-    { value: 'usd', text: 'USD' },
-    { value: 'krw', text: 'KRW' },
+    { value: 'USD', text: 'USD' },
+    { value: 'KRW', text: 'KRW' },
   ];
 
   const modalParam = 'memoModalTarget';

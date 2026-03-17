@@ -10,6 +10,6 @@
  *   // setupServer(...repositoryHandlers) 또는
  *   // 기존 handlers에 spread하여 사용
  */
-export { repositoryHandlers } from './handlers';
+export { allHandlers } from './handlers';
 export { mockRepositoryDB } from './mockData';
 export type * from './types';

@@ -35,7 +35,7 @@ const MemoFormModal = async ({
   ] = await Promise.all([
     // getAllPortfolios(),
 
-    getMemoFormById(memoId),
+    memoId ? getMemoFormById(memoId) : undefined,
     // getRelatedMemoByActualId(portfolioId),
   ]);
 
@@ -45,8 +45,8 @@ const MemoFormModal = async ({
   const queryClient = getQueryClient();
 
   if (
-    initFormDataRes.data?.linkedPortfolioInfo?.id &&
-    initFormDataRes.data?.memoType !== 'event'
+    initFormDataRes?.data?.linkedPortfolioInfo?.id &&
+    initFormDataRes?.data?.memoType !== 'event'
   ) {
     queryClient.prefetchQuery({
       queryKey: memoKeys.recents(
@@ -95,7 +95,7 @@ const MemoFormModal = async ({
                 []
               }
               id={formId}
-              initData={initFormDataRes.data || undefined}
+              initData={initFormDataRes?.data || undefined}
               // tagInfo={}
               formAction={async (actionRes, formData) => {
                 'use server';
@@ -119,7 +119,7 @@ const MemoFormModal = async ({
               <MemoReference
                 initInfo={
                   (initFormDataRes?.data?.linkedPortfolioInfo?.assetId ||
-                    initFormDataRes.data?.linkedPortfolioInfo?.id) &&
+                    initFormDataRes?.data?.linkedPortfolioInfo?.id) &&
                   initFormDataRes.data?.memoType !== 'event'
                     ? {
                         targetId:
@@ -137,7 +137,7 @@ const MemoFormModal = async ({
           portfolioReference={
             <PortfolioReference
               init={
-                initFormDataRes.data
+                initFormDataRes?.data
                   ? ({
                       ...initFormDataRes.data?.linkedPortfolioInfo,
                       portfolioType:

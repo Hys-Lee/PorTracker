@@ -179,6 +179,17 @@ const memoData: MemoResponse[] = [
     targetId: targetPortfolioData[0].id,
     tags: [tagData[1].id!],
   },
+  {
+    id: faker.string.uuid(),
+    createdAt: new Date('2026-03-17').toISOString(),
+    importance: 'normal',
+    title: '이런 일이 있던 날',
+    content: '먼가의 이벤트가 터졌어요. 마치 이란-미국 전쟁 마냥',
+    // evaluation: 'soso',
+    date: new Date('2026-03-10').toISOString(),
+    memoType: 'event',
+    tags: [tagData[1].id!],
+  },
 ];
 
 // ─── Profile ───────────────────────────────────────────────
@@ -203,27 +214,21 @@ const statisticData: GroupStatisticResponse = {
 
 // ─── In-memory DB (Map 기반) ────────────────────────────────
 export const mockRepositoryDB = {
-  memos: new Map<string, MemoResponse>(
-    memoData.map((d) => [d.id!, d])
-  ),
+  memos: new Map<string, MemoResponse>(memoData.map((d) => [d.id!, d])),
   actualPortfolios: new Map<string, ActualPortfolioResponse>(
     actualPortfolioData.map((d) => [d.id!, d])
   ),
   targetPortfolios: new Map<string, TargetPortfolioResponse>(
     targetPortfolioData.map((d) => [d.id!, d])
   ),
-  assets: new Map<string, AssetResponse>(
-    assetData.map((d) => [d.id!, d])
-  ),
+  assets: new Map<string, AssetResponse>(assetData.map((d) => [d.id!, d])),
   assetTypes: new Map<string, AssetTypeResponse>(
     assetTypeData.map((d) => [d.id!, d])
   ),
   currencies: new Map<string, CurrencyTypeResponse>(
     currencyData.map((d) => [d.id!, d])
   ),
-  tags: new Map<string, TagResponse>(
-    tagData.map((d) => [d.id!, d])
-  ),
+  tags: new Map<string, TagResponse>(tagData.map((d) => [d.id!, d])),
   profile: profileData,
   statistic: statisticData,
 };

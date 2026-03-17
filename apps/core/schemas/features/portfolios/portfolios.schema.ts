@@ -91,7 +91,7 @@ export const relatedMemoSchema = z.object({
   title: z.string().min(1, '제목은 필수입니다'),
   content: z.string(),
   tags: z.array(z.string().min(1, '태그 명을 작성하세요')),
-  evaluation: z.enum([...MEMO_EVALUATION_VALUES]),
+  evaluation: z.enum([...MEMO_EVALUATION_VALUES]).optional(),
 });
 export const relatedMemoListSchema = z.array(relatedMemoSchema);
 
@@ -176,6 +176,9 @@ export type ActualPortfolio = z.infer<typeof actualPortfolioSchema>;
 export type ActualForm = z.infer<typeof actualFormSchema>;
 export type RelatedActualAsset = z.infer<typeof relatedActualAssetSchema>;
 export type RelatedMemo = z.infer<typeof relatedMemoSchema>;
+export type RecentActualWithAssetInfo = z.infer<
+  typeof actualRecentListsForAssetsSchema
+>;
 
 // export type TargetPortfolioDetail = z.infer<
 //   typeof targetPortfolioDetailedSchema

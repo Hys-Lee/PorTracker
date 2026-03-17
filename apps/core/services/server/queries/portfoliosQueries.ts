@@ -31,7 +31,7 @@ export interface ActualPortfolioQueryService {
     ...params: any
   ) => Promise<Response<z.infer<typeof relatedMemoSchema>>>;
   getRelatedMemos: (
-    ...params: any
+    params?: MemoSearchParams
   ) => Promise<Response<z.infer<typeof relatedMemoListSchema>>>;
   getActualPortfolioRecentsOfAll: (
     ...params: any
@@ -69,6 +69,10 @@ const actualPortfolioService: ActualPortfolioQueryService = {
     return res;
   },
   getRelatedMemos: async (params?: MemoSearchParams) => {
+    //test
+    const testres = await memoAggregates.getMemos({ ...params });
+    console.log('getmemos in getrealtedmemos testres: ', testres);
+
     const res = await schemaParser(
       // serverFetch(`/api/memos/related-memos`),
       memoAggregates.getMemos({ ...params }),

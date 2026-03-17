@@ -36,14 +36,14 @@ export const targetPortfolioRepoHandlers = [
     async ({ request }) => {
       const url = new URL(request.url);
 
-      const name = url.searchParams.get('name') || undefined;
+      const names = url.searchParams.get('name')?.split(',') || undefined;
       const startDate = url.searchParams.get('startDate') || undefined;
       const endDate = url.searchParams.get('endDate') || undefined;
       const limit = url.searchParams.get('limit') || undefined;
       const offset = url.searchParams.get('offset') || undefined;
 
       const portfolios = await searchTargetPortfolio({
-        name,
+        names,
         startDate,
         endDate,
         limit: limit ? parseInt(limit) : undefined,
@@ -55,17 +55,14 @@ export const targetPortfolioRepoHandlers = [
   ),
 
   /** GET /api/v1/target-portfolios/bulk - getTargetPortfoliosBulk */
-  http.get(
-    `${API_BASE}/api/v1/target-portfolios/bulk`,
-    async ({ request }) => {
-      const url = new URL(request.url);
-      const publicIds = url.searchParams.getAll('publicIds');
+  http.get(`${API_BASE}/api/v1/target-portfolios/bulk`, async ({ request }) => {
+    const url = new URL(request.url);
+    const publicIds = url.searchParams.getAll('publicIds');
 
-      const portfolios = await getTargetPortfoliosBulk(publicIds);
+    const portfolios = await getTargetPortfoliosBulk(publicIds);
 
-      return HttpResponse.json(portfolios as TargetPortfolioResponse[]);
-    }
-  ),
+    return HttpResponse.json(portfolios as TargetPortfolioResponse[]);
+  }),
 
   /** GET /api/v1/target-portfolios/:publicId - getTargetPortfolio */
   http.get(
@@ -90,16 +87,13 @@ export const targetPortfolioRepoHandlers = [
   ),
 
   /** POST /api/v1/target-portfolios - addTargetPortfolio */
-  http.post(
-    `${API_BASE}/api/v1/target-portfolios`,
-    async ({ request }) => {
-      const body = (await request.json()) as TargetPortfolioCreateRequest;
-      const res = await addTargetPortfolio(body);
-      const { id: newId } = res || {};
+  http.post(`${API_BASE}/api/v1/target-portfolios`, async ({ request }) => {
+    const body = (await request.json()) as TargetPortfolioCreateRequest;
+    const res = await addTargetPortfolio(body);
+    const { id: newId } = res || {};
 
-      return HttpResponse.json({ id: newId } satisfies IdResponse);
-    }
-  ),
+    return HttpResponse.json({ id: newId } satisfies IdResponse);
+  }),
 
   /** PUT /api/v1/target-portfolios/:publicId - updateTargetPortfolio */
   http.put(

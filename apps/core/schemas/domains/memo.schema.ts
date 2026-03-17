@@ -16,13 +16,15 @@ export const memoOriginSchema = z.object({
     if (typeof val === 'string') return val.split(',').filter((str) => !!str); // 빈 문자열 지우기
     return val;
   }, z.array(z.string().min(1, '태그 명을 작성하세요'))),
-  evaluation: z.enum([...MEMO_EVALUATION_VALUES], {
-    message: '유효한 평가를 선택해주세요',
-  }),
-  date: z
-    .string()
-    .datetime({ message: '유효한 날짜가 아닙니다' })
-    .transform((str) => new Date(str)),
+  evaluation: z
+    .enum([...MEMO_EVALUATION_VALUES], {
+      message: '유효한 평가를 선택해주세요',
+    })
+    .optional(),
+  date: z.coerce.date(),
+  // .string()
+  // .datetime({ message: '유효한 날짜가 아닙니다' })
+  // .transform((str) => new Date(str)),
   memoType: z.enum([...MEMO_TYPE_VALUES]),
   // linkedInfo?: DropdownItem<>;
 });

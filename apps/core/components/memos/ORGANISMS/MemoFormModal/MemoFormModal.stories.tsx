@@ -3,7 +3,8 @@ import MemoFormModal from './MemoFormModal';
 import StoreProvider from '@core/utils/components/StoreProvider/StoreProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { memoKeys } from '@core/services/keys/memoKeys';
-import { mockDB } from '@core/mocks/_legacy_/db/memoDB';
+// import { mockDB } from '@core/mocks/_legacy_/db/memoDB';
+import { mockRepositoryDB } from '@core/mocks/repositories';
 
 const meta: Meta<typeof MemoFormModal> = {
   component: MemoFormModal,
@@ -42,7 +43,7 @@ export const ModifyVersion: Story = {
   render: (args) => {
     queryClient.setQueryData(memoKeys.recents(), []);
 
-    const memoIds = Array.from(mockDB.memo.keys());
+    const memoIds = Array.from(mockRepositoryDB.memos.keys());
 
     return (
       <QueryClientProvider client={queryClient}>

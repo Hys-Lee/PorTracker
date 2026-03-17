@@ -1,5 +1,3 @@
-import { getUserId } from '@core/libs/api/server-fetcher';
-import { ApiError } from '@core/libs/errors/errors';
 import {
   ActualForm,
   ActualFormCreateRequest,
@@ -9,13 +7,8 @@ import {
   ActualFormUpdateResponse,
   ActualPortfolio,
   ActualPortfolioSearchParams,
+  RecentActualWithAssetInfo,
 } from '@core/schemas/features/portfolios/portfolios.schema';
-// import { } from '@core/server/repositories/actualPortfolioRepo';
-// import { getActualPortfolio } from '@core/server/repositories';
-// import { } from '@core/server/repositories/assetRepo';
-// import { } from '@core/server/repositories/assetTypeRepo';
-// import { } from '@core/server/repositories/currencyRepo';
-import { fetchTagKeyFactory } from '@core/server/repositories/utils/fetchTagKeyFactory';
 import { Response } from '@core/types/api';
 import { aggregateErrorHandler } from '../utils/aggregateErrorHandler';
 import { CurrencyValue } from '@core/types';
@@ -67,6 +60,9 @@ export const actualPortfolioAggregates = {
         }),
       ]);
 
+      //test
+      console.log('recents in getactualformbyid: ', recents);
+
       return {
         data: {
           amount: (actual?.amountBp || 0) / 10000,
@@ -77,23 +73,23 @@ export const actualPortfolioAggregates = {
             type: targetAssetType?.name || '',
             description: targetAsset?.description,
           },
-          currency: (targetCurrencies?.code as CurrencyValue) || 'usd',
+          currency: (targetCurrencies?.code as CurrencyValue) || 'USD',
           date: new Date(actual?.date || ''),
           exchangeRate: (actual?.exchangeRateBp || 1) / 10000,
           id: actual?.id || '',
           price: (actual?.priceBp || 0) / 10000,
           relatedActuals:
-            recents?.map((actual) => ({
-              amount: (actual.amountBp || 0) / 10000,
-              date: new Date(actual.date || ''),
-              exchangeRate: (actual.exchangeRateBp || 1) / 10000,
-              id: actual.id || '',
-              price: (actual.priceBp || 0) / 10000,
-              transactionType: actual.transactionType || 'allocation',
+            recents?.map((recent) => ({
+              amount: (recent.amountBp || 0) / 10000,
+              date: new Date(recent.date || ''),
+              exchangeRate: (recent.exchangeRateBp || 1) / 10000,
+              id: recent.id || '',
+              price: (recent.priceBp || 0) / 10000,
+              transactionType: recent.transactionType || 'allocation',
               value:
-                ((actual.amountBp || 0) *
-                  (actual.exchangeRateBp || 1) *
-                  (actual.priceBp || 0)) /
+                ((recent.amountBp || 0) *
+                  (recent.exchangeRateBp || 1) *
+                  (recent.priceBp || 0)) /
                 10000 /
                 10000 /
                 10000,
@@ -215,7 +211,7 @@ export const actualPortfolioAggregates = {
               assetType: targetAssetType?.name || '',
               changesRatio: 0, // 임시,
               createdAt: new Date(actual?.createdAt || ''),
-              currency: (targetCurrencies?.code as 'usd' | 'krw') || 'usd', // 이 부분 고민좀 해야겠네.
+              currency: (targetCurrencies?.code as CurrencyValue) || 'USD', // 이 부분 고민좀 해야겠네.
               date: new Date(actual?.date || ''),
               id: actual?.id || '',
               transactionType: actual?.transactionType || 'allocation',
@@ -239,7 +235,7 @@ export const actualPortfolioAggregates = {
   },
   getAllRecentActualPortfolios: async (
     params?: Omit<NonNullable<ActualPortfolioSearchParams>, 'assetIds'>
-  ): Promise<Response<ActualPortfolio[]>> => {
+  ): Promise<Response<RecentActualWithAssetInfo>> => {
     try {
       const [currencies, assets, assetTypes] = await Promise.all([
         getCurrencies(),
@@ -252,38 +248,54 @@ export const actualPortfolioAggregates = {
         assetIds: assets ? assets.map((asset) => asset.id || '') : undefined,
       });
 
+      const recentsByAsset = assets?.map((assetInfo) => ({
+        assetInfo,
+        recents: [],
+      })) || [
+        {
+          assetInfo: {} as NonNullable<typeof assets>[0],
+          recents: [] as NonNullable<typeof recetns>,
+        },
+      ];
+      recetns?.forEach((rec) => {
+        const targetIdx =
+          recentsByAsset?.findIndex(
+            (asset) => asset.assetInfo?.id === rec.assetId
+          ) ?? -1;
+        if (targetIdx < 0 || recentsByAsset.length <= targetIdx) return;
+
+        recentsByAsset[targetIdx].recents.push(rec);
+      });
       return {
-        data:
-          recetns?.map((actual) => {
-            const targetAsset = assets?.find(
-              (asset) => asset.id === actual?.assetId
-            );
-            const targetAssetType = assetTypes?.find(
-              (assetType) => assetType.id === targetAsset?.typeId
-            );
-            const targetCurrencies = currencies?.find(
-              (currency) => currency.id === actual?.currencyId
-            );
-            return {
-              assetName: targetAsset?.name || '',
-              accumulatedRatio: 0, // 임시
-              assetType: targetAssetType?.name || '',
-              changesRatio: 0, // 임시,
-              createdAt: new Date(actual?.createdAt || ''),
-              currency: (targetCurrencies?.code as 'usd' | 'krw') || 'usd', // 이 부분 고민좀 해야겠네.
-              date: new Date(actual?.date || ''),
-              id: actual?.id || '',
-              transactionType: actual?.transactionType || 'allocation',
-              value:
-                ((actual?.priceBp || 0) *
-                  (actual?.amountBp || 0) *
-                  (actual?.exchangeRateBp || 1)) /
-                10000 /
-                10000 /
-                10000,
-              assetDescription: targetAsset?.description,
-            };
-          }) || [],
+        data: recentsByAsset.map((data) => {
+          const assetTypeName = assetTypes?.find(
+            (assetType) => assetType.id === data.assetInfo.typeId
+          )?.name;
+
+          return {
+            assetInfo: {
+              createdAt: new Date(data.assetInfo.createdAt || ''),
+              id: data.assetInfo.id || '',
+              name: data.assetInfo.name || '',
+              type: assetTypeName || '',
+              description: data.assetInfo.description,
+            },
+            recents: data.recents.map((recData) => {
+              const currency =
+                currencies?.find((curData) => curData.id === recData.currencyId)
+                  ?.code || '';
+              return {
+                date: new Date(recData.date || ''),
+                id: recData.id || '',
+                transactionType: recData.transactionType || 'allocation',
+                amount: (recData.amountBp || 0) / 10000,
+                currency: currency as CurrencyValue,
+                price: (recData.priceBp || 0) / 10000,
+                exchangeRate: (recData.exchangeRateBp || 0) / 10000,
+              };
+            }),
+          };
+        }),
         error: null,
         success: true,
       };
@@ -321,7 +333,7 @@ export const actualPortfolioAggregates = {
               assetType: targetAssetType?.name || '',
               changesRatio: 0, // 임시,
               createdAt: new Date(actual?.createdAt || ''),
-              currency: (targetCurrencies?.code as 'usd' | 'krw') || 'usd', // 이 부분 고민좀 해야겠네.
+              currency: (targetCurrencies?.code as CurrencyValue) || 'USD', // 이 부분 고민좀 해야겠네.
               date: new Date(actual?.date || ''),
               id: actual?.id || '',
               transactionType: actual?.transactionType || 'allocation',

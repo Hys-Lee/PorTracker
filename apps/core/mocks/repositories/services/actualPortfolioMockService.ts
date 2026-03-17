@@ -82,7 +82,7 @@ export const actualPortfolioMockService: {
     const offsetNum = offset || 0;
     const limitNum = limit || portfolios.length;
     portfolios = portfolios.slice(offsetNum, offsetNum + limitNum);
-    return portfolios.map((d) => ({}));
+    return portfolios;
   },
   updateActualPortfolio: async (portfolioId, body) => {
     const existing = mockRepositoryDB.actualPortfolios.get(portfolioId);

@@ -28,7 +28,7 @@ import {
 } from '@core/server/repositories';
 import { Response } from '@core/types/api';
 import { aggregateErrorHandler } from '../utils/aggregateErrorHandler';
-import { MemoTypeValue } from '@core/types';
+import { CurrencyValue, MemoTypeValue } from '@core/types';
 import { UnknownError } from '@core/libs/errors/errors';
 
 export const memoAggregates = {
@@ -69,7 +69,7 @@ export const memoAggregates = {
               assetType: targetAssetType?.name || '',
               changesRatio: 0, // 임시
               createdAt: new Date(actual.createdAt || ''),
-              currency: (targetCurrencies?.code as 'usd' | 'krw') || 'usd',
+              currency: (targetCurrencies?.code as CurrencyValue) || 'USD',
               date: new Date(actual.date || ''),
               exchangeRate: (actual.exchangeRateBp || 1) / 10000,
               id: actual.id || '',
@@ -196,7 +196,6 @@ export const memoAggregates = {
     try {
       // const memos = await getAllMemos();
       const memos = await searchMemo({ ...params });
-
       return {
         data:
           memos?.map((memo) => ({

@@ -30,7 +30,7 @@ export const Primary: Story = {
         assetType: '자산타입',
         changesRatio: 456,
         createdAt: new Date('2026-01-24'),
-        currency: 'usd',
+        currency: 'USD',
         date: new Date('2026-01-24'),
         id: '1',
         portfolioType: 'actual',

@@ -13,7 +13,7 @@ import { currencyRepoHandlers } from './currencyRepoHandler';
 import { credentialRepoHandlers } from './credentialRepoHandler';
 import { tagRepoHandlers } from './tagRepoHandler';
 
-export const repositoryHandlers = [
+export const allHandlers = [
   ...memoRepoHandlers,
   ...actualPortfolioRepoHandlers,
   ...targetPortfolioRepoHandlers,

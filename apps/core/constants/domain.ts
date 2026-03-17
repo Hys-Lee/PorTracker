@@ -14,7 +14,7 @@ export const TRANSACTION_VALUES = [
   'fee',
 ] as const;
 
-export const CURRENCY_VALUES = ['usd', 'krw'] as const;
+export const CURRENCY_VALUES = ['USD', 'KRW'] as const;
 
 export const PORTFOLIO_TYPE_VALUES = ['actual', 'target'] as const;
 
@@ -40,8 +40,8 @@ export const TRANSACTION_MAP: Record<TransactionValue, string> = {
 } as const;
 
 export const CURRENCY_MAP: Record<CurrencyValue, string> = {
-  krw: '원',
-  usd: '달러',
+  KRW: '원',
+  USD: '달러',
 } as const;
 
 export const MEMO_IMPORTANCE_MAP: Record<MemoImportanceValue, string> = {

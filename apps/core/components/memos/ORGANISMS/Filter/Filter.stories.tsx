@@ -16,8 +16,8 @@ type Story = StoryObj<typeof Filter>;
 export const Primary: Story = {
   args: {
     currencyInfo: [
-      { text: 'USD', value: 'usd' },
-      { text: 'KRW', value: 'krw' },
+      { text: 'USD', value: 'USD' },
+      { text: 'KRW', value: 'KRW' },
     ],
     memoTypeInfo: [
       { text: 'Target', value: 'target' },
@@ -35,7 +35,7 @@ export const WithInit: Story = {
       startDate: '2023-01-01T00:00:00.000Z',
       endDate: '2023-12-31T00:00:00.000Z',
       memoType: 'actual',
-      currency: 'usd',
+      currency: 'USD',
     },
   },
 };
