@@ -8,6 +8,10 @@ import {
 import { z } from 'zod';
 import { assetInfoSchema } from '../../domains/asset.schema';
 import { actualPortfolioOriginSchema } from '../../domains/actualPortfolio.schema';
+import {
+  datetimeRequestSchema,
+  datetimeResponseSchema,
+} from '@core/schemas/domains/utils.schema';
 
 /** 나중에 백엔드 기준 schema를 참조하도록 변경해야 함. 이 안에서 참조하는게 아니라. */
 
@@ -219,19 +223,27 @@ export type ActualPortfolioSearchParams = z.infer<
 
 /** RES for REQ */
 
-export const actualCreateResponseSchema = actualFormSchema.omit({
-  id: true,
-  // recents: true,
-  relatedActuals: true,
-  assetInfo: true,
-  // relatedMemoId: true,
+export const actualCreateResponseSchema = z.object({
+  ...actualFormSchema.omit({
+    // id: true,
+    // recents: true,
+    relatedActuals: true,
+    assetInfo: true,
+    date: true,
+    // relatedMemoId: true,
+  }).shape,
+  date: datetimeResponseSchema,
 });
 
-export const actualUpdateResponseSchema = actualFormSchema.omit({
-  // recents: true,
-  relatedActuals: true,
-  assetInfo: true,
-  // relatedMemoId: true,
+export const actualUpdateResponseSchema = z.object({
+  ...actualFormSchema.omit({
+    // recents: true,
+    relatedActuals: true,
+    assetInfo: true,
+    date: true,
+    // relatedMemoId: true,
+  }).shape,
+  date: datetimeResponseSchema,
 });
 
 export const actualDeleteResponseSchema = actualFormSchema.pick({ id: true });
@@ -252,14 +264,16 @@ export const actualFormRequestSchema = z.discriminatedUnion('submitMode', [
   z.object({
     submitMode: z.literal('add'),
     // ...actualCreateResponseSchema.omit({ assetInfo: true }).shape,
-    ...actualCreateResponseSchema.omit({}).shape,
+    ...actualCreateResponseSchema.omit({ date: true }).shape,
+    date: datetimeRequestSchema,
     assetId: assetInfoSchema.shape.id,
     // relatedMemoId: actualFormSchema.shape.relatedMemoId,
   }),
   z.object({
     submitMode: z.literal('modify'),
     // ...actualUpdateResponseSchema.omit({ assetInfo: true }).shape,
-    ...actualUpdateResponseSchema.omit({}).shape,
+    ...actualUpdateResponseSchema.omit({ date: true }).shape,
+    date: datetimeRequestSchema,
     assetId: assetInfoSchema.shape.id,
     // relatedMemoId: actualFormSchema.shape.relatedMemoId,
   }),

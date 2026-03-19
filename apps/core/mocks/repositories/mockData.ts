@@ -153,7 +153,7 @@ const memoData: MemoResponse[] = [
     date: new Date('2026-02-01').toISOString(),
     memoType: 'actual',
     actualId: actualPortfolioData[0].id,
-    tags: [tagData[0].id!, tagData[1].id!],
+    tags: [tagData[0].content!, tagData[1].content!],
   },
   {
     id: faker.string.uuid(),
@@ -165,7 +165,7 @@ const memoData: MemoResponse[] = [
     date: new Date('2026-02-05').toISOString(),
     memoType: 'actual',
     actualId: actualPortfolioData[1].id,
-    tags: [tagData[2].id!],
+    tags: [tagData[2].content!],
   },
   {
     id: faker.string.uuid(),
@@ -177,7 +177,7 @@ const memoData: MemoResponse[] = [
     date: new Date('2026-02-10').toISOString(),
     memoType: 'target',
     targetId: targetPortfolioData[0].id,
-    tags: [tagData[1].id!],
+    tags: [tagData[1].content!],
   },
   {
     id: faker.string.uuid(),
@@ -188,7 +188,7 @@ const memoData: MemoResponse[] = [
     // evaluation: 'soso',
     date: new Date('2026-03-10').toISOString(),
     memoType: 'event',
-    tags: [tagData[1].id!],
+    tags: [tagData[1].content!],
   },
 ];
 

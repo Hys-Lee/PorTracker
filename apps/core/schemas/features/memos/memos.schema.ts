@@ -8,6 +8,10 @@ import {
   MEMO_TYPE_VALUES,
   PORTFOLIO_TYPE_VALUES,
 } from '@core/constants';
+import {
+  datetimeRequestSchema,
+  datetimeResponseSchema,
+} from '@core/schemas/domains/utils.schema';
 
 export const actualPortfolioDetailedSchema = actualPortfolioOriginSchema.extend(
   {
@@ -111,16 +115,20 @@ export const memoCreateResponseSchema = memoFormSchema
   .omit({
     id: true,
     linkedPortfolioInfo: true,
+    date: true,
   })
   .extend({
+    date: datetimeResponseSchema,
     linkedPortfolioId: z.string().uuid().optional(),
   });
 
 export const memoUpdateResponseSchema = memoFormSchema
   .omit({
     linkedPortfolioInfo: true,
+    date: true,
   })
   .extend({
+    date: datetimeResponseSchema,
     linkedPortfolioId: z.string().uuid().optional(),
   });
 
@@ -140,7 +148,8 @@ export const memoFormRequestSchema = z.discriminatedUnion('submitMode', [
       linkedPortfolioId: actualPortfolioDetailedSchema.shape.id.optional(),
       linkedPortfolioType: z.enum([...PORTFOLIO_TYPE_VALUES]).optional(),
     })
-    .omit({ memoType: true }),
+    .omit({ memoType: true, date: true })
+    .extend({ date: datetimeRequestSchema }),
   z
     .object({
       submitMode: z.literal('modify'),
@@ -148,12 +157,18 @@ export const memoFormRequestSchema = z.discriminatedUnion('submitMode', [
       linkedPortfolioId: actualPortfolioDetailedSchema.shape.id.optional(),
       linkedPortfolioType: z.enum([...PORTFOLIO_TYPE_VALUES]).optional(),
     })
-    .omit({ memoType: true }),
+    .omit({ memoType: true, date: true })
+    .extend({ date: datetimeRequestSchema }),
   z.object({
     submitMode: z.literal('delete'),
     ...memoDeleteResponseSchema.shape,
   }),
 ]);
+
+export const memoFormPatchLinksSchema = z.object({
+  actualId: z.string().optional(),
+  targetId: z.string().optional(),
+});
 
 export type MemoFormRequest = z.infer<typeof memoFormRequestSchema>;
 
@@ -168,4 +183,8 @@ export type MemoFormUpdateRequest = Omit<
 export type MemoFormDeleteRequest = Omit<
   Extract<MemoFormRequest, { submitMode: 'delete' }>,
   'submitMode'
+>;
+
+export type MemoFormPatchLinksRequest = z.infer<
+  typeof memoFormPatchLinksSchema
 >;
