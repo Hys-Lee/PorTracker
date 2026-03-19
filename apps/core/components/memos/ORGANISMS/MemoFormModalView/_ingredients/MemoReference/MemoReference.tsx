@@ -369,7 +369,14 @@ const Preview = ({
           ))}
         </div> */}
         <div {...stylex.props(previewStyels.evaluationBox)}>
-          {memoEvaluationSelector(evaluation, 28, 28, previewStyels.evaluation)}
+          {evaluation
+            ? memoEvaluationSelector(
+                evaluation,
+                28,
+                28,
+                previewStyels.evaluation
+              )
+            : undefined}
         </div>
       </div>
     </>

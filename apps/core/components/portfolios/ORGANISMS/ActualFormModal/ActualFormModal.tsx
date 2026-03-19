@@ -54,8 +54,6 @@ const ActualFormModal = async ({
     // getRelatedMemoByActualId(portfolioId),
     getRelatedMemos({ memoTypes: ['event'] }),
   ]);
-  //test
-  console.log('getActualPort: ', initFormDataRes?.data);
   const formId = 'actual';
   const buttonName = 'submitMode';
   /** ********************************
@@ -124,7 +122,12 @@ const ActualFormModal = async ({
                   formData.set('id', initFormDataRes.data?.id);
                 }
                 const res = await postActualForm(formData);
-                console.log('formActionRes: ', JSON.stringify(res));
+                // console.log(
+                //   'formActionRes: ',
+                //   JSON.stringify(res),
+                //   res.error,
+                //   Object.fromEntries(formData.entries())
+                // );
                 // res.error?.details;
                 if (res.success) {
                   redirect(modalCloseHref);
@@ -179,9 +182,13 @@ const ActualFormModal = async ({
 
             <Suspense fallback={<>대기중</>}>
               <MemoReferenceContainer
-                initPromise={getRelatedMemoByMemoId(
-                  initFormDataRes?.data?.relatedMemoId || ''
-                )}
+                initPromise={
+                  initFormDataRes?.data?.relatedMemoId
+                    ? getRelatedMemoByMemoId(
+                        initFormDataRes?.data?.relatedMemoId
+                      )
+                    : undefined
+                }
               />
             </Suspense>
           }
