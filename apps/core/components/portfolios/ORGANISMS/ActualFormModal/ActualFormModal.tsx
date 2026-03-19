@@ -1,4 +1,3 @@
-import { serverFetch } from '@core/libs/api/server-fetcher';
 import FormArea from '../ActualFormModalView/_ingredients/ActualFormArea/ActualFormArea';
 import MemoReference from '../ActualFormModalView/_ingredients/MemoReference/MemoReference';
 import PortfolioReference from '../ActualFormModalView/_ingredients/PortfolioReference/PortfolioReference';
@@ -21,7 +20,7 @@ import { transactionIconSelector } from '@core/utils/renderers/iconSelector';
 // import {} from 'overlay-kit'
 import { ComponentProps, Suspense, use } from 'react';
 import { TRANSACTION_MAP } from '@core/constants';
-import MemoReferenceContainer from '@core/app/portfolios/_components/MemoReferenceContainer';
+import MemoReferenceContainer from '@core/app/(main)/portfolios/_components/MemoReferenceContainer';
 import Button from '@core/components/shared/ATOMS/Button/Button';
 
 import * as stylex from '@stylexjs/stylex';

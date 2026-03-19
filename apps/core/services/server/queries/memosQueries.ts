@@ -1,7 +1,7 @@
 import { Response } from '@core/types/api';
 import z from 'zod';
 import { schemaParser } from '../../shemaParser';
-import { serverFetch } from '@core/libs/api/server-fetcher';
+
 import {
   allPortfolioDetailedListSchema,
   memoFormListSchema,

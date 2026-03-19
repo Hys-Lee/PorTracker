@@ -21,9 +21,6 @@ const MemosPage = async ({
     getMemos(params.toString()),
   ]);
 
-  //test
-  // console.log('memoREs: ', memosRes);
-
   const currencyInfo: ComponentProps<typeof Filter>['currencyInfo'] = [
     { value: 'USD', text: 'USD' },
     { value: 'KRW', text: 'KRW' },

@@ -1,5 +1,5 @@
 import ActualFormModal from '@core/components/portfolios/ORGANISMS/ActualFormModal/ActualFormModal';
-import { colors } from '../../../../tokens/colors.stylex';
+import { colors } from '../../../../../tokens/colors.stylex';
 
 import { PlusIcon } from '@radix-ui/react-icons';
 

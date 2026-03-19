@@ -1,5 +1,3 @@
-import { serverFetch } from '@core/libs/api/server-fetcher';
-
 import {
   actualFormSchema,
   actualPortfolioListSchema,

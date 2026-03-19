@@ -3,13 +3,13 @@ import '../tokens/colors.css';
 import './globals.css';
 import { suite } from './fonts';
 import { fonts } from '../tokens/fonts.stylex';
-import * as stylex from '@stylexjs/stylex';
-import BreadCrumb from './_components/Breadcrumb';
-import { colors } from '@core/tokens/colors.stylex';
-import Navbar from './_components/Navbar';
-import Link from 'next/link';
-import { AntdRegistry } from '@ant-design/nextjs-registry';
-import TanstackQueryProvider from '@core/libs/tanstack-query/TanstackQueryProvider';
+// import * as stylex from '@stylexjs/stylex';
+// import BreadCrumb from './_components/Breadcrumb';
+// import { colors } from '@core/tokens/colors.stylex';
+// import Navbar from './_components/Navbar';
+// import Link from 'next/link';
+// import { AntdRegistry } from '@ant-design/nextjs-registry';
+// import TanstackQueryProvider from '@core/libs/tanstack-query/TanstackQueryProvider';
 
 export const metadata: Metadata = {
   title: 'My App',
@@ -22,70 +22,79 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={suite.variable}>
       <head>
         {/* <link rel="icon" type="image/x-icon" href="/favicon.ico" />
           <link rel="stylesheet" href="/src/styles.css" /> */}
       </head>
       <body
-        className={suite.variable}
-        {...stylex.props(bodyStyles.font, bodyStyles.base)}
+        // className={suite.variable}
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          fontFamily: fonts.suite,
+          margin: 0,
+          padding: 0,
+        }}
+        // {...stylex.props(bodyStyles.font, bodyStyles.base)}
       >
-        {/** Antd Next App Router에서 작동하도록 */}
-        <AntdRegistry>
-          <div {...stylex.props(bodyStyles.innerBase)}>
+        {children}
+        {/* <AntdRegistry>
+          <div {...stylex.props(baseStyles.innerBase)}>
             <header {...stylex.props(headerStyles.base)}>
               <div {...stylex.props(headerStyles.leftPart)}>
                 <Link href={'/'} {...stylex.props(headerStyles.logo)}>
-                  MyFancyLogo
+                  PorTracker
                 </Link>
 
                 <BreadCrumb />
               </div>
               <Navbar />
             </header>
-            <TanstackQueryProvider>{children}</TanstackQueryProvider>
-            {/* <script type="module" src="/src/main.tsx"></script> */}
+            <div {...stylex.props(baseStyles.font, baseStyles.base)}>
+              <TanstackQueryProvider>{children}</TanstackQueryProvider>
+            </div>
+            
           </div>
-        </AntdRegistry>
+        </AntdRegistry> */}
       </body>
     </html>
   );
 }
 
-const bodyStyles = stylex.create({
-  base: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  font: {
-    fontFamily: fonts.suite,
-  },
-  innerBase: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '60px',
-    padding: '20px',
-    maxWidth: '1280px',
-    width: '100%',
-  },
-});
+// const baseStyles = stylex.create({
+//   base: {
+//     display: 'flex',
+//     justifyContent: 'center',
+//   },
+//   font: {
+//     fontFamily: fonts.suite,
+//   },
+//   innerBase: {
+//     display: 'flex',
+//     flexDirection: 'column',
+//     gap: '60px',
+//     padding: '20px',
+//     maxWidth: '1280px',
+//     width: '100%',
+//   },
+// });
 
-const headerStyles = stylex.create({
-  base: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  logo: {
-    margin: 0,
-    fontWeight: '700',
-    fontSize: '24px',
-    color: colors.primary,
-    textDecoration: 'none',
-  },
-  leftPart: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-});
+// const headerStyles = stylex.create({
+//   base: {
+//     display: 'flex',
+//     alignItems: 'center',
+//     justifyContent: 'space-between',
+//   },
+//   logo: {
+//     margin: 0,
+//     fontWeight: '700',
+//     fontSize: '24px',
+//     color: colors.primary,
+//     textDecoration: 'none',
+//   },
+//   leftPart: {
+//     display: 'flex',
+//     alignItems: 'center',
+//   },
+// });

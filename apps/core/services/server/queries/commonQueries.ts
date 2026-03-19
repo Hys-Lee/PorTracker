@@ -3,7 +3,7 @@ import { assetInfoListSchema } from '@core/schemas/features/commons/assets.schem
 import { Response } from '@core/types/api';
 import z from 'zod';
 import { schemaParser } from '../../shemaParser';
-import { serverFetch } from '@core/libs/api/server-fetcher';
+
 import { assetAggregates } from '@core/server/aggregates/commons/assetAggr';
 
 export interface CommonQueryService {

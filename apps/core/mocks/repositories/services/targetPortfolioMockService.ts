@@ -125,4 +125,50 @@ export const targetPortfolioMockService: {
 
     return { id: publicId };
   },
+  addTargetPortfolioWithMemo: async (body) => {
+    const newId = faker.string.uuid();
+
+    const newPortfolio: TargetPortfolioResponse = {
+      id: newId,
+      name: body.name,
+      date: body.date,
+      createdAt: new Date().toISOString(),
+      items: body.items.map((item) => ({
+        assetId: item.assetId,
+        currentRatioBp: item.currentRatioBp,
+      })),
+    };
+
+    const memo = mockRepositoryDB.memos.get(body.memoId || '');
+    mockRepositoryDB.memos.set(memo?.id || '', { ...memo, targetId: newId });
+
+    mockRepositoryDB.targetPortfolios.set(newId, newPortfolio);
+
+    return { id: newId };
+  },
+  updateTargetPortfolioWithMemo: async (publicId, body) => {
+    const existing = mockRepositoryDB.targetPortfolios.get(publicId);
+    if (!existing)
+      throw new ApiError(
+        '[모킹 서비스]: 대상 데이터가 존재하지 않습니다',
+        'M000',
+        404
+      );
+
+    const updated: TargetPortfolioResponse = {
+      ...existing,
+      name: body.name,
+      date: body.date,
+      items: body.items.map((item) => ({
+        assetId: item.assetId,
+        currentRatioBp: item.currentRatioBp,
+      })),
+    };
+    const memo = mockRepositoryDB.memos.get(body.memoId || '');
+    mockRepositoryDB.memos.set(memo?.id || '', { ...memo, targetId: publicId });
+
+    mockRepositoryDB.targetPortfolios.set(publicId, updated);
+
+    return { id: publicId };
+  },
 };

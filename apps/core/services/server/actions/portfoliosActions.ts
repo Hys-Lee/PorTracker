@@ -1,6 +1,5 @@
 'use server';
 
-import { serverFetch } from '@core/libs/api/server-fetcher';
 import {
   actualCreateResponseSchema,
   actualDeleteResponseSchema,

@@ -11,7 +11,7 @@ const Navbar = () => {
   const pathname = usePathname();
   const pathSemgents = pathname.split('/').filter((data) => data !== '');
   //test
-  console.log('pathSegments: ', pathSemgents);
+  // console.log('pathSegments: ', pathSemgents);
   const majorPathName =
     pathSemgents.length > 0 &&
     navPage.includes(pathSemgents[0] as (typeof navPage)[number])
@@ -22,12 +22,12 @@ const Navbar = () => {
       <div {...stylex.props(navWrapperStyles.base)}>
         {navPage.map((navPageName) => {
           const text = `${navPageName[0].toUpperCase()}${navPageName.slice(1)}`;
-          console.log(
-            'navtext,majorPathName , navPageName : ',
-            text,
-            majorPathName,
-            navPageName
-          );
+          // console.log(
+          //   'navtext,majorPathName , navPageName : ',
+          //   text,
+          //   majorPathName,
+          //   navPageName
+          // );
           return (
             <Link
               key={navPageName}
@@ -43,7 +43,7 @@ const Navbar = () => {
             </Link>
           );
         })}
-        <div>마이페이지 관련</div>
+        <div>MyPage</div>
         {/* <Link href={'/flows'}>{'Flows'}</Link>
         <Link href={'/portfolios'}>{'Portfolios'}</Link>
         <Link href={'/memos'}>{'Memos'}</Link> */}
