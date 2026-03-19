@@ -41,53 +41,54 @@ export const getUserId = async () => {
   return user?.id;
 };
 
-export async function serverFetch(
-  url: string,
-  options: Omit<RequestInit, 'method'> & { method: RestfulMethod } = {
-    method: 'GET',
-  }
-): Promise<Response<any>> {
-  if (process.env.NODE_ENV === 'development') {
-    await enableMocking();
-  }
-  try {
-    const supabase = await createSupabaseClient();
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    const accessToken = session?.access_token;
+// export async function serverFetch(
+//   url: string,
+//   options: Omit<RequestInit, 'method'> & { method: RestfulMethod } = {
+//     method: 'GET',
+//   }
+// ): Promise<Response<any>> {
+//   if (process.env.NODE_ENV === 'development') {
+//     await enableMocking();
+//   }
 
-    const headerList = await headers();
-    const cookie = headerList.get('cookie');
+//   try {
+//     const supabase = await createSupabaseClient();
+//     const {
+//       data: { session },
+//     } = await supabase.auth.getSession();
+//     const accessToken = session?.access_token;
 
-    const res = await fetch(
-      process.env.INTERNAL_API_URL
-        ? `${process.env.INTERNAL_API_URL}${url}`
-        : `${'http://localhost:4200'}${url}`,
-      {
-        ...options,
-        headers: {
-          'Content-Type': 'application/json',
-          ...options.headers,
-          Cookie: cookie || '', // 서버에서 쿠키 전달 필수
-          ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
-      }
-    );
+//     const headerList = await headers();
+//     const cookie = headerList.get('cookie');
 
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new ApiError(
-        errorData.message || 'API Error occured',
-        errorData.code || '',
-        res.status
-      );
-    }
-    const data = await res.json();
+//     const res = await fetch(
+//       process.env.INTERNAL_API_URL
+//         ? `${process.env.INTERNAL_API_URL}${url}`
+//         : `${'http://localhost:4200'}${url}`,
+//       {
+//         ...options,
+//         headers: {
+//           'Content-Type': 'application/json',
+//           ...options.headers,
+//           Cookie: cookie || '', // 서버에서 쿠키 전달 필수
+//           ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+//         },
+//       }
+//     );
 
-    return { success: true, error: null, data };
-  } catch (error) {
-    console.error('[server-fetcher Error]: ', url, error);
-    return handleApiError(error);
-  }
-}
+//     if (!res.ok) {
+//       const errorData = await res.json();
+//       throw new ApiError(
+//         errorData.message || 'API Error occured',
+//         errorData.code || '',
+//         res.status
+//       );
+//     }
+//     const data = await res.json();
+
+//     return { success: true, error: null, data };
+//   } catch (error) {
+//     console.error('[server-fetcher Error]: ', url, error);
+//     return handleApiError(error);
+//   }
+// }

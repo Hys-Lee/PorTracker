@@ -15,6 +15,8 @@ export const {
   searchActualPortfolio,
   updateActualPortfolio,
   getUnlinkedActualPortfolios,
+  addActualPortfolioWithMemo,
+  updateActualPortfolioWithMemo,
 } = actualPortfolioRepository;
 
 export const { addAsset, deleteAsset, getAssets, getAssetsBulk, updateAsset } =
@@ -33,6 +35,7 @@ export const {
   getRecentMemosByAssetId,
   searchMemo,
   updateMemo,
+  patchMemo,
 } = memoRepository;
 export const {
   addSnapshot,
@@ -43,4 +46,6 @@ export const {
   getTargetPortfoliosBulk,
   searchTargetPortfolio,
   updateTargetPortfolio,
+  addTargetPortfolioWithMemo,
+  updateTargetPortfolioWithMemo,
 } = targetPortfolioRepository;

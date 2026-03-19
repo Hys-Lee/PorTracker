@@ -20,6 +20,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/target-portfolios/{publicId}/with-memo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["updateTargetPortfolioWithMemo"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/tags/{id}": {
         parameters: {
             query?: never;
@@ -52,7 +68,11 @@ export interface paths {
         delete: operations["deleteMemo"];
         options?: never;
         head?: never;
-        patch?: never;
+        /**
+         * 메모의 실제/목표 포트폴리오 연결 수정
+         * @description actualId와 targetId 중 하나를 받아 메모에 연결하고 다른 하나는 연결 해제합니다.
+         */
+        patch: operations["patchMemoIds"];
         trace?: never;
     };
     "/api/v1/currencies/{publicId}": {
@@ -119,6 +139,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/actual-portfolios/{publicId}/with-memo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["updateActualPortfolioWithMemo"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/target-portfolios": {
         parameters: {
             query?: never;
@@ -145,6 +181,22 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["addSnapshot"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/target-portfolios/with-memo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["addTargetPortfolioWithMemo"];
         delete?: never;
         options?: never;
         head?: never;
@@ -259,6 +311,22 @@ export interface paths {
         get: operations["getActualPortfolios"];
         put?: never;
         post: operations["addActualPortfolio"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/actual-portfolios/with-memo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["addActualPortfolioWithMemo"];
         delete?: never;
         options?: never;
         head?: never;
@@ -519,6 +587,12 @@ export interface components {
              */
             id?: string;
         };
+        TargetPortfolioWithMemoCreateRequest: {
+            name: string;
+            date: string;
+            items: components["schemas"]["TargetPortfolioItemRequest"][];
+            memoId?: string;
+        };
         TagCreateRequest: {
             /**
              * @description 태그 내용
@@ -532,10 +606,11 @@ export interface components {
         Importance: "critical" | "useful" | "normal";
         MemoCreateRequest: {
             title: string;
-            content?: string;
             importance: components["schemas"]["Importance"];
             evaluation?: components["schemas"]["Evaluation"];
+            /** Format: date-time */
             date: string;
+            content?: string;
             memoType: components["schemas"]["MemoType"];
             actualId?: string;
             targetId?: string;
@@ -570,6 +645,20 @@ export interface components {
         };
         /** @enum {string} */
         TransactionType: "allocation" | "withdrawal" | "dividend" | "fee";
+        ActualPortfolioWithMemoCreateRequest: {
+            assetId: string;
+            /** Format: date-time */
+            date: string;
+            transactionType: components["schemas"]["TransactionType"];
+            currencyId: string;
+            /** Format: int64 */
+            priceBp: number;
+            /** Format: int64 */
+            amountBp: number;
+            /** Format: int64 */
+            exchangeRateBp: number;
+            memoId?: string;
+        };
         TargetPortfolioSnapshotUpdateRequest: {
             items?: components["schemas"]["TargetPortfolioItemRequest"][];
         };
@@ -577,6 +666,10 @@ export interface components {
             nickname?: string;
             /** Format: int64 */
             baseCurrencyId?: number;
+        };
+        MemoPatchRequest: {
+            actualId?: string;
+            targetId?: string;
         };
         TargetPortfolioItemResponse: {
             assetId?: string;
@@ -807,6 +900,59 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["IdResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    updateTargetPortfolioWithMemo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                publicId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TargetPortfolioWithMemoCreateRequest"];
+            };
+        };
         responses: {
             /** @description OK */
             200: {
@@ -1109,6 +1255,59 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["IdResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    patchMemoIds: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                publicId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MemoPatchRequest"];
+            };
+        };
         responses: {
             /** @description OK */
             200: {
@@ -1605,6 +1804,59 @@ export interface operations {
             };
         };
     };
+    updateActualPortfolioWithMemo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                publicId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActualPortfolioWithMemoCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["IdResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     getTargetPortfolios: {
         parameters: {
             query?: never;
@@ -1715,6 +1967,57 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["TargetPortfolioSnapshotUpdateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["IdResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    addTargetPortfolioWithMemo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TargetPortfolioWithMemoCreateRequest"];
             };
         };
         responses: {
@@ -2354,6 +2657,57 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["ActualPortfolioCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["IdResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 에러 발생 (공통 구조) */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    addActualPortfolioWithMemo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActualPortfolioWithMemoCreateRequest"];
             };
         };
         responses: {

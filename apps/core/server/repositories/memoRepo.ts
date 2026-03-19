@@ -38,6 +38,22 @@ export const memoRepository = {
     handleInternalError(error);
     return data;
   },
+  patchMemo: async (
+    publicId: string,
+    body: BodyTypeOf<'/api/v1/memos/{publicId}', 'patch'>
+  ) => {
+    const { data, error } = await internalServerFetch.PATCH(
+      '/api/v1/memos/{publicId}',
+      {
+        params: {
+          path: { publicId },
+        },
+        body,
+      }
+    );
+    handleInternalError(error);
+    return data;
+  },
   getAllMemos: async () => {
     const { data, error } = await internalServerFetch.GET('/api/v1/memos');
     handleInternalError(error);

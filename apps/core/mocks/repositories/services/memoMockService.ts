@@ -130,6 +130,32 @@ export const memoMockService: {
 
     return { id: publicId };
   },
+  patchMemo: async (publicId: string, body) => {
+    const existing = mockRepositoryDB.memos.get(publicId);
+    if (!existing)
+      throw new ApiError(
+        '[모킹 서비스]: 대상 데이터가 존재하지 않습니다',
+        'M000',
+        404
+      );
+    const patchingData: {
+      actualId: undefined | string;
+      targetId: undefined | string;
+    } = {
+      actualId: undefined,
+      targetId: undefined,
+    };
+    if (body.actualId) {
+      patchingData.actualId = body.actualId;
+    } else {
+      patchingData.targetId = body.targetId;
+    }
+    const patched: MemoResponse = {
+      ...existing,
+      ...patchingData,
+    };
+    return { id: publicId };
+  },
   getRecentMemosByAssetId: async (assetId: string) => {
     // actual연결 중 해당 assetId가진 메모 가져오면 되겠군
 

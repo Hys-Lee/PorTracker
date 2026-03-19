@@ -90,4 +90,29 @@ export const actualPortfolioRepository = {
     handleInternalError(error);
     return data;
   },
+  addActualPortfolioWithMemo: async (
+    body: BodyTypeOf<'/api/v1/actual-portfolios/with-memo', 'post'>
+  ) => {
+    const { data, error } = await internalServerFetch.POST(
+      '/api/v1/actual-portfolios/with-memo',
+      {
+        body,
+      }
+    );
+    handleInternalError(error);
+    return data;
+  },
+  updateActualPortfolioWithMemo: async (
+    portfolioId: string,
+    body: BodyTypeOf<'/api/v1/actual-portfolios/{publicId}/with-memo', 'put'>
+  ) => {
+    //test
+    console.log('updateActualPortfolioWIthMemo memoid: ', body.memoId);
+    const { data, error } = await internalServerFetch.PUT(
+      '/api/v1/actual-portfolios/{publicId}/with-memo',
+      { params: { path: { publicId: portfolioId } }, body }
+    );
+    handleInternalError(error);
+    return data;
+  },
 };

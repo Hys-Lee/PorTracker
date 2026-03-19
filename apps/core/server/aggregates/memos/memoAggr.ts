@@ -3,6 +3,7 @@ import {
   MemoFormCreateRequest,
   MemoFormCreateResponse,
   MemoFormDeleteResponse,
+  MemoFormPatchLinksRequest,
   MemoFormUpdateRequest,
   MemoFormUpdateResponse,
   MemoRecent,
@@ -25,6 +26,7 @@ import {
   deleteMemo,
   searchMemo,
   getRecentMemosByAssetId,
+  patchMemo,
 } from '@core/server/repositories';
 import { Response } from '@core/types/api';
 import { aggregateErrorHandler } from '../utils/aggregateErrorHandler';
@@ -112,7 +114,8 @@ export const memoAggregates = {
     try {
       const res = await addMemo({
         content: body.content,
-        date: body.date.toISOString(),
+        // date: body.date.toISOString(),
+        date: body.date,
         evaluation: body.evaluation,
         importance: body.importance,
         memoType: body.linkedPortfolioType || 'event',
@@ -131,6 +134,7 @@ export const memoAggregates = {
         data: {
           ...body,
           memoType: body.linkedPortfolioType || 'event',
+          date: new Date(body.date),
         },
         error: null,
         success: true,
@@ -147,7 +151,8 @@ export const memoAggregates = {
     try {
       const res = await updateMemo(id, {
         content: body.content,
-        date: body.date.toISOString(),
+        // date: body.date.toISOString(),
+        date: body.date,
         evaluation: body.evaluation,
         importance: body.importance,
         memoType: body.linkedPortfolioType || 'event',
@@ -166,6 +171,7 @@ export const memoAggregates = {
         data: {
           ...body,
           memoType: body.linkedPortfolioType || 'event',
+          date: new Date(body.date),
         },
         error: null,
         success: true,

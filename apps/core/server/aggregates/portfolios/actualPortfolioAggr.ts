@@ -24,6 +24,9 @@ import {
   updateActualPortfolio,
   addActualPortfolio,
   searchMemo,
+  patchMemo,
+  addActualPortfolioWithMemo,
+  updateActualPortfolioWithMemo,
 } from '@core/server/repositories';
 
 export const actualPortfolioAggregates = {
@@ -60,9 +63,6 @@ export const actualPortfolioAggregates = {
         }),
       ]);
 
-      //test
-      console.log('recents in getactualformbyid: ', recents);
-
       return {
         data: {
           amount: (actual?.amountBp || 0) / 10000,
@@ -95,7 +95,7 @@ export const actualPortfolioAggregates = {
                 10000,
             })) || [],
           transactionType: actual?.transactionType || 'allocation',
-          relatedMemoId: relatedMemo?.[0].id || '',
+          relatedMemoId: relatedMemo?.[0]?.id || undefined,
         },
         error: null,
         success: true,
@@ -114,18 +114,29 @@ export const actualPortfolioAggregates = {
       const currencyId =
         currencies?.find((data) => data.code === body.currency)?.id || '';
 
-      const res = await addActualPortfolio({
+      const dataForAdd: Parameters<
+        typeof addActualPortfolio | typeof addActualPortfolioWithMemo
+      >[0] = {
         amountBp: body.amount * 10000,
         assetId: body.assetId,
         currencyId: currencyId,
-        date: body.date.toISOString(),
+        // date: body.date.toISOString(),
+        date: body.date,
         exchangeRateBp: body.exchangeRate * 10000,
         priceBp: body.price * 10000,
         transactionType: body.transactionType,
-      });
+        memoId: body.relatedMemoId,
+      };
+
+      const res = body.relatedMemoId
+        ? await addActualPortfolioWithMemo(dataForAdd)
+        : await addActualPortfolio(dataForAdd);
+
       return {
         data: {
           ...body,
+          id: res?.id || '',
+          date: new Date(body.date),
         },
         error: null,
         success: true,
@@ -145,18 +156,28 @@ export const actualPortfolioAggregates = {
       const currencyId =
         currencies?.find((data) => data.code === body.currency)?.id || '';
 
-      const res = await updateActualPortfolio(id, {
+      const dataForUpdate: Parameters<
+        typeof addActualPortfolio | typeof addActualPortfolioWithMemo
+      >[0] = {
         amountBp: body.amount * 10000,
         assetId: body.assetId,
         currencyId: currencyId,
-        date: body.date.toISOString(),
+        // date: body.date.toISOString(),
+        date: body.date,
         exchangeRateBp: body.exchangeRate * 10000,
         priceBp: body.price * 10000,
         transactionType: body.transactionType,
-      });
+        memoId: body.relatedMemoId,
+      };
+
+      const res = body.relatedMemoId
+        ? await updateActualPortfolioWithMemo(id, dataForUpdate)
+        : await updateActualPortfolio(id, dataForUpdate);
+
       return {
         data: {
           ...body,
+          date: new Date(body.date),
         },
         error: null,
         success: true,

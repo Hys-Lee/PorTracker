@@ -95,4 +95,30 @@ export const targetPortfolioRepository = {
     handleInternalError(error);
     return data;
   },
+  addTargetPortfolioWithMemo: async (
+    body: BodyTypeOf<'/api/v1/target-portfolios/with-memo', 'post'>
+  ) => {
+    const { data, error } = await internalServerFetch.POST(
+      '/api/v1/target-portfolios/with-memo',
+      {
+        body,
+      }
+    );
+    handleInternalError(error);
+    return data;
+  },
+  updateTargetPortfolioWithMemo: async (
+    publicId: string,
+    body: BodyTypeOf<'/api/v1/target-portfolios/{publicId}/with-memo', 'put'>
+  ) => {
+    const { data, error } = await internalServerFetch.PUT(
+      '/api/v1/target-portfolios/{publicId}/with-memo',
+      {
+        params: { path: { publicId } },
+        body,
+      }
+    );
+    handleInternalError(error);
+    return data;
+  },
 };
