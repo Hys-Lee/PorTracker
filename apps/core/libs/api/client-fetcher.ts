@@ -2,6 +2,7 @@ import { enableMocking } from '@core/mocks';
 import { ApiError, AppError } from '../errors/errors';
 import { handleApiError } from './error-handler';
 import { Response, RestfulMethod } from '@core/types/api';
+import { createClient } from '../supabase/client';
 
 export async function clientFetch(
   url: string,
@@ -10,6 +11,12 @@ export async function clientFetch(
   }
 ): Promise<Response<any>> {
   try {
+    const supabase = createClient();
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     const res = await fetch(
       process.env.NEXT_PUBLIC_API_URL
         ? `${process.env.NEXT_PUBLIC_API_URL}${url}`
@@ -19,6 +26,7 @@ export async function clientFetch(
         headers: {
           'Content-Type': 'application/json',
           ...options.headers,
+          Authorization: `Bearer ${session?.access_token}`,
         },
         // 클라이언트는 쿠키가 자동으로 포함됨 (기본값)
       }

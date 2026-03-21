@@ -31,6 +31,9 @@ internalServerFetch.use({
     accessToken &&
       request.headers.set('Authorization', `Bearer ${accessToken}`);
   },
+  onError: (e) => {
+    console.error('[InternalServerFetcher] 에러 발생', e);
+  },
 });
 
 export const getUserId = async () => {
