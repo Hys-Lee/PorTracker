@@ -1,1 +1,6 @@
 @stylex;
+
+body {
+  min-width: 1280px;
+  overflow-x: auto;
+}

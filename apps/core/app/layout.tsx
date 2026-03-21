@@ -10,6 +10,15 @@ import { fonts } from '../tokens/fonts.stylex';
 // import Link from 'next/link';
 // import { AntdRegistry } from '@ant-design/nextjs-registry';
 // import TanstackQueryProvider from '@core/libs/tanstack-query/TanstackQueryProvider';
+import type { Viewport } from 'next';
+
+export const viewport: Viewport = {
+  // width: 'device-width',
+  width: 1280,
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
 
 export const metadata: Metadata = {
   title: 'My App',

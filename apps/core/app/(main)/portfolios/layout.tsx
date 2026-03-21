@@ -29,5 +29,6 @@ const layoutStyles = stylex.create({
     flexDirection: 'column',
     gap: '20px',
     alignItems: 'center',
+    width: '100%',
   },
 });

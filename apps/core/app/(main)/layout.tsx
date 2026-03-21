@@ -15,8 +15,8 @@ import { ReactNode } from 'react';
 
 export default function MainLayout({ children }: { children: ReactNode }) {
   return (
-    <div
-    // className={suite.variable}
+    <
+      // className={suite.variable}
     >
       {/** Antd Next App Router에서 작동하도록 */}
       <AntdRegistry>
@@ -42,7 +42,7 @@ export default function MainLayout({ children }: { children: ReactNode }) {
           {/* <script type="module" src="/src/main.tsx"></script> */}
         </div>
       </AntdRegistry>
-    </div>
+    </>
   );
 }
 
