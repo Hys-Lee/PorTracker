@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { updateSession } from '@core/libs/supabase/proxy';
 import { createClient } from './libs/supabase/server';
+import * as Sentry from '@sentry/nextjs';
 
 export async function proxy(request: NextRequest) {
   // supabase 세션 업데이트 (supabase token refresh automatically)
@@ -16,6 +17,10 @@ export async function proxy(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  // sentry 유저 정보 세팅
+  if (user) Sentry.setUser({ id: user.id, email: user.email });
+  else Sentry.setUser(null);
 
   // 이 부분은 왜 필요한가? auth router로 가기 전에 미리 걸러주는역할인가?
   if (isAuthRoute && !user) {

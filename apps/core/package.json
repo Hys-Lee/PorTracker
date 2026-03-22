@@ -11,5 +11,8 @@
   "license": "ISC",
   "devDependencies": {
     "@stylexjs/unplugin": "^0.17.2"
+  },
+  "dependencies": {
+    "@sentry/nextjs": "^10.45.0"
   }
 }
