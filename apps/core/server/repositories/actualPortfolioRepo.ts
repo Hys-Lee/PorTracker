@@ -106,8 +106,6 @@ export const actualPortfolioRepository = {
     portfolioId: string,
     body: BodyTypeOf<'/api/v1/actual-portfolios/{publicId}/with-memo', 'put'>
   ) => {
-    //test
-    console.log('updateActualPortfolioWIthMemo memoid: ', body.memoId);
     const { data, error } = await internalServerFetch.PUT(
       '/api/v1/actual-portfolios/{publicId}/with-memo',
       { params: { path: { publicId: portfolioId } }, body }

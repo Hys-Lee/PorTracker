@@ -30,5 +30,7 @@ const layoutStyles = stylex.create({
     gap: '20px',
     alignItems: 'center',
     width: '100%',
+    // test
+    height: '500px',
   },
 });
