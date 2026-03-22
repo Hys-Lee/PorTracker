@@ -31,7 +31,7 @@ export const ActualReference: Story = {
       amount: 1,
       assetName: '자산1',
       assetType: '타입1',
-      currency: 'usd',
+      currency: 'USD',
       date: new Date('2026-01-23'),
       exchangeRate: 123,
       price: 456,

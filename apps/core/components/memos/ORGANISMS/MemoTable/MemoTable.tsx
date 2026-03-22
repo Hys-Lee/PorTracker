@@ -50,9 +50,13 @@ export default MemoTable;
 const memoTaleStyles = stylex.create({
   base: {
     width: '100%',
-    display: 'flex',
-    flexWrap: 'wrap',
+    // display: 'flex',
+    // flexWrap: 'wrap',
     gap: '28px',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(240px,1fr))',
+    justifyContent: 'center',
+    justifyItems: 'center',
   },
 });
 

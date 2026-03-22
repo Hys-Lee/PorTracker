@@ -9,8 +9,9 @@ import './stylex.css';
 
 // MSW
 import { initialize as mswInitialize, mswLoader } from 'msw-storybook-addon';
-import { allHandlers } from '@core/mocks/handlers';
-import { directServiceController } from '@core/mocks/services/utils';
+// import { allHandlers } from '@core/mocks/_legacy_/handlers';
+// import { directServiceController } from '@core/mocks/_legacy_/services/utils';
+import { allHandlers } from '@core/mocks/repositories';
 
 // MSW INIT
 mswInitialize();
@@ -40,8 +41,8 @@ const preview: Preview = {
     },
   },
   decorators: (Story, context) => {
-    const isDirect = !!context.parameters.api?.directMock;
-    directServiceController.setDirectService(isDirect);
+    // const isDirect = !!context.parameters.api?.directMock;
+    // directServiceController.setDirectService(isDirect);
     return (
       <div className={suite.variable}>
         <Story />

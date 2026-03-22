@@ -1,7 +1,7 @@
 'use server';
 
 // import { serverFetch } from '@core/libs/api/unified-fetcher';
-import { serverFetch } from '@core/libs/api/server-fetcher';
+
 import { Response } from '@core/types/api';
 import z from 'zod';
 import { schemaParser } from '../../shemaParser';
@@ -13,6 +13,7 @@ import {
   MemoFormUpdateRequest,
   memoUpdateResponseSchema,
 } from '@core/schemas/features/memos/memos.schema';
+import { memoAggregates } from '@core/server/aggregates/memos/memoAggr';
 
 export interface MemoActionService {
   createMemoForm: (
@@ -35,10 +36,11 @@ export interface MemoActionService {
 const memoActions: MemoActionService = {
   createMemoForm: async (dataForAdd) => {
     const res = await schemaParser(
-      serverFetch(`/api/memos`, {
-        method: 'POST',
-        body: JSON.stringify(dataForAdd),
-      }),
+      // serverFetch(`/api/memos`, {
+      //   method: 'POST',
+      //   body: JSON.stringify(dataForAdd),
+      // }),
+      memoAggregates.addMemoForm(dataForAdd),
       memoCreateResponseSchema
     );
     return res;
@@ -46,10 +48,11 @@ const memoActions: MemoActionService = {
 
   updateMemoForm: async (dataForModify) => {
     const res = await schemaParser(
-      serverFetch(`/api/memos/${dataForModify.id}`, {
-        method: 'PUT',
-        body: JSON.stringify(dataForModify),
-      }),
+      // serverFetch(`/api/memos/${dataForModify.id}`, {
+      //   method: 'PUT',
+      //   body: JSON.stringify(dataForModify),
+      // }),
+      memoAggregates.updateMemoForm(dataForModify.id, dataForModify),
       memoUpdateResponseSchema
     );
     return res;
@@ -57,9 +60,10 @@ const memoActions: MemoActionService = {
 
   deleteMemoForm: async (dataForDelete) => {
     const res = await schemaParser(
-      serverFetch(`/api/memos/${dataForDelete.id}`, {
-        method: 'DELETE',
-      }),
+      // serverFetch(`/api/memos/${dataForDelete.id}`, {
+      //   method: 'DELETE',
+      // }),
+      memoAggregates.deleteMemoForm(dataForDelete.id),
       memoDeleteResponseSchema
     );
     return res;

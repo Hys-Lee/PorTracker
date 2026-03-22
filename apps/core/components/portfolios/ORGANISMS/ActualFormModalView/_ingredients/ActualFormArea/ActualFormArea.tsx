@@ -128,6 +128,11 @@ const FormArea = ({
           formData.set('date', new Date(dashDate).toISOString());
         }
 
+        const linkedMemoId = JSON.parse(
+          formData.get('relatedMemoId') as string
+        )?.[0]?.value;
+        formData.set('relatedMemoId', linkedMemoId);
+
         // ***Asset Dropdown 값 덮어쓰기*** -> 비제어용
         // const assetRawData = formData.get('asset');
         // if (assetRawData && typeof assetRawData === 'string') {
@@ -248,7 +253,7 @@ const FormArea = ({
           )}
         /> */}
           <Dropdown
-            name="linkedMemo"
+            name="relatedMemoId"
             items={tmpMemosInfo.map((memoData, idx) => {
               return { text: memoData.title, value: memoData.id, index: idx };
             })}

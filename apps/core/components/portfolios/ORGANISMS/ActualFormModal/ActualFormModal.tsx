@@ -1,4 +1,3 @@
-import { serverFetch } from '@core/libs/api/server-fetcher';
 import FormArea from '../ActualFormModalView/_ingredients/ActualFormArea/ActualFormArea';
 import MemoReference from '../ActualFormModalView/_ingredients/MemoReference/MemoReference';
 import PortfolioReference from '../ActualFormModalView/_ingredients/PortfolioReference/PortfolioReference';
@@ -7,12 +6,11 @@ import ActualFormModalView, {
 } from '../ActualFormModalView/ActualFormModalView';
 import {
   getActualPortfolioById,
-  getActualPortfolioRecents,
   getAllActualPortfolios,
   getAssets,
-  getRelatedMemo,
+  getRelatedMemos,
   getRelatedMemoByMemoId,
-  getTransactionTypes,
+  getActualPortfolioRecentsOfAll,
 } from '@core/services/server';
 import { postActualForm } from '@core/services/serverFunctions/portfoliosServerFunctions';
 // } from '@core/services/queries/portfoliosQueries';
@@ -22,7 +20,7 @@ import { transactionIconSelector } from '@core/utils/renderers/iconSelector';
 // import {} from 'overlay-kit'
 import { ComponentProps, Suspense, use } from 'react';
 import { TRANSACTION_MAP } from '@core/constants';
-import MemoReferenceContainer from '@core/app/portfolios/_components/MemoReferenceContainer';
+import MemoReferenceContainer from '@core/app/(main)/portfolios/_components/MemoReferenceContainer';
 import Button from '@core/components/shared/ATOMS/Button/Button';
 
 import * as stylex from '@stylexjs/stylex';
@@ -50,13 +48,11 @@ const ActualFormModal = async ({
   mode,
 }: ActualFormModalProps) => {
   const [recentsRes, initFormDataRes, allRelatedMemos] = await Promise.all([
-    getActualPortfolioRecents(),
-    getActualPortfolioById(portfolioId),
+    getActualPortfolioRecentsOfAll(),
+    portfolioId ? getActualPortfolioById(portfolioId) : undefined,
     // getRelatedMemoByActualId(portfolioId),
-    getRelatedMemo(),
+    getRelatedMemos({ memoTypes: ['event'] }),
   ]);
-  //test
-  console.log('getActualPort: ', initFormDataRes.data);
   const formId = 'actual';
   const buttonName = 'submitMode';
   /** ********************************
@@ -105,7 +101,7 @@ const ActualFormModal = async ({
                       },
                       currency: {
                         text: initFormDataRes.data?.currency,
-                        value: initFormDataRes.data?.currency || 'usd',
+                        value: initFormDataRes.data?.currency || 'USD',
                       },
                       date: initFormDataRes.data?.date,
                       exchangeRate: initFormDataRes.data.exchangeRate,
@@ -115,8 +111,8 @@ const ActualFormModal = async ({
                   : undefined
               }
               currenciesInfo={[
-                { value: 'usd', text: 'usd' },
-                { value: 'krw', text: 'krw' },
+                { value: 'USD', text: 'usd' },
+                { value: 'KRW', text: 'krw' },
               ]}
               localCurrencyValue="krw"
               formAction={async (actionRes, formData) => {
@@ -125,7 +121,12 @@ const ActualFormModal = async ({
                   formData.set('id', initFormDataRes.data?.id);
                 }
                 const res = await postActualForm(formData);
-                console.log('formActionRes: ', JSON.stringify(res));
+                // console.log(
+                //   'formActionRes: ',
+                //   JSON.stringify(res),
+                //   res.error,
+                //   Object.fromEntries(formData.entries())
+                // );
                 // res.error?.details;
                 if (res.success) {
                   redirect(modalCloseHref);
@@ -180,9 +181,13 @@ const ActualFormModal = async ({
 
             <Suspense fallback={<>대기중</>}>
               <MemoReferenceContainer
-                initPromise={getRelatedMemoByMemoId(
-                  initFormDataRes?.data?.relatedMemoId || ''
-                )}
+                initPromise={
+                  initFormDataRes?.data?.relatedMemoId
+                    ? getRelatedMemoByMemoId(
+                        initFormDataRes?.data?.relatedMemoId
+                      )
+                    : undefined
+                }
               />
             </Suspense>
           }

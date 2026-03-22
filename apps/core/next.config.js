@@ -111,10 +111,21 @@ const path = require('path');
 const { composePlugins, withNx } = require('@nx/next');
 const stylexPlugin = require('@stylexswc/nextjs-plugin/turbopack').default;
 
+const { withSentryConfig } = require('@sentry/nextjs');
+
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
 const nextConfig = {
+  redirects: async () => {
+    return [
+      {
+        source: '/portfolios',
+        destination: '/portfolios/actual',
+        permanent: true,
+      },
+    ];
+  },
   nx: {},
   turbopack: {
     rules: {
@@ -194,4 +205,20 @@ const plugins = [
 ];
 
 // 3. 조합된 플러그인으로 nextConfig를 감싸서 최종 설정을 export 합니다.
-module.exports = composePlugins(...plugins)(nextConfig);
+module.exports = composePlugins(...plugins)(
+  withSentryConfig(nextConfig, {
+    silent: true,
+    org: 'portracker',
+    project: 'portrackerfe',
+
+    // Upload source maps for readable stack traces
+    authToken: process.env.SENTRY_AUTH_TOKEN,
+
+    // Route Sentry requests through your server (avoids ad-blockers)
+    tunnelRoute: '/monitoring',
+
+    silent: true,
+    hideSourceMaps: true,
+    disableLogger: true,
+  })
+);

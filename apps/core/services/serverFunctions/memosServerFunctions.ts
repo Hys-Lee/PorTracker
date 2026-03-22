@@ -11,6 +11,7 @@ import z from 'zod';
 import {
   createMemoForm,
   deleteMemoForm,
+  getMemoRecents,
   updateMemoForm,
 } from '@core/services/server';
 
@@ -70,4 +71,10 @@ export const postMemoForm = async (
         success: false,
       };
   }
+};
+
+export const getMemoRecentsOnType = async (
+  params: Parameters<typeof getMemoRecents>[0]
+) => {
+  return await getMemoRecents(params);
 };

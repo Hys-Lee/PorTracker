@@ -13,7 +13,8 @@ import MemoPill from '@core/components/shared/ATOMS/MemoPill/MemoPill';
 import { dateFormatter } from '@core/utils/helpers/dateFormatter';
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { memoKeys } from '@core/services/keys/memoKeys';
-import { getMemoRecents } from '@core/services/client';
+// import { getMemoRecents } from '@core/services/client';
+import { getMemoRecentsOnType } from '@core/services/serverFunctions/memosServerFunctions';
 import { memoEvaluationSelector } from '@core/utils/renderers/iconSelector';
 import Separator from '@core/components/shared/ATOMS/Separator/Separator';
 import PasteIcon from '@core/assets/images/svgs/Paste.svg?react';
@@ -51,12 +52,23 @@ const MemoReference = ({ initInfo }: MemoReferenceProps) => {
       linkedPortfolioData?.portfolioType || initInfo?.portfolioType
     ),
     queryFn: () => {
-      return getMemoRecents(
-        linkedPortfolioData?.portfolioType === 'actual'
-          ? linkedPortfolioData?.assetId
-          : linkedPortfolioData?.id || initInfo?.targetId,
-        linkedPortfolioData?.portfolioType || initInfo?.portfolioType
-      );
+      // return getMemoRecents(
+      //   linkedPortfolioData?.portfolioType === 'actual'
+      //     ? linkedPortfolioData?.assetId
+      //     : linkedPortfolioData?.id || initInfo?.targetId,
+      //   linkedPortfolioData?.portfolioType || initInfo?.portfolioType
+      // );
+      return getMemoRecentsOnType({
+        assetId:
+          linkedPortfolioData?.portfolioType === 'actual'
+            ? linkedPortfolioData.assetId
+            : undefined,
+        portfolioType: linkedPortfolioData?.portfolioType,
+        targetPortfolioId:
+          linkedPortfolioData?.portfolioType === 'target'
+            ? linkedPortfolioData.id
+            : undefined,
+      });
     },
   }); // useSuspenseQuery로 바꿀거임.
 
@@ -357,7 +369,14 @@ const Preview = ({
           ))}
         </div> */}
         <div {...stylex.props(previewStyels.evaluationBox)}>
-          {memoEvaluationSelector(evaluation, 28, 28, previewStyels.evaluation)}
+          {evaluation
+            ? memoEvaluationSelector(
+                evaluation,
+                28,
+                28,
+                previewStyels.evaluation
+              )
+            : undefined}
         </div>
       </div>
     </>

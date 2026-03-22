@@ -5,10 +5,10 @@ export const assetInfoSchema = z.object({
   name: z.string().min(1, '이름은 필수입니다'),
   type: z.string().min(1, '유효한 타입이어야 합니다.'),
   description: z.string().optional(),
-  createdAt: z
-    .string()
-    .datetime()
-    .transform((str) => new Date(str)),
+  createdAt: z.coerce.date(),
+  // .string()
+  // .datetime()
+  // .transform((str) => new Date(str)),
 });
 
 export type AssetInfo = z.infer<typeof assetInfoSchema>;

@@ -50,8 +50,8 @@ type FilterState = {
 };
 
 const defaultCurrency: CurrencyInfo = {
-  value: 'usd',
-  text: CURRENCY_MAP['usd'],
+  value: 'USD',
+  text: CURRENCY_MAP['USD'],
 };
 
 type QueryInfo = {

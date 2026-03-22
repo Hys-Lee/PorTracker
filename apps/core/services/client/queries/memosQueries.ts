@@ -11,18 +11,18 @@ export interface MemoClientQueryService {
   ) => Promise<Response<z.infer<typeof memoRecentListSchema>>>;
 }
 
-const memoServices: MemoClientQueryService = {
-  getMemoRecents: async (
-    targetId?: string,
-    portfolioType?: PortfolioTypeValue
-  ) => {
-    const params = `?portfolioType=${portfolioType}&targetId=${targetId}`;
-    const res = await schemaParser(
-      clientFetch(`/api/memos/recents${params}`),
-      memoRecentListSchema
-    );
-    return res;
-  },
-};
+// const memoServices: MemoClientQueryService = {
+//   getMemoRecents: async (
+//     targetId?: string,
+//     portfolioType?: PortfolioTypeValue
+//   ) => {
+//     const params = `?portfolioType=${portfolioType}&targetId=${targetId}`;
+//     const res = await schemaParser(
+//       clientFetch(`/api/memos/recents${params}`),
+//       memoRecentListSchema
+//     );
+//     return res;
+//   },
+// };
 
-export const { getMemoRecents } = memoServices;
+// export const { getMemoRecents } = memoServices;

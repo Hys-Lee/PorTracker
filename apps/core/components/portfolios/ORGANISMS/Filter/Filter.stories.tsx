@@ -18,8 +18,8 @@ export const Primary: Story = {
   args: {
     assetInfo: [{ name: '1', value: '1' }],
     currencyInfo: [
-      { name: 'c1', value: 'krw' },
-      { name: 'c2', value: 'usd' },
+      { name: 'c1', value: 'KRW' },
+      { name: 'c2', value: 'USD' },
     ],
     transactionInfo: [
       { name: 't1', value: 'allocation' },

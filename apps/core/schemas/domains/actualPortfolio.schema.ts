@@ -8,14 +8,14 @@ export const actualPortfolioOriginSchema = z.object({
   assetDescription: assetInfoSchema.shape.description,
   assetType: assetInfoSchema.shape.type,
   assetId: assetInfoSchema.shape.id,
-  date: z
-    .string()
-    .datetime({ message: '유효한 날짜가 아닙니다' })
-    .transform((str) => new Date(str)),
-  createdAt: z
-    .string()
-    .datetime({ message: '유효한 날짜가 아닙니다' })
-    .transform((str) => new Date(str)),
+  date: z.coerce.date(),
+  // .string()
+  // .datetime({ message: '유효한 날짜가 아닙니다' })
+  // .transform((str) => new Date(str)),
+  createdAt: z.coerce.date(),
+  // .string()
+  // .datetime({ message: '유효한 날짜가 아닙니다' })
+  // .transform((str) => new Date(str)),
   transactionType: z.enum([...TRANSACTION_VALUES]),
   changesRatio: z.number(),
   accumulatedRatio: z.number(),

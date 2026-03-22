@@ -1,8 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import ActualFormModal from './ActualFormModal';
-import { mockDB } from '@core/mocks/db/portfoliosDB';
+// import { mockDB } from '@core/mocks/_legacy_/db/portfoliosDB';
+import { mockRepositoryDB } from '@core/mocks/repositories';
 import { Suspense } from 'react';
 import { transactionIconSelector } from '@core/utils/renderers/iconSelector';
+import { TRANSACTION_MAP, TRANSACTION_VALUES } from '@core/constants';
 
 const meta: Meta<typeof ActualFormModal> = {
   component: ActualFormModal,
@@ -24,22 +26,21 @@ type Story = StoryObj<typeof ActualFormModal>;
 const CloseBtn = () => <div>임시닫기</div>;
 const CloseEle = <CloseBtn />;
 
-const target = [...mockDB.actuals.values()].filter(
-  (data) => data.linkedMemo !== null
-)[0].id;
+const targetId = [...mockRepositoryDB.memos.values()].find(
+  (memo) => memo.actualId
+)?.actualId;
+// const target = mockRepositoryDB.actualPortfolios.get(targetId || '');
 
-const assetInfo = [...mockDB.assets.values()].map((data) => ({
-  text: data.name,
-  value: data.id,
+const assetInfo = [...mockRepositoryDB.assets.values()].map((data) => ({
+  text: data.name || '',
+  value: data.id || '',
 }));
 
-const transactionTypeInfo = [...mockDB.transactionTypes.values()].map(
-  (data) => ({
-    icon: transactionIconSelector(data.value, 24, 24),
-    text: data.text,
-    value: data.value,
-  })
-);
+const transactionTypeInfo = [...TRANSACTION_VALUES].map((data) => ({
+  icon: transactionIconSelector(data, 24, 24),
+  text: TRANSACTION_MAP[data],
+  value: data,
+}));
 
 export const Primary: Story = {
   // loaders: [
@@ -61,12 +62,12 @@ export const Primary: Story = {
   render: (args, { loaded }) => {
     // console.log('linkedActuals: ', linkedActual);
     // mockDB.actuals.get(linkedActual?.id);
-    console.log('TARGETID: ', target);
+    console.log('TARGETID: ', targetId);
 
     return (
       <ActualFormModal
         mode={args.mode}
-        portfolioId={target}
+        portfolioId={targetId}
         // asClose={CloseEle}
         modalCloseHref="/"
         assetsInfo={assetInfo}
