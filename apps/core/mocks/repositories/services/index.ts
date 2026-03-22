@@ -17,6 +17,8 @@ export const {
   searchActualPortfolio,
   updateActualPortfolio,
   getUnlinkedActualPortfolios,
+  addActualPortfolioWithMemo,
+  updateActualPortfolioWithMemo,
 } = actualPortfolioMockService;
 
 // ─── Memo ──────────────────────────────────────────────────
@@ -29,6 +31,7 @@ export const {
   updateMemo,
   deleteMemo,
   getRecentMemosByAssetId,
+  patchMemo,
 } = memoMockService;
 
 // ─── TargetPortfolio ───────────────────────────────────────
@@ -41,6 +44,8 @@ export const {
   updateTargetPortfolio,
   deleteTargetPortfolio,
   addSnapshot,
+  addTargetPortfolioWithMemo,
+  updateTargetPortfolioWithMemo,
 } = targetPortfolioMockService;
 
 // ─── Asset ─────────────────────────────────────────────────
