@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "AI들": [
+    "claude-code"
+  ],
+  "폴더지침": {
+    "claude-code": "예"
+  },
+  "프로젝트정책": true,
+  "도메인들": [],
+  "단계": true,
+  "설계먼저": "사람",
+  "빌드명령": [
+    "pnpm nx test core",
+    "pnpm lint",
+    "pnpm exec nx build core"
+  ],
+  "검증명령": [
+    "pnpm nx test core",
+    "pnpm lint",
+    "pnpm exec nx build core"
+  ]
+}
