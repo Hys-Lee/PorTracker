@@ -20,6 +20,12 @@
 
 제목·날짜·중요도·연결 대상·내용·태그·평가를 한 모달에서 적습니다. 오른쪽에서 같은 자산의 지난 메모(Memo Histories)와 연결된 포트폴리오(Linked Portfolio)를 같이 보며 작성합니다.
 
+### Portfolios — 실제 거래 입력
+
+<img src="docs/screens/actual-form.png" alt="실제 포트폴리오 입력 모달" />
+
+자산·날짜·거래 유형·가격·수량·환율을 적으면 총 가치를 바로 셈해 보여 줍니다. 거래마다 메모를 연결할 수 있고, 오른쪽에서 같은 자산의 최근 거래(Asset Histories)와 연결된 메모(Linked Memo)를 봅니다.
+
 ## 기술 스택
 
 | 영역 | 사용 |
