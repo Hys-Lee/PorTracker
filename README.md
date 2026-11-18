@@ -20,6 +20,12 @@
 
 제목·날짜·중요도·연결 대상·내용·태그·평가를 한 모달에서 적습니다. 오른쪽에서 같은 자산의 지난 메모(Memo Histories)와 연결된 포트폴리오(Linked Portfolio)를 같이 보며 작성합니다.
 
+### Portfolios — 실제 거래 목록
+
+<img src="docs/screens/actual-list.png" alt="실제 거래 목록 화면" />
+
+실제 거래를 자산·날짜·거래 유형·금액과 함께 표로 모아 봅니다. 위쪽 필터로 자산·기간·거래 유형·통화를 골라 좁힙니다.
+
 ### Portfolios — 실제 거래 입력
 
 <img src="docs/screens/actual-form.png" alt="실제 포트폴리오 입력 모달" />
